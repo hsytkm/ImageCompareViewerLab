@@ -49,6 +49,7 @@ namespace ImagePixels.BitmapSource
         // 全画面の平均輝度読み込み
         public static double GetAllAverageY(this BitmapImage bmp)
         {
+            if (bmp == null) throw new ArgumentNullException(nameof(bmp));
             var rect = new Int32Rect(0, 0, bmp.PixelWidth, bmp.PixelHeight);
             return bmp.GetAverageY(ref rect);
         }

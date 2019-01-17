@@ -1,4 +1,5 @@
 ﻿using ImagePixels.BitmapSource;
+using ImagePixels.Drawing;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -17,6 +18,8 @@ namespace ImagePixels
             var count = 10;
             double y = 0d;
 
+            Console.WriteLine("Start");
+
             var sw = new Stopwatch();
 
             // BitmapImage
@@ -29,6 +32,13 @@ namespace ImagePixels
             Console.WriteLine($"BitmapImage: Y={y:f2}  {sw.Elapsed}");
 
             // Drawing
+            sw.Restart();
+            for (var i = 0; i < count; i++)
+            {
+                y = path.ToBitmap().GetAllAverageY();
+            }
+            sw.Stop();
+            Console.WriteLine($"Bitmap     : Y={y:f2}  {sw.Elapsed}");
 
             Console.WriteLine("Finish");
             Console.ReadKey();
