@@ -7,9 +7,11 @@ namespace ImagePixels
 {
     class Program
     {
+        private static readonly string ImagePath = @"C:\data\image1.jpg";
+
         static void Main(string[] args)
         {
-            var path = @"c:\data\image1.jpg";
+            var path = ImagePath;
             if (!File.Exists(path)) throw new Exception();
 
             var count = 10;
