@@ -26,39 +26,40 @@ namespace ImagePixels
 
             // BitmapImage
             tag = "BitmapImage";
+            Console.WriteLine($"Start: {tag}");
             sw.Restart();
             for (var i = 0; i < count; i++)
             {
                 y = path.ToBitmapImage().GetAllAverageY();
             }
             times.Add((tag, y, sw.Elapsed));
-            Console.WriteLine($"Complete: {tag}");
 
 
             // Bitmap1
             tag = "Bitmap1(Lockbits)";
+            Console.WriteLine($"Start: {tag}");
             sw.Restart();
             for (var i = 0; i < count; i++)
             {
                 y = path.GetAverageYBitmap1();
             }
             times.Add((tag, y, sw.Elapsed));
-            Console.WriteLine($"Complete: {tag}");
 
 
             // Bitmap2
             tag = "Bitmap2(Lockbits&Unsafe)";
+            Console.WriteLine($"Start: {tag}");
             sw.Restart();
             for (var i = 0; i < count; i++)
             {
                 y = path.GetAverageYBitmap2();
             }
             times.Add((tag, y, sw.Elapsed));
-            Console.WriteLine($"Complete: {tag}");
 
-
+#if false
             // Bitmap3
             tag = "Bitmap3(Lockbits&Unsafe&Palallel)";
+            Console.WriteLine($"Start: {tag}");
             Console.WriteLine("排他制御を行ってないので計算結果が不正になる");
             sw.Restart();
             for (var i = 0; i < count; i++)
@@ -66,7 +67,7 @@ namespace ImagePixels
                 y = path.GetAverageYBitmap3();
             }
             times.Add((tag, y, sw.Elapsed));
-            Console.WriteLine($"Complete: {tag}");
+#endif
 
             
             // 処理時間の出力

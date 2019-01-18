@@ -29,6 +29,7 @@ namespace ImagePixels.Drawing
             int heightInPixels = bitmapData.Height;
             int widthInBytes = bitmapData.Width * bytesPerPixel;
 
+            // 排他制御を行っていません
             ulong sumB = 0, sumG = 0, sumR = 0;
             unsafe
             {
