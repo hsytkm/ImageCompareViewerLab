@@ -69,9 +69,20 @@ namespace ImagePixels
             times.Add((tag, y, sw.Elapsed));
 #endif
 
-            
+
+            // Bitmap4
+            tag = "Bitmap4(Lockbits&Unsafe&Span)";
+            Console.WriteLine($"Start: {tag}");
+            sw.Restart();
+            for (var i = 0; i < count; i++)
+            {
+                y = path.GetAverageYBitmap4();
+            }
+            times.Add((tag, y, sw.Elapsed));
+
+
             // 処理時間の出力
-            var baseTime = (double)times[0].ts.TotalMilliseconds;
+            var baseTime = times[0].ts.TotalMilliseconds;
             foreach (var (name, Y, ts) in times)
             {
                 Console.WriteLine($"{name,-35}: Y={Y:f2} Time={ts} Ratio={(ts.TotalMilliseconds / baseTime * 100):f1}%");
