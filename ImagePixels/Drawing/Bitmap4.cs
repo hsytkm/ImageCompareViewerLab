@@ -23,7 +23,7 @@ namespace ImagePixels.Drawing
             ProcessUsingLockbitsAndSpan(this Bitmap processedBitmap)
         {
             var rect = new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height);
-            var bitmapData = processedBitmap.LockBits(rect, ImageLockMode.ReadWrite, processedBitmap.PixelFormat);
+            var bitmapData = processedBitmap.LockBits(rect, ImageLockMode.ReadOnly, processedBitmap.PixelFormat);
             int bytesPerPixel = Image.GetPixelFormatSize(processedBitmap.PixelFormat) / 8;
             int heightInPixels = bitmapData.Height;
             int widthInBytes = bitmapData.Width * bytesPerPixel;

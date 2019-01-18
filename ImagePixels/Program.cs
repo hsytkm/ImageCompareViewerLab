@@ -34,7 +34,7 @@ namespace ImagePixels
             }
             times.Add((tag, y, sw.Elapsed));
 
-
+#if false
             // Bitmap1
             tag = "Bitmap1(Lockbits)";
             Console.WriteLine($"Start: {tag}");
@@ -44,8 +44,9 @@ namespace ImagePixels
                 y = path.GetAverageYBitmap1();
             }
             times.Add((tag, y, sw.Elapsed));
+#endif
 
-
+#if true
             // Bitmap2
             tag = "Bitmap2(Lockbits&Unsafe)";
             Console.WriteLine($"Start: {tag}");
@@ -55,6 +56,7 @@ namespace ImagePixels
                 y = path.GetAverageYBitmap2();
             }
             times.Add((tag, y, sw.Elapsed));
+#endif
 
 #if false
             // Bitmap3
@@ -69,7 +71,7 @@ namespace ImagePixels
             times.Add((tag, y, sw.Elapsed));
 #endif
 
-
+#if false
             // Bitmap4
             tag = "Bitmap4(Lockbits&Unsafe&Span)";
             Console.WriteLine($"Start: {tag}");
@@ -79,7 +81,19 @@ namespace ImagePixels
                 y = path.GetAverageYBitmap4();
             }
             times.Add((tag, y, sw.Elapsed));
+#endif
 
+#if false
+            // Bitmap5
+            tag = "Bitmap5(Lockbits&Unsafe&Task)";
+            Console.WriteLine($"Start: {tag}");
+            sw.Restart();
+            for (var i = 0; i < count; i++)
+            {
+                y = path.GetAverageYBitmap5();
+            }
+            times.Add((tag, y, sw.Elapsed));
+#endif
 
             // 処理時間の出力
             var baseTime = times[0].ts.TotalMilliseconds;
