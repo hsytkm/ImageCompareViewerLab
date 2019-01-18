@@ -1,6 +1,7 @@
 ﻿using ImagePixels.BitmapSource;
 using ImagePixels.Drawing;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -16,29 +17,40 @@ namespace ImagePixels
             if (!File.Exists(path)) throw new Exception();
 
             var count = 10;
-            double y = 0d;
 
             Console.WriteLine("Start");
-
+            var times = new List<(string name, double Y, TimeSpan ts)>();
             var sw = new Stopwatch();
+            string tag;
+            double y = 0d;
 
             // BitmapImage
+            tag = "BitmapImage";
             sw.Restart();
             for (var i = 0; i < count; i++)
             {
                 y = path.ToBitmapImage().GetAllAverageY();
             }
-            sw.Stop();
-            Console.WriteLine($"BitmapImage: Y={y:f2}  {sw.Elapsed}");
+            times.Add((tag, y, sw.Elapsed));
+            Console.WriteLine($"Complete: {tag}");
 
-            // Drawing
+            // Bitmap1
+            tag = "Bitmap1";
             sw.Restart();
             for (var i = 0; i < count; i++)
             {
-                y = path.ToBitmap().GetAllAverageY();
+                y = path.GetAverageYBitmap1();
             }
-            sw.Stop();
-            Console.WriteLine($"Bitmap     : Y={y:f2}  {sw.Elapsed}");
+            times.Add((tag, y, sw.Elapsed));
+            Console.WriteLine($"Complete: {tag}");
+
+
+            // 処理時間の出力
+            var baseTime = (double)times[0].ts.TotalMilliseconds;
+            foreach (var (name, Y, ts) in times)
+            {
+                Console.WriteLine($"{name,-16}: Y={Y:f2} Time={ts} Ratio={(ts.TotalMilliseconds / baseTime * 100):f1}%");
+            }
 
             Console.WriteLine("Finish");
             Console.ReadKey();
