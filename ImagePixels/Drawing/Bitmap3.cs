@@ -2,46 +2,47 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ImagePixels.Drawing
 {
     // Fast Image Processing in C# http://csharpexamples.com/fast-image-processing-c/
-    static class Bitmap2
+    static class Bitmap3
     {
-        public static double GetAverageYBitmap2(this string imagePath)
+        public static double GetAverageYBitmap3(this string imagePath)
         {
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
 
             using (var bitmap = new Bitmap(imagePath))
             {
-                return bitmap.ProcessUsingLockbitsAndUnsafe().Y;
+                return bitmap.ProcessUsingLockbitsAndUnsafeAndParallel().Y;
             }
         }
 
         private static (double R, double G, double B, double Y)
-            ProcessUsingLockbitsAndUnsafe(this Bitmap processedBitmap)
+             ProcessUsingLockbitsAndUnsafeAndParallel(this Bitmap processedBitmap)
         {
             var rect = new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height);
             var bitmapData = processedBitmap.LockBits(rect, ImageLockMode.ReadWrite, processedBitmap.PixelFormat);
+
             int bytesPerPixel = Image.GetPixelFormatSize(processedBitmap.PixelFormat) / 8;
             int heightInPixels = bitmapData.Height;
             int widthInBytes = bitmapData.Width * bytesPerPixel;
-            ulong sumB = 0, sumG = 0, sumR = 0;
 
+            ulong sumB = 0, sumG = 0, sumR = 0;
             unsafe
             {
-                var ptrFirstPixel = (byte*)bitmapData.Scan0;
-                for (byte* pixels = ptrFirstPixel;
-                     pixels < ptrFirstPixel + heightInPixels * bitmapData.Stride;
-                     pixels += bitmapData.Stride)
+                var PtrFirstPixel = (byte*)bitmapData.Scan0;
+                Parallel.For(0, heightInPixels, y =>
                 {
+                    byte* pixels = PtrFirstPixel + (y * bitmapData.Stride);
                     for (int x = 0; x < widthInBytes; x += bytesPerPixel)
                     {
                         sumB += pixels[x];
                         sumG += pixels[x + 1];
                         sumR += pixels[x + 2];
                     }
-                }
+                });
             }
             processedBitmap.UnlockBits(bitmapData);
 

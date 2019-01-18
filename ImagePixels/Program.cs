@@ -57,11 +57,23 @@ namespace ImagePixels
             Console.WriteLine($"Complete: {tag}");
 
 
+            // Bitmap3
+            tag = "Bitmap3(Lockbits&Unsafe&Palallel)";
+            Console.WriteLine("排他制御を行ってないので計算結果が不正になる");
+            sw.Restart();
+            for (var i = 0; i < count; i++)
+            {
+                y = path.GetAverageYBitmap3();
+            }
+            times.Add((tag, y, sw.Elapsed));
+            Console.WriteLine($"Complete: {tag}");
+
+            
             // 処理時間の出力
             var baseTime = (double)times[0].ts.TotalMilliseconds;
             foreach (var (name, Y, ts) in times)
             {
-                Console.WriteLine($"{name,-25}: Y={Y:f2} Time={ts} Ratio={(ts.TotalMilliseconds / baseTime * 100):f1}%");
+                Console.WriteLine($"{name,-35}: Y={Y:f2} Time={ts} Ratio={(ts.TotalMilliseconds / baseTime * 100):f1}%");
             }
 
             Console.WriteLine("Finish");

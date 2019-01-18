@@ -54,6 +54,7 @@
     <Compile Include="Drawing\Bitmap1.cs" />
     <Compile Include="Common\Gamut.cs" />
     <Compile Include="Drawing\Bitmap2.cs" />
+    <Compile Include="Drawing\Bitmap3.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
