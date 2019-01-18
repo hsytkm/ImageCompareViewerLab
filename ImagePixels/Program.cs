@@ -34,8 +34,9 @@ namespace ImagePixels
             times.Add((tag, y, sw.Elapsed));
             Console.WriteLine($"Complete: {tag}");
 
+
             // Bitmap1
-            tag = "Bitmap1";
+            tag = "Bitmap1(Lockbits)";
             sw.Restart();
             for (var i = 0; i < count; i++)
             {
@@ -45,11 +46,22 @@ namespace ImagePixels
             Console.WriteLine($"Complete: {tag}");
 
 
+            // Bitmap2
+            tag = "Bitmap2(Lockbits&Unsafe)";
+            sw.Restart();
+            for (var i = 0; i < count; i++)
+            {
+                y = path.GetAverageYBitmap2();
+            }
+            times.Add((tag, y, sw.Elapsed));
+            Console.WriteLine($"Complete: {tag}");
+
+
             // 処理時間の出力
             var baseTime = (double)times[0].ts.TotalMilliseconds;
             foreach (var (name, Y, ts) in times)
             {
-                Console.WriteLine($"{name,-16}: Y={Y:f2} Time={ts} Ratio={(ts.TotalMilliseconds / baseTime * 100):f1}%");
+                Console.WriteLine($"{name,-25}: Y={Y:f2} Time={ts} Ratio={(ts.TotalMilliseconds / baseTime * 100):f1}%");
             }
 
             Console.WriteLine("Finish");

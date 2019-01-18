@@ -19,7 +19,7 @@ namespace ImagePixels.Drawing
             }
         }
 
-        public static (double R, double G, double B, double Y)
+        private static (double R, double G, double B, double Y)
             ProcessUsingLockbits(this Bitmap processedBitmap)
         {
             var rect = new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height);
