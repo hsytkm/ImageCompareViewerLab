@@ -1,5 +1,4 @@
-﻿using ImagePixels.BitmapSource;
-using ImagePixels.Drawing;
+﻿using ImagePixels.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,79 +20,27 @@ namespace ImagePixels
             Console.WriteLine("Start");
             var times = new List<(string name, double Y, TimeSpan ts)>();
             var sw = new Stopwatch();
-            string tag;
             double y = 0d;
 
-            // BitmapImage
-            tag = "BitmapImage";
-            Console.WriteLine($"Start: {tag}");
-            sw.Restart();
-            for (var i = 0; i < count; i++)
+            var readers = new IPixelReader[]
             {
-                y = path.ToBitmapImage().GetAllAverageY();
-            }
-            times.Add((tag, y, sw.Elapsed));
+                new BitmapImageEx(ImagePath),
+                new PixelReader1(ImagePath),
+                new PixelReader2(ImagePath),
+                //new PixelReader3(ImagePath),   // バグってます
+                new PixelReader4(ImagePath),
+            };
 
-#if false
-            // Bitmap1
-            tag = "Bitmap1(Lockbits)";
-            Console.WriteLine($"Start: {tag}");
-            sw.Restart();
-            for (var i = 0; i < count; i++)
+            foreach (var reader in readers)
             {
-                y = path.GetAverageYBitmap1();
+                Console.WriteLine($"Start: {reader.Name}");
+                sw.Restart();
+                for (var i = 0; i < count; i++)
+                {
+                    y = reader.GetAverageY();
+                }
+                times.Add((reader.Name, y, sw.Elapsed));
             }
-            times.Add((tag, y, sw.Elapsed));
-#endif
-
-#if true
-            // Bitmap2
-            tag = "Bitmap2(Lockbits&Unsafe)";
-            Console.WriteLine($"Start: {tag}");
-            sw.Restart();
-            for (var i = 0; i < count; i++)
-            {
-                y = path.GetAverageYBitmap2();
-            }
-            times.Add((tag, y, sw.Elapsed));
-#endif
-
-#if false
-            // Bitmap3
-            tag = "Bitmap3(Lockbits&Unsafe&Palallel)";
-            Console.WriteLine($"Start: {tag}");
-            Console.WriteLine("排他制御を行ってないので計算結果が不正になる");
-            sw.Restart();
-            for (var i = 0; i < count; i++)
-            {
-                y = path.GetAverageYBitmap3();
-            }
-            times.Add((tag, y, sw.Elapsed));
-#endif
-
-#if false
-            // Bitmap4
-            tag = "Bitmap4(Lockbits&Unsafe&Span)";
-            Console.WriteLine($"Start: {tag}");
-            sw.Restart();
-            for (var i = 0; i < count; i++)
-            {
-                y = path.GetAverageYBitmap4();
-            }
-            times.Add((tag, y, sw.Elapsed));
-#endif
-
-#if false
-            // Bitmap5
-            tag = "Bitmap5(Lockbits&Unsafe&Task)";
-            Console.WriteLine($"Start: {tag}");
-            sw.Restart();
-            for (var i = 0; i < count; i++)
-            {
-                y = path.GetAverageYBitmap5();
-            }
-            times.Add((tag, y, sw.Elapsed));
-#endif
 
             // 処理時間の出力
             var baseTime = times[0].ts.TotalMilliseconds;

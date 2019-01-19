@@ -3,47 +3,60 @@ using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace ImagePixels.Drawing
 {
-    static class Bitmap4
+    // Fast Image Processing in C# http://csharpexamples.com/fast-image-processing-c/
+    class PixelReader3 : IPixelReader
     {
-        public static double GetAverageYBitmap4(this string imagePath)
+        public string Name { get; } = "Bitmap(Lockbits&Unsafe&Para)";
+
+        private readonly string ImagePath;
+
+        public PixelReader3(string imagePath)
         {
+            ImagePath = imagePath;
+            Console.WriteLine("排他制御を行ってないので計算結果が不正になります");
+        }
+
+        public double GetAverageY()
+        {
+            var imagePath = ImagePath;
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
 
             using (var bitmap = new Bitmap(imagePath))
             {
-                return bitmap.ProcessUsingLockbitsAndSpan().Y;
+                var (R, G, B) = ProcessUsingLockbitsAndUnsafeAndParallel(bitmap);
+                return Gamut.GetY(R, G, B);
             }
         }
 
-        // .NETFramework4.6.1のSpanは高速でないとどこかで見た気がする。実際にイマイチやった
-        private static (double R, double G, double B, double Y)
-            ProcessUsingLockbitsAndSpan(this Bitmap processedBitmap)
+        private static (double R, double G, double B)
+             ProcessUsingLockbitsAndUnsafeAndParallel(Bitmap processedBitmap)
         {
             var rect = new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height);
             var bitmapData = processedBitmap.LockBits(rect, ImageLockMode.ReadOnly, processedBitmap.PixelFormat);
+
             int bytesPerPixel = Image.GetPixelFormatSize(processedBitmap.PixelFormat) / 8;
             int heightInPixels = bitmapData.Height;
             int widthInBytes = bitmapData.Width * bytesPerPixel;
-            ulong sumB = 0, sumG = 0, sumR = 0;
 
+            // 排他制御を行っていません
+            ulong sumB = 0, sumG = 0, sumR = 0;
             unsafe
             {
-                var ptrFirstPixel = (byte*)bitmapData.Scan0;
-                for (byte* y = ptrFirstPixel;
-                     y < ptrFirstPixel + heightInPixels * bitmapData.Stride;
-                     y += bitmapData.Stride)
+                var PtrFirstPixel = (byte*)bitmapData.Scan0;
+                Parallel.For(0, heightInPixels, y =>
                 {
-                    var pixels = new ReadOnlySpan<byte>(y, widthInBytes);
+                    byte* pixels = PtrFirstPixel + (y * bitmapData.Stride);
                     for (int x = 0; x < widthInBytes; x += bytesPerPixel)
                     {
                         sumB += pixels[x];
                         sumG += pixels[x + 1];
                         sumR += pixels[x + 2];
                     }
-                }
+                });
             }
             processedBitmap.UnlockBits(bitmapData);
 
@@ -51,10 +64,8 @@ namespace ImagePixels.Drawing
             var aveR = sumR / count;
             var aveG = sumG / count;
             var aveB = sumB / count;
-            var aveY = Gamut.GetY(aveR, aveG, aveB);
-            return (aveR, aveG, aveB, aveY);
+            return (aveR, aveG, aveB);
         }
 
     }
-
 }

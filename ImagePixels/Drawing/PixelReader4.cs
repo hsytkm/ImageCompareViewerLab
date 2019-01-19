@@ -1,25 +1,38 @@
 ﻿using ImagePixels.Common;
+using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
 namespace ImagePixels.Drawing
 {
-    // Fast Image Processing in C# http://csharpexamples.com/fast-image-processing-c/
-    static class Bitmap2
+    class PixelReader4 : IPixelReader
     {
-        public static double GetAverageYBitmap2(this string imagePath)
+        public string Name { get; } = "Bitmap(Lockbits&Unsafe&Span)";
+
+
+        private readonly string ImagePath;
+
+        public PixelReader4(string imagePath)
         {
+            ImagePath = imagePath;
+        }
+
+        public double GetAverageY()
+        {
+            var imagePath = ImagePath;
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
 
             using (var bitmap = new Bitmap(imagePath))
             {
-                return bitmap.ProcessUsingLockbitsAndUnsafe().Y;
+                var (R, G, B) = ProcessUsingLockbitsAndSpan(bitmap);
+                return Gamut.GetY(R, G, B);
             }
         }
 
-        private static (double R, double G, double B, double Y)
-            ProcessUsingLockbitsAndUnsafe(this Bitmap processedBitmap)
+        // .NETFramework4.6.1のSpanは高速でないとどこかで見た気がする。実際にイマイチやった
+        private static (double R, double G, double B)
+            ProcessUsingLockbitsAndSpan(Bitmap processedBitmap)
         {
             var rect = new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height);
             var bitmapData = processedBitmap.LockBits(rect, ImageLockMode.ReadOnly, processedBitmap.PixelFormat);
@@ -31,10 +44,11 @@ namespace ImagePixels.Drawing
             unsafe
             {
                 var ptrFirstPixel = (byte*)bitmapData.Scan0;
-                for (byte* pixels = ptrFirstPixel;
-                     pixels < ptrFirstPixel + heightInPixels * bitmapData.Stride;
-                     pixels += bitmapData.Stride)
+                for (byte* y = ptrFirstPixel;
+                     y < ptrFirstPixel + heightInPixels * bitmapData.Stride;
+                     y += bitmapData.Stride)
                 {
+                    var pixels = new ReadOnlySpan<byte>(y, widthInBytes);
                     for (int x = 0; x < widthInBytes; x += bytesPerPixel)
                     {
                         sumB += pixels[x];
@@ -49,9 +63,9 @@ namespace ImagePixels.Drawing
             var aveR = sumR / count;
             var aveG = sumG / count;
             var aveB = sumB / count;
-            var aveY = Gamut.GetY(aveR, aveG, aveB);
-            return (aveR, aveG, aveB, aveY);
+            return (aveR, aveG, aveB);
         }
 
     }
+
 }

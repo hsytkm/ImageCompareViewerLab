@@ -5,12 +5,33 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
 
-namespace ImagePixels.BitmapSource
+namespace ImagePixels.Drawing
 {
-    static class BitmapImageEx
+    class BitmapImageEx : IPixelReader
     {
+        public string Name { get; } = "BitmapImage";
+
+        private readonly string ImagePath;
+
+        public BitmapImageEx(string imagePath)
+        {
+            ImagePath = imagePath;
+        }
+
+        public double GetAverageY()
+        {
+            var imagePath = ImagePath;
+            if (!File.Exists(imagePath)) throw new FileNotFoundException();
+
+            var bmp = ToBitmapImage(imagePath);
+            if (bmp == null) throw new ArgumentNullException(nameof(bmp));
+
+            var rect = new Int32Rect(0, 0, bmp.PixelWidth, bmp.PixelHeight);
+            return GetAverageY(bmp, ref rect);
+        }
+
         // 画像の読み出し
-        public static BitmapImage ToBitmapImage(this string imagePath, bool isCanGC = true)
+        public static BitmapImage ToBitmapImage(string imagePath, bool isCanGC = true)
         {
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
 
@@ -40,22 +61,14 @@ namespace ImagePixels.BitmapSource
                     GC.Collect();                           // アクセス不可能なオブジェクトを除去
                     GC.WaitForPendingFinalizers();          // ファイナライゼーションが終わるまでスレッド待機
                     GC.Collect();                           // ファイナライズされたばかりのオブジェクトに関連するメモリを開放
-                    bi = imagePath.ToBitmapImage(false);    // GC禁止でコール
+                    bi = ToBitmapImage(imagePath, false);   // GC禁止でコール
                 }
             }
             return bi;
         }
 
-        // 全画面の平均輝度読み込み
-        public static double GetAllAverageY(this BitmapImage bmp)
-        {
-            if (bmp == null) throw new ArgumentNullException(nameof(bmp));
-            var rect = new Int32Rect(0, 0, bmp.PixelWidth, bmp.PixelHeight);
-            return bmp.GetAverageY(ref rect);
-        }
-
         // 指定領域の平均輝度の読み込み
-        private static double GetAverageY(this BitmapImage bmp, ref Int32Rect rect)
+        private static double GetAverageY(BitmapImage bmp, ref Int32Rect rect)
         {
             if (bmp == null) throw new ArgumentNullException(nameof(bmp));
             if (rect.Width * rect.Height == 0) throw new ArgumentException("RectArea");
@@ -105,16 +118,15 @@ namespace ImagePixels.BitmapSource
                 }
                 else
                 {
-                    var (R, G, B, Y) = GetAverage(pixels, rect.Width, rect.Height, pixelsByte);
-                    //Debug.WriteLine($"RGBY: {R:f1} {G:f1} {B:f1} {Y:f1}");
-                    return Y;
+                    var (R, G, B) = GetAverage(pixels, rect.Width, rect.Height, pixelsByte);
+                    return Gamut.GetY(R, G, B);
                 }
             }
             return 0;
         }
 
         // 画素の平均値を計算
-        private static (double R, double G, double B, double Y)
+        private static (double R, double G, double B)
             GetAverage(byte[] pixels, int width, int height, int pixelsByte)
         {
             ulong sumB = 0, sumG = 0, sumR = 0;
@@ -128,8 +140,7 @@ namespace ImagePixels.BitmapSource
             var aveR = sumR / count;
             var aveG = sumG / count;
             var aveB = sumB / count;
-            var aveY = Gamut.GetY(aveR, aveG, aveB);
-            return (aveR, aveG, aveB, aveY);
+            return (aveR, aveG, aveB);
         }
 
     }

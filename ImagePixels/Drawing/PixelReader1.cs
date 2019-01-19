@@ -7,20 +7,31 @@ using System.Runtime.InteropServices;
 namespace ImagePixels.Drawing
 {
     // Fast Image Processing in C# http://csharpexamples.com/fast-image-processing-c/
-    static class Bitmap1
+    class PixelReader1 : IPixelReader
     {
-        public static double GetAverageYBitmap1(this string imagePath)
+        public string Name { get; } = "Bitmap(Lockbits)";
+
+        private readonly string ImagePath;
+
+        public PixelReader1(string imagePath)
         {
+            ImagePath = imagePath;
+        }
+
+        public double GetAverageY()
+        {
+            var imagePath = ImagePath;
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
 
             using (var bitmap = new Bitmap(imagePath))
             {
-                return bitmap.ProcessUsingLockbits().Y;
+                var (R, G, B) = ProcessUsingLockbits(bitmap);
+                return Gamut.GetY(R, G, B);
             }
         }
 
-        private static (double R, double G, double B, double Y)
-            ProcessUsingLockbits(this Bitmap processedBitmap)
+        private static (double R, double G, double B)
+            ProcessUsingLockbits(Bitmap processedBitmap)
         {
             var rect = new Rectangle(0, 0, processedBitmap.Width, processedBitmap.Height);
             var bitmapData = processedBitmap.LockBits(rect, ImageLockMode.ReadOnly, processedBitmap.PixelFormat);
@@ -49,8 +60,7 @@ namespace ImagePixels.Drawing
             var aveR = sumR / count;
             var aveG = sumG / count;
             var aveB = sumB / count;
-            var aveY = Gamut.GetY(aveR, aveG, aveB);
-            return (aveR, aveG, aveB, aveY);
+            return (aveR, aveG, aveB);
         }
 
     }
