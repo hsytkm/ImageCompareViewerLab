@@ -8,8 +8,7 @@ namespace ImagePixels.Drawing
 {
     class PixelReader4 : IPixelReader
     {
-        public string Name { get; } = "Bitmap(Lockbits&Unsafe&Span)";
-
+        public string Name { get; } = "Bitmap4(Lockbits&Unsafe&Span)";
 
         private readonly string ImagePath;
 

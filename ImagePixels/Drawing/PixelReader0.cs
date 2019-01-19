@@ -9,7 +9,7 @@ namespace ImagePixels.Drawing
 {
     class BitmapImageEx : IPixelReader
     {
-        public string Name { get; } = "BitmapImage";
+        public string Name { get; } = "BitmapImage0";
 
         private readonly string ImagePath;
 

@@ -10,7 +10,7 @@ namespace ImagePixels.Drawing
     // Fast Image Processing in C# http://csharpexamples.com/fast-image-processing-c/
     class PixelReader3 : IPixelReader
     {
-        public string Name { get; } = "Bitmap(Lockbits&Unsafe&Para)";
+        public string Name { get; } = "Bitmap3(Lockbits&Unsafe&Para)";
 
         private readonly string ImagePath;
 
