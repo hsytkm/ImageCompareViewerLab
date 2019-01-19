@@ -70,6 +70,7 @@
     <Compile Include="Drawing\PixelReader2.cs" />
     <Compile Include="Drawing\PixelReader3.cs" />
     <Compile Include="Drawing\PixelReader4.cs" />
+    <Compile Include="Drawing\PixelReader5.cs" />
     <Compile Include="IPixelReader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -24,11 +24,14 @@ namespace ImagePixels
 
             var readers = new IPixelReader[]
             {
-                new BitmapImageEx(ImagePath),
-                new PixelReader1(ImagePath),
-                new PixelReader2(ImagePath),
-                //new PixelReader3(ImagePath),   // バグってます
-                new PixelReader4(ImagePath),
+                new BitmapImageEx(ImagePath),   // 基準
+                //new PixelReader1(ImagePath),
+                new PixelReader2(ImagePath),    // 最速候補
+                //new PixelReader3(ImagePath),  // バグってます
+                //new PixelReader4(ImagePath),
+                //new PixelReader5(ImagePath, 2),   // core1*80%
+                new PixelReader5(ImagePath, 4),     // core1*71%
+                //new PixelReader5(ImagePath, 8),   // core1*70%
             };
 
             foreach (var reader in readers)
