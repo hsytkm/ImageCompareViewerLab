@@ -1,5 +1,7 @@
 # ImagePixels
 
+JPEG全画素のRGB平均値を求める検討リポジトリ
+
 ## 画素値の読み出し結果
 
 Start
@@ -17,4 +19,3 @@ Bitmap5(Bitmap2+Parallel4)         : Y=86.58 Time=00:00:07.3467357 Ratio=65.0%  
 Bitmap5(Bitmap2+Parallel8)         : Y=86.58 Time=00:00:07.4916510 Ratio=66.2%
 
 Finish
-
