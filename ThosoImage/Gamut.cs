@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ThosoImage.Gamut
+namespace ThosoImage
 {
-    public class GamutRgb
+    public class Gamut
     {
         #region RGB
 
@@ -83,13 +83,13 @@ namespace ThosoImage.Gamut
 
         #endregion
 
-        public GamutRgb(double r, double g, double b)
+        public Gamut(double r, double g, double b)
         {
             Rgb = (r, g, b);
             IntRgb = null;
         }
 
-        public GamutRgb(byte r, byte g, byte b)
+        public Gamut(byte r, byte g, byte b)
         {
             Rgb = (r, g, b);
             IntRgb = (r, g, b);

@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ThosoImage;
 using ThosoImage.Drawing;
-using ThosoImage.Gamut;
 
 namespace LibraryTestConsole
 {
