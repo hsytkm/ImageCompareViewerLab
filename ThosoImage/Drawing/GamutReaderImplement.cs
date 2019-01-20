@@ -1,12 +1,13 @@
-﻿using System.Drawing;
+﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Imaging;
-using ThosoImage;
 
 namespace ThosoImage.Drawing
 {
     internal static class GamutReaderImplement
     {
-        internal static Gamut ReadGamutRgb(this Bitmap bitmap, Rectangle rectInput)
+        // Rectangleの範囲制限
+        private static Rectangle ClipRectangle(Rectangle rectInput, int width, int height)
         {
             int clip(int val, int min, int max)
             {
@@ -15,38 +16,74 @@ namespace ThosoImage.Drawing
                 return val;
             }
 
-            // 範囲制限
-            var rectX = clip(rectInput.X, 0, bitmap.Width);
-            var rectY = clip(rectInput.Y, 0, bitmap.Height);
-            var rect = new Rectangle(rectX, rectY,
-                clip(rectInput.Width, 0, bitmap.Width - rectX),
-                clip(rectInput.Height, 0, bitmap.Height - rectY));
-
-            return ProcessUsingLockbitsAndUnsafe(bitmap, ref rect);
+            var rectX = clip(rectInput.X, 0, width);
+            var rectY = clip(rectInput.Y, 0, height);
+            return new Rectangle(rectX, rectY,
+                clip(rectInput.Width, 0, width - rectX),
+                clip(rectInput.Height, 0, height - rectY));
         }
 
-        private static Gamut ProcessUsingLockbitsAndUnsafe(Bitmap bitmap, ref Rectangle rect)
+        // 単一エリアの計算
+        internal static Gamut ReadGamutRgb(this Bitmap bitmap, Rectangle rectInput)
         {
             int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+            var bitmapData = bitmap.LockBits(
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadOnly, bitmap.PixelFormat);
 
+            try
+            {
+                // 範囲制限
+                var rect = ClipRectangle(rectInput, bitmap.Width, bitmap.Height);
+                return ProcessUsingLockbitsAndUnsafe(bitmapData, bytesPerPixel, ref rect);
+            }
+            finally
+            {
+                bitmap.UnlockBits(bitmapData);
+            }
+        }
+
+        // 複数エリアの計算
+        internal static IEnumerable<Gamut> ReadGamutRgb(this Bitmap bitmap, IReadOnlyList<Rectangle> rects)
+        {
+            int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
+            var bitmapData = bitmap.LockBits(
+                new Rectangle(0, 0, bitmap.Width, bitmap.Height),
+                ImageLockMode.ReadOnly, bitmap.PixelFormat);
+
+            try
+            {
+                foreach (var rectInput in rects)
+                {
+                    var rect = ClipRectangle(rectInput, bitmap.Width, bitmap.Height);
+                    yield return ProcessUsingLockbitsAndUnsafe(bitmapData, bytesPerPixel, ref rect);
+                }
+            }
+            finally {
+                bitmap.UnlockBits(bitmapData);
+            }
+        }
+
+        // 画素読み出し本体
+        private static Gamut ProcessUsingLockbitsAndUnsafe(BitmapData bitmapData, int bytesPerPixel, ref Rectangle rect)
+        {
             ulong sumB = 0, sumG = 0, sumR = 0;
             unsafe
             {
-                var bitmapData = bitmap.LockBits(rect, ImageLockMode.ReadOnly, bitmap.PixelFormat);
                 var stride = bitmapData.Stride;
                 var ptrSt = (byte*)bitmapData.Scan0 + rect.Y * stride;
                 var ptrEd = ptrSt + rect.Height * stride;
-                var xEd = rect.Width * bytesPerPixel;
+                var xSt = rect.X * bytesPerPixel;
+                var xEd = (rect.X + rect.Width) * bytesPerPixel;
                 for (byte* pixels = ptrSt; pixels < ptrEd; pixels += stride)
                 {
-                    for (int x = 0; x < xEd; x += bytesPerPixel)
+                    for (int x = xSt; x < xEd; x += bytesPerPixel)
                     {
                         sumB += pixels[x];
                         sumG += pixels[x + 1];
                         sumR += pixels[x + 2];
                     }
                 }
-                bitmap.UnlockBits(bitmapData);
             }
 
             var count = (double)(rect.Width * rect.Height);

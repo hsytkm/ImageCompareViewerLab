@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using ThosoImage;
 
 namespace ThosoImage.Drawing
 {

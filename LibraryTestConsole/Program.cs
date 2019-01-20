@@ -18,6 +18,14 @@ namespace LibraryTestConsole
             Console.WriteLine($"R={gamut.Rgb.R:f2} G={gamut.Rgb.G:f2} B={gamut.Rgb.B:f2}");
             Console.WriteLine($"Y={gamut.Y:f2}");
             Console.WriteLine($"L={gamut.Lab.L:f2} a={gamut.Lab.a:f2} b={gamut.Lab.b:f2}");
+            Console.WriteLine($"----------------");
+
+            // 9分割
+            var gamuts = path.Get9DivisionPixelAverage();
+            gamut = gamuts.AllAreaGamut;
+            Console.WriteLine($"R={gamut.Rgb.R:f2} G={gamut.Rgb.G:f2} B={gamut.Rgb.B:f2}");
+            Console.WriteLine($"Y={gamut.Y:f2}");
+            Console.WriteLine($"L={gamut.Lab.L:f2} a={gamut.Lab.a:f2} b={gamut.Lab.b:f2}");
 
             Console.ReadKey();
         }

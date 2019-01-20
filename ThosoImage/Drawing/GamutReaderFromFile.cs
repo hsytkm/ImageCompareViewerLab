@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using ThosoImage;
 
 namespace ThosoImage.Drawing
 {
@@ -40,24 +38,6 @@ namespace ThosoImage.Drawing
             }
             catch (Exception) { throw; }
         }
-
-        //private static IReadOnlyList<GamutRgb> GetPixelAverage(this string imagePath, IReadOnlyList<Rectangle> rects)
-        //{
-        //    if (!File.Exists(imagePath)) throw new FileNotFoundException();
-        //    try
-        //    {
-        //        var gamuts = new List<GamutRgb>(rects.Count);
-        //        using (var bitmap = new Bitmap(imagePath))
-        //        {
-        //            foreach(var rect in rects)
-        //            {
-        //                gamuts.Add(bitmap.ReadGamutRgb(rect));
-        //            }
-        //        }
-        //        return gamuts;
-        //    }
-        //    catch (Exception) { throw; }
-        //}
 
     }
 }
