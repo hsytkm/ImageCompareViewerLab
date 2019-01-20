@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Pixels", "01_Pixels", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePixels", "ImagePixels\ImagePixels.csproj", "{BB116C6B-8CFF-4204-B19F-5541AB534883}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThosoImage", "ThosoImage\ThosoImage.csproj", "{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThosoImage", "ThosoImage\ThosoImage.csproj", "{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryTestConsole", "LibraryTestConsole\LibraryTestConsole.csproj", "{4FAB9D38-EB02-49BB-BE66-F4AC507C16D4}"
 EndProject
@@ -18,9 +18,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{BB116C6B-8CFF-4204-B19F-5541AB534883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB116C6B-8CFF-4204-B19F-5541AB534883}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB116C6B-8CFF-4204-B19F-5541AB534883}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB116C6B-8CFF-4204-B19F-5541AB534883}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}.Release|Any CPU.ActiveCfg = Release|Any CPU
