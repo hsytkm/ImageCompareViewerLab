@@ -91,41 +91,105 @@ namespace ThosoImage.Wpf.Imaging
             {
                 if (pixelsByte <= 1)
                 {
-                    return GetAverage1ch(pixels, rect.Width * rect.Height, pixelsByte);
+                    return GetGamut1ch(pixels, rect.Width * rect.Height, pixelsByte);
                 }
                 else
                 {
-                    return GetAverage3ch(pixels, rect.Width * rect.Height, pixelsByte);
+                    return GetGamut3ch(pixels, rect.Width * rect.Height, pixelsByte);
                 }
             }
         }
 
+        #region 1ch
+
+        private static Gamut GetGamut1ch(byte[] pixels, int count, int pixelsByte)
+        {
+            var ave = ReadAverage1ch(pixels, count, pixelsByte);
+            var rms = ReadRms1ch(pixels, count, pixelsByte, ave);
+            return new Gamut(ave, rms);
+        }
+
         // 1ch画素の平均値を計算
-        private static Gamut GetAverage1ch(byte[] ps, int count, int pixByte)
+        private static double ReadAverage1ch(byte[] pixels, int count, int pixelsByte)
         {
             ulong sum = 0;
-            for (var i = 0; i < ps.Length; i += pixByte)
+            for (var i = 0; i < pixels.Length; i += pixelsByte)
             {
-                sum += ps[i];
+                sum += pixels[i];
             }
-            return new Gamut(sum / (double)count);
+            return sum / (double)count;
+        }
+
+        // ROIの二乗平均平方根
+        private static double
+            ReadRms1ch(byte[] pixels, int count, int pixelsByte, double ave)
+        {
+            double sum = 0D;
+            for (var i = 0; i < pixels.Length; i += pixelsByte)
+            {
+                var d = pixels[i];
+                sum += (d - ave) * (d - ave);
+            }
+            return sum / count;
+        }
+
+        #endregion
+
+        #region 3ch
+
+        private static Gamut GetGamut3ch(byte[] pixels, int count, int pixelsByte)
+        {
+            var ave = ReadRgbAverage3ch(pixels, count, pixelsByte);
+            var rms = ReadRgbyRms3ch(pixels, count, pixelsByte, ave);
+            return new Gamut(ave, rms);
         }
 
         // 3ch画素の平均値を計算
-        private static Gamut GetAverage3ch(byte[] ps, int count, int pixByte)
+        private static (double R, double G, double B)
+            ReadRgbAverage3ch(byte[] pixels, int count, int pixelsByte)
         {
             ulong sumB = 0, sumG = 0, sumR = 0;
-            for (var i = 0; i < ps.Length; i += pixByte)
+            for (var i = 0; i < pixels.Length; i += pixelsByte)
             {
-                sumB += ps[i];
-                sumG += ps[i + 1];
-                sumR += ps[i + 2];
+                sumB += pixels[i];
+                sumG += pixels[i + 1];
+                sumR += pixels[i + 2];
             }
             var aveR = sumR / (double)count;
             var aveG = sumG / (double)count;
             var aveB = sumB / (double)count;
-            return new Gamut(r: aveR, g: aveG, b: aveB);
+            return (aveR, aveG, aveB);
         }
+
+        // ROIの二乗平均平方根
+        private static (double R, double G, double B, double Y)
+            ReadRgbyRms3ch(byte[] pixels, int count, int pixelsByte, (double R, double G, double B) ave)
+        {
+            var aveY = Gamut.CalcY(r: ave.R, g: ave.G, b: ave.B);
+            double sumB = 0D, sumG = 0D, sumR = 0D, sumY = 0D;
+
+            for (var i = 0; i < pixels.Length; i += pixelsByte)
+            {
+                var b = pixels[i + 0];
+                var g = pixels[i + 1];
+                var r = pixels[i + 2];
+                var y = Gamut.CalcY(r: r, g: g, b: b);
+
+                // Math.Powで2乗するよりベタの方が速い
+                sumB += (b - ave.B) * (b - ave.B);
+                sumG += (g - ave.G) * (g - ave.G);
+                sumR += (r - ave.R) * (r - ave.R);
+                sumY += (y - aveY) * (y - aveY);
+            }
+
+            var rmsR = Math.Sqrt(sumR / count);
+            var rmsG = Math.Sqrt(sumG / count);
+            var rmsB = Math.Sqrt(sumB / count);
+            var rmsY = Math.Sqrt(sumY / count);
+            return (rmsR, rmsG, rmsB, rmsY);
+        }
+
+        #endregion
 
     }
 }

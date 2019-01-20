@@ -37,15 +37,22 @@ namespace ThosoImage
             {
                 if (_AllAreaGamut == null)
                 {
-                    double r = 0, g = 0, b = 0;
+                    double sumaver = 0, sumaveg = 0, sumaveb = 0;
+                    double sumrmsr = 0, sumrmsg = 0, sumrmsb = 0, sumrmsy = 0;
                     foreach (var gamut in Gamuts)
                     {
-                        r += gamut.Rgb.R;
-                        g += gamut.Rgb.G;
-                        b += gamut.Rgb.B;
+                        sumaver += gamut.Rgb.R;
+                        sumaveg += gamut.Rgb.G;
+                        sumaveb += gamut.Rgb.B;
+                        sumrmsr += gamut.Rms.R;
+                        sumrmsg += gamut.Rms.G;
+                        sumrmsb += gamut.Rms.B;
+                        sumrmsy += gamut.Rms.Y;
                     }
                     var count = Gamuts.Count;
-                    _AllAreaGamut = new Gamut(r: r / count, g: g / count, b: b / count);
+                    _AllAreaGamut = new Gamut(
+                        ((sumaver / count), (sumaveg / count), (sumaveb / count)),
+                        ((sumrmsr / count), (sumrmsg / count), (sumrmsb / count), (sumrmsy / count)));
                 }
                 return _AllAreaGamut;
             }

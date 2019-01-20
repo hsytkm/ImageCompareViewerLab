@@ -15,6 +15,12 @@ namespace ThosoImage
 
         #endregion
 
+        #region Rms
+
+        public (double R, double G, double B, double Y) Rms { get; }
+
+        #endregion
+
         #region YData
 
         private double? _Y = null;
@@ -22,11 +28,23 @@ namespace ThosoImage
         {
             get
             {
-                if (!_Y.HasValue)
-                    _Y = 0.299 * Rgb.R + 0.587 * Rgb.G + 0.114 * Rgb.B;
+                if (!_Y.HasValue) _Y = CalcY(Rgb);
                 return _Y.Value;
             }
         }
+
+        private static readonly double CoefR = 0.299;
+        private static readonly double CoefG = 0.587;
+        private static readonly double CoefB = 0.114;
+
+        public static double CalcY((double R, double G, double B) rgb) =>
+            CoefR * rgb.R + CoefG * rgb.G + CoefB * rgb.B;
+
+        public static double CalcY(double r, double g, double b) =>
+            CoefR * r + CoefG * g + CoefB * b;
+
+        public static double CalcY(byte r, byte g, byte b) =>
+            CoefR * r + CoefG * g + CoefB * b;
 
         #endregion
 
@@ -80,19 +98,37 @@ namespace ThosoImage
 
         #endregion
 
-        public Gamut(double r, double g, double b)
+        #region constractor double
+
+        public Gamut(double ave, double rms)
         {
-            Rgb = (r, g, b);
+            Rgb = (ave, ave, ave);
+            Rms = (rms, rms, rms, rms);
             IntRgb = null;      // 整数でないのでnull
         }
-        public Gamut(double d) : this(d, d, d) { }
 
+        // Rms付き
+        public Gamut((double r, double g, double b) rgb, (double r, double g, double b, double y) rms)
+        {
+            Rgb = rgb;
+            Rms = rms;
+            IntRgb = null;      // 整数でないのでnull
+        }
+
+        #endregion
+
+        #region constractor byte
+
+        // 1画素用
         public Gamut(byte r, byte g, byte b)
         {
-            Rgb = (r, g, b);    // 小数側も設定しておく
+            Rgb = (r, g, b);        // 小数側も設定しておく
+            Rms = (0, 0, 0, 0);     // 1画素なので計算不可
             IntRgb = (r, g, b);
         }
         public Gamut(byte d) : this(d, d, d) { }
+
+        #endregion
 
         public override string ToString()
         {
