@@ -29,7 +29,9 @@ namespace ImagePixels.Drawing
             }
         }
 
-        // .NETFramework4.6.1のSpanは高速でないとどこかで見た気がする。実際にイマイチやった
+        // Spanで実装したけどにunsafeを使っちゃってて、やりたいことができているか怪しい
+        // unsafe直読みより早くなることはないのでイマイチそう
+        // .NETFramework4.6.1のSpanは高速でないとどこかで見た気がする。
         private static (double R, double G, double B)
             ProcessUsingLockbitsAndSpan(Bitmap processedBitmap)
         {
