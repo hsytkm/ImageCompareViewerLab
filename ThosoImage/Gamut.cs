@@ -17,6 +17,8 @@ namespace ThosoImage
 
         #region Rms
 
+        // 二乗平均平方根(root mean square)
+        // 1画素なら全て0が入る
         public (double R, double G, double B, double Y) Rms { get; }
 
         #endregion
@@ -100,20 +102,17 @@ namespace ThosoImage
 
         #region constractor double
 
-        public Gamut(double ave, double rms)
-        {
-            Rgb = (ave, ave, ave);
-            Rms = (rms, rms, rms, rms);
-            IntRgb = null;      // 整数でないのでnull
-        }
-
         // Rms付き
-        public Gamut((double r, double g, double b) rgb, (double r, double g, double b, double y) rms)
+        public Gamut(
+            (double r, double g, double b) rgb,
+            (double r, double g, double b, double y) rms)
         {
             Rgb = rgb;
             Rms = rms;
             IntRgb = null;      // 整数でないのでnull
         }
+        public Gamut(double ave, double rms) :
+            this((ave, ave, ave), (rms, rms, rms, rms)) { }
 
         #endregion
 
