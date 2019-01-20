@@ -1,23 +1,20 @@
-﻿using ImagePixels.Common;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using ThosoImage.Gamut;
 
-namespace ImagePixels.Drawing
+namespace ThosoImage.Drawing
 {
-    // Fast Image Processing in C# http://csharpexamples.com/fast-image-processing-c/
-    class PixelReader2 : IPixelReader
+    public class PixelReader
     {
-        public string Name { get; } = "Bitmap2(Lockbits&Unsafe)";
-
         private readonly string ImagePath;
 
-        public PixelReader2(string imagePath)
+        public PixelReader(string imagePath)
         {
             ImagePath = imagePath;
         }
 
-        public double GetAverageY()
+        public GamutRgb GetAllPixelAverage()
         {
             var imagePath = ImagePath;
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
@@ -25,13 +22,11 @@ namespace ImagePixels.Drawing
             using (var bitmap = new Bitmap(imagePath))
             {
                 var rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-                var (R, G, B) = ProcessUsingLockbitsAndUnsafe(bitmap, ref rect);
-                return Gamut.GetY(R, G, B);
+                return ProcessUsingLockbitsAndUnsafe(bitmap, ref rect);
             }
         }
 
-        private static (double R, double G, double B)
-            ProcessUsingLockbitsAndUnsafe(Bitmap bitmap, ref Rectangle rect)
+        private static GamutRgb ProcessUsingLockbitsAndUnsafe(Bitmap bitmap, ref Rectangle rect)
         {
             int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
             var bitmapData = bitmap.LockBits(rect, ImageLockMode.ReadOnly, bitmap.PixelFormat);
@@ -60,7 +55,7 @@ namespace ImagePixels.Drawing
             var aveR = sumR / count;
             var aveG = sumG / count;
             var aveB = sumB / count;
-            return (aveR, aveG, aveB);
+            return new GamutRgb(aveR, aveG, aveB);
         }
 
     }

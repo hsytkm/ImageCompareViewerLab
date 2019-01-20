@@ -10,7 +10,7 @@ namespace ImagePixels
     class Program
     {
         private static readonly string ImagePath = @"C:\data\image1.jpg";
-        private static readonly int LoopCount = 30;
+        private static readonly int LoopCount = 10;
 
         static void Main(string[] args)
         {
@@ -30,13 +30,13 @@ namespace ImagePixels
             {
                 new BitmapImageEx(ImagePath),   // 基準
                 new BitmapImageEx(ImagePath),   // 基準(2回目の方がちょい早い気がする)
-                new PixelReader1(ImagePath),    // 
+                //new PixelReader1(ImagePath),    // 
                 new PixelReader2(ImagePath),    // 最速候補
-                new PixelReader3(ImagePath),    // バグってます
-                new PixelReader4(ImagePath),    // 
-                new PixelReader5(ImagePath, 2), // core1*80%
-                new PixelReader5(ImagePath, 4), // core1*71%
-                new PixelReader5(ImagePath, 8), // core1*70%
+                //new PixelReader3(ImagePath),    // バグってます
+                //new PixelReader4(ImagePath),    // 
+                //new PixelReader5(ImagePath, 2), // core1*80%
+                //new PixelReader5(ImagePath, 4), // core1*71%
+                //new PixelReader5(ImagePath, 8), // core1*70%
             };
 
             foreach (var reader in readers)
