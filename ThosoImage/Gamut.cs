@@ -41,9 +41,6 @@ namespace ThosoImage
                 return _Lab.Value;
             }
         }
-        //public double LabL => Lab.L;
-        //public double Laba => Lab.a;
-        //public double Labb => Lab.b;
 
         /// <summary>
         /// RGBからLabを計算(Web拾い版) これが正しいか不明…
@@ -88,12 +85,14 @@ namespace ThosoImage
             Rgb = (r, g, b);
             IntRgb = null;
         }
+        public Gamut(double d) : this(d, d, d) { }
 
         public Gamut(byte r, byte g, byte b)
         {
             Rgb = (r, g, b);
             IntRgb = (r, g, b);
         }
+        public Gamut(byte d) : this(d, d, d) { }
 
         public override string ToString()
         {

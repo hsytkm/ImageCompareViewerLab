@@ -15,12 +15,11 @@ namespace ThosoImage.Drawing
                 if (val >= max) return max;
                 return val;
             }
-
             var rectX = clip(rectInput.X, 0, width);
             var rectY = clip(rectInput.Y, 0, height);
             return new Rectangle(rectX, rectY,
-                clip(rectInput.Width, 0, width - rectX),
-                clip(rectInput.Height, 0, height - rectY));
+                clip(rectInput.Width, 1, width - rectX),
+                clip(rectInput.Height, 1, height - rectY));
         }
 
         // 単一エリアの計算
