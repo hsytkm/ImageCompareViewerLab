@@ -16,18 +16,41 @@ namespace ThosoImage.Drawing
 
         public GamutRgb GetAllPixelAverage()
         {
+            var rect = new Rectangle(0, 0, int.MaxValue, int.MaxValue);
+            return GetAllPixelAverage(ref rect);
+        }
+
+        public GamutRgb GetAllPixelAverage(int x, int y, int width, int height)
+        {
+            var rect = new Rectangle(x, y, width, height);
+            return GetAllPixelAverage(ref rect);
+        }
+
+        public GamutRgb GetAllPixelAverage(ref Rectangle rect)
+        {
             var imagePath = ImagePath;
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
-
             using (var bitmap = new Bitmap(imagePath))
             {
-                var rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
                 return ProcessUsingLockbitsAndUnsafe(bitmap, ref rect);
             }
         }
 
-        private static GamutRgb ProcessUsingLockbitsAndUnsafe(Bitmap bitmap, ref Rectangle rect)
+        private static GamutRgb ProcessUsingLockbitsAndUnsafe(Bitmap bitmap, ref Rectangle rectInput)
         {
+            int clip(int val, int min, int max)
+            {
+                if (val <= min) return min;
+                if (val >= max) return max;
+                return val;
+            }
+
+            var rectX = clip(rectInput.X, 0, bitmap.Width);
+            var rectY = clip(rectInput.Y, 0, bitmap.Height);
+            var rect = new Rectangle(rectX, rectY,
+                clip(rectInput.Width, 0, bitmap.Width - rectX),
+                clip(rectInput.Height, 0, bitmap.Height - rectY));
+
             int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
             var bitmapData = bitmap.LockBits(rect, ImageLockMode.ReadOnly, bitmap.PixelFormat);
             var stride = bitmapData.Stride;
