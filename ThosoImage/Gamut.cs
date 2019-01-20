@@ -83,13 +83,13 @@ namespace ThosoImage
         public Gamut(double r, double g, double b)
         {
             Rgb = (r, g, b);
-            IntRgb = null;
+            IntRgb = null;      // 整数でないのでnull
         }
         public Gamut(double d) : this(d, d, d) { }
 
         public Gamut(byte r, byte g, byte b)
         {
-            Rgb = (r, g, b);
+            Rgb = (r, g, b);    // 小数側も設定しておく
             IntRgb = (r, g, b);
         }
         public Gamut(byte d) : this(d, d, d) { }
