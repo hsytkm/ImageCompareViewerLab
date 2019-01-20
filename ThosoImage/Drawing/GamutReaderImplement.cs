@@ -89,7 +89,7 @@ namespace ThosoImage.Drawing
             var aveR = sumR / count;
             var aveG = sumG / count;
             var aveB = sumB / count;
-            return new Gamut(aveR, aveG, aveB);
+            return new Gamut(r: aveR, g: aveG, b: aveB);
         }
 
     }

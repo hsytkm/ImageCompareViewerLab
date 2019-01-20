@@ -45,7 +45,7 @@ namespace ThosoImage
                         b += gamut.Rgb.B;
                     }
                     var count = Gamuts.Count;
-                    _AllAreaGamut = new Gamut(r / count, g / count, b / count);
+                    _AllAreaGamut = new Gamut(r: r / count, g: g / count, b: b / count);
                 }
                 return _AllAreaGamut;
             }

@@ -46,8 +46,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Imaging\BitmapImageEx.cs" />
-    <Compile Include="Imaging\BitmapImageReader.cs" />
+    <Compile Include="Imaging\BitmapImageReaderImplement.cs" />
+    <Compile Include="Imaging\BitmapImageReaderFromFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Imaging
 {
-    public static class BitmapImageEx
+    public static class BitmapImageReaderImplement
     {
         // Rectの範囲制限
         private static Int32Rect ClipRect(ref Int32Rect rectInput, int width, int height)
@@ -23,8 +23,37 @@ namespace ThosoImage.Wpf.Imaging
                 clip(rectInput.Height, 1, height - rectY));
         }
 
+
+        /// <summary>
+        /// 指定1画素のBGRを返す
+        /// </summary>
+        /// <param name="bitmap">対象画像</param>
+        /// <param name="pointRate">対象画素(割合)</param>
+        /// <returns>画素値(BGR)</returns>
+        public static Gamut ReadPixelsAverage(this BitmapSource bitmap, Point pointRate)
+        {
+            int rectX = (int)Math.Round(pointRate.X * bitmap.PixelWidth);
+            int rectY = (int)Math.Round(pointRate.Y * bitmap.PixelHeight);
+            return bitmap.GetPixelAverage(new Int32Rect(rectX, rectY, 1, 1));
+        }
+
+        /// <summary>
+        /// 指定矩形のBGRを返す
+        /// </summary>
+        /// <param name="bitmap">対象画像</param>
+        /// <param name="rectRate">対象領域(割合)</param>
+        /// <returns>画素値(BGR)</returns>
+        public static Gamut ReadPixelsAverage(this BitmapSource bitmap, Rect rectRate)
+        {
+            int rectX = (int)Math.Round(rectRate.X * bitmap.PixelWidth);
+            int rectY = (int)Math.Round(rectRate.Y * bitmap.PixelHeight);
+            int rectWidth = (int)Math.Round(rectRate.Width * bitmap.PixelWidth);
+            int rectHeight = (int)Math.Round(rectRate.Height * bitmap.PixelHeight);
+            return bitmap.GetPixelAverage(new Int32Rect(rectX, rectY, rectWidth, rectHeight));
+        }
+
         // 指定領域の平均輝度の読み込み
-        public static Gamut GetPixelAverage(this BitmapSource bitmap, Int32Rect rectInput)
+        private static Gamut GetPixelAverage(this BitmapSource bitmap, Int32Rect rectInput)
         {
             if (bitmap == null) throw new ArgumentNullException(nameof(bitmap));
             if (rectInput.Width * rectInput.Height == 0) throw new ArgumentException("RectArea");
@@ -95,7 +124,7 @@ namespace ThosoImage.Wpf.Imaging
             var aveR = sumR / (double)count;
             var aveG = sumG / (double)count;
             var aveB = sumB / (double)count;
-            return new Gamut(aveR, aveG, aveB);
+            return new Gamut(r: aveR, g: aveG, b: aveB);
         }
 
     }

@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Imaging
 {
-    public static class BitmapImageReader
+    public static class BitmapImageReaderFromFile
     {
         // 画像の読み出し
         public static BitmapImage ToBitmapImage(this string imagePath, bool isCanGC = true)
