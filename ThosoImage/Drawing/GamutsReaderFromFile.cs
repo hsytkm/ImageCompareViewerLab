@@ -44,5 +44,28 @@ namespace ThosoImage.Drawing
             catch (Exception) { throw; }
         }
 
+        // 49分割の中央部のみ
+        public static Gamut Get49DivCenterPixelAverage(this string imagePath)
+        {
+            if (!File.Exists(imagePath)) throw new FileNotFoundException();
+            try
+            {
+                using (var bitmap = new Bitmap(imagePath))
+                {
+                    int div = 7;
+                    var divWidth = bitmap.Width / div;
+                    var divHeight = bitmap.Height / div;
+
+                    var rect = new Rectangle(
+                        divWidth * (div / 2),   //Floor
+                        divHeight * (div / 2),  //Floor
+                        divWidth, divHeight);
+
+                    return bitmap.ReadGamutRgb(rect);
+                }
+            }
+            catch (Exception) { throw; }
+        }
+
     }
 }
