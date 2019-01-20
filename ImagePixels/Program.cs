@@ -1,4 +1,5 @@
-﻿using ImagePixels.Drawing;
+﻿using ImagePixels.Common;
+using ImagePixels.Drawing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,15 +10,18 @@ namespace ImagePixels
     class Program
     {
         private static readonly string ImagePath = @"C:\data\image1.jpg";
+        private static readonly int LoopCount = 10;
 
         static void Main(string[] args)
         {
-            var path = ImagePath;
-            if (!File.Exists(path)) throw new Exception();
-
-            var count = 10;
+            var path = File.Exists(ImagePath) ? ImagePath : args[0];
+            if (!File.Exists(path)) throw new FileNotFoundException(path);
 
             Console.WriteLine("Start");
+            Console.WriteLine($"LoopCount: {LoopCount}");
+            var (Width, Height) = path.GetImageSize();
+            Console.WriteLine($"ImageSize: W={Width} H={Height}");
+
             var times = new List<(string name, double Y, TimeSpan ts)>();
             var sw = new Stopwatch();
             double y = 0d;
@@ -25,6 +29,7 @@ namespace ImagePixels
             var readers = new IPixelReader[]
             {
                 new BitmapImageEx(ImagePath),   // 基準
+                new BitmapImageEx(ImagePath),   // 基準(2回目の方がちょい早い気がする)
                 //new PixelReader1(ImagePath),
                 new PixelReader2(ImagePath),    // 最速候補
                 //new PixelReader3(ImagePath),  // バグってます
@@ -38,7 +43,7 @@ namespace ImagePixels
             {
                 Console.WriteLine($"Start: {reader.Name}");
                 sw.Restart();
-                for (var i = 0; i < count; i++)
+                for (var i = 0; i < LoopCount; i++)
                 {
                     y = reader.GetAverageY();
                 }
@@ -46,7 +51,7 @@ namespace ImagePixels
             }
 
             // 処理時間の出力
-            var baseTime = times[0].ts.TotalMilliseconds;
+            var baseTime = times[1].ts.TotalMilliseconds;   // 2回目基準にする
             foreach (var (name, Y, ts) in times)
             {
                 Console.WriteLine($"{name,-35}: Y={Y:f2} Time={ts} Ratio={(ts.TotalMilliseconds / baseTime * 100):f1}%");

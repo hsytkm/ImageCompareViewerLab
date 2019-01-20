@@ -64,6 +64,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ImageReader.cs" />
     <Compile Include="Drawing\PixelReader0.cs" />
     <Compile Include="Drawing\PixelReader1.cs" />
     <Compile Include="Common\Gamut.cs" />
