@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drawing\BitmapImageReaderFromBitmap.cs" />
-    <Compile Include="Imaging\BitmapImageToFile.cs" />
+    <Compile Include="Imaging\BitmapSourceToFile.cs" />
     <Compile Include="Imaging\BitmapSourceReadImplement.cs" />
     <Compile Include="Imaging\BitmapImageReaderFromFile.cs" />
     <Compile Include="Imaging\BitmapSourceRotate.cs" />

@@ -45,9 +45,6 @@ namespace ThosoImage
         public static double CalcY(double r, double g, double b) =>
             CoefR * r + CoefG * g + CoefB * b;
 
-        public static double CalcY(byte r, byte g, byte b) =>
-            CoefR * r + CoefG * g + CoefB * b;
-
         #endregion
 
         #region Lab

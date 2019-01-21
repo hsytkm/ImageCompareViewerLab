@@ -4,7 +4,7 @@ using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Imaging
 {
-    public static class BitmapImageToFile
+    public static class BitmapSourceToFile
     {
         // JPEG画質(Min=1, Max=100)
         private const int DefaultQualityLevel = 100;
