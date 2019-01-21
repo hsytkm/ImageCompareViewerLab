@@ -48,6 +48,9 @@
   <ItemGroup>
     <Compile Include="Imaging\BitmapImageReaderImplement.cs" />
     <Compile Include="Imaging\BitmapImageReaderFromFile.cs" />
+    <Compile Include="Imaging\BitmapSourceRotate.cs" />
+    <Compile Include="Imaging\BitmapSourceThumbnail.cs" />
+    <Compile Include="Imaging\BitmapSourceGray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
