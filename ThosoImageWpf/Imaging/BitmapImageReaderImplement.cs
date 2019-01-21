@@ -25,12 +25,12 @@ namespace ThosoImage.Wpf.Imaging
 
 
         /// <summary>
-        /// 指定1画素のBGRを返す
+        /// 指定1画素のGamutを返す
         /// </summary>
         /// <param name="bitmap">対象画像</param>
         /// <param name="pointRate">対象画素(割合)</param>
         /// <returns>画素値(BGR)</returns>
-        public static Gamut ReadPixelsAverage(this BitmapSource bitmap, Point pointRate)
+        public static Gamut ReadPixel(this BitmapSource bitmap, Point pointRate)
         {
             int rectX = (int)Math.Round(pointRate.X * bitmap.PixelWidth);
             int rectY = (int)Math.Round(pointRate.Y * bitmap.PixelHeight);
@@ -38,7 +38,7 @@ namespace ThosoImage.Wpf.Imaging
         }
 
         /// <summary>
-        /// 指定矩形のBGRを返す
+        /// 指定矩形のGamutを返す
         /// </summary>
         /// <param name="bitmap">対象画像</param>
         /// <param name="rectRate">対象領域(割合)</param>
@@ -78,25 +78,14 @@ namespace ThosoImage.Wpf.Imaging
             // 1画素(カーソル用)の計算
             if (rectArea == 1)
             {
-                if (pixelsByte < 3)
-                {
-                    return new Gamut(pixels[0]);
-                }
-                else
-                {
-                    return new Gamut(r: pixels[2], g: pixels[1], b: pixels[0]);
-                }
+                if (pixelsByte < 3) return new Gamut(pixels[0]);
+                return new Gamut(r: pixels[2], g: pixels[1], b: pixels[0]);
             }
             else
             {
                 if (pixelsByte <= 1)
-                {
                     return GetGamut1ch(pixels, rect.Width * rect.Height, pixelsByte);
-                }
-                else
-                {
-                    return GetGamut3ch(pixels, rect.Width * rect.Height, pixelsByte);
-                }
+                return GetGamut3ch(pixels, rect.Width * rect.Height, pixelsByte);
             }
         }
 
@@ -121,14 +110,13 @@ namespace ThosoImage.Wpf.Imaging
         }
 
         // ROIの二乗平均平方根
-        private static double
-            ReadRms1ch(byte[] pixels, int count, int pixelsByte, double ave)
+        private static double ReadRms1ch(byte[] pixels, int count, int pixelsByte, double ave)
         {
             double sum = 0D;
             for (var i = 0; i < pixels.Length; i += pixelsByte)
             {
-                var d = pixels[i];
-                sum += (d - ave) * (d - ave);
+                var d = pixels[i] - ave;
+                sum += d * d;
             }
             return sum / count;
         }
@@ -170,7 +158,7 @@ namespace ThosoImage.Wpf.Imaging
 
             for (var i = 0; i < pixels.Length; i += pixelsByte)
             {
-                var b = pixels[i + 0];
+                var b = pixels[i];
                 var g = pixels[i + 1];
                 var r = pixels[i + 2];
                 var y = Gamut.CalcY(r: r, g: g, b: b);
