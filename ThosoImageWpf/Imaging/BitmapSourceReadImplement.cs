@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Imaging
 {
-    public static class BitmapImageReaderImplement
+    private static class BitmapSourceReadImplement
     {
         // Rectの範囲制限
         private static Int32Rect ClipRect(ref Int32Rect rectInput, int width, int height)
@@ -22,7 +22,6 @@ namespace ThosoImage.Wpf.Imaging
                 clip(rectInput.Width, 1, width - rectX),
                 clip(rectInput.Height, 1, height - rectY));
         }
-
 
         /// <summary>
         /// 指定1画素のGamutを返す

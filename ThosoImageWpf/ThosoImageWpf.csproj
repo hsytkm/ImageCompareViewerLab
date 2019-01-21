@@ -46,7 +46,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Imaging\BitmapImageReaderImplement.cs" />
+    <Compile Include="Drawing\BitmapImageReaderFromBitmap.cs" />
+    <Compile Include="Imaging\BitmapImageToFile.cs" />
+    <Compile Include="Imaging\BitmapSourceReadImplement.cs" />
     <Compile Include="Imaging\BitmapImageReaderFromFile.cs" />
     <Compile Include="Imaging\BitmapSourceRotate.cs" />
     <Compile Include="Imaging\BitmapSourceThumbnail.cs" />

@@ -7,7 +7,12 @@ namespace ThosoImage.Wpf.Imaging
 {
     public static class BitmapImageReaderFromFile
     {
-        // 画像の読み出し
+        /// <summary>
+        /// ファイルからBitmapImageを読み出す
+        /// </summary>
+        /// <param name="imagePath">ファイルPATH</param>
+        /// <param name="isCanGC">メモリ不足時のGC実行可否</param>
+        /// <returns>BitmapImage</returns>
         public static BitmapImage ToBitmapImage(this string imagePath, bool isCanGC = true)
         {
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
