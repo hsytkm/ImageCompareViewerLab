@@ -10,7 +10,7 @@ namespace ThosoImage.Wpf.Imaging
         private const int DefaultQualityLevel = 100;
 
         /// <summary>
-        /// BitmapSourceを保存する
+        /// BitmapSourceをファイルに保存する
         /// </summary>
         /// <param name="bitmap">保存する画像</param>
         /// <param name="filePath">保存PATH</param>

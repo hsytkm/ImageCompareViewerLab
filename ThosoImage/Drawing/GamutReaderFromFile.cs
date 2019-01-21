@@ -6,28 +6,49 @@ namespace ThosoImage.Drawing
 {
     public static class GamutReaderFromFile
     {
+        /// <summary>
+        /// 引数画像の全画素の平均値を取得する
+        /// </summary>
+        /// <param name="imagePath">対象画像PATH</param>
+        /// <returns>Gamut</returns>
         public static Gamut GetAllPixelAverage(this string imagePath)
         {
             try
             {
                 var rect = new Rectangle(0, 0, int.MaxValue, int.MaxValue);
-                return imagePath.GetPixelAverage(rect);
+                return imagePath.GetPixelAverage(ref rect);
             }
             catch (Exception) { throw; }
         }
 
+        /// <summary>
+        /// 引数画像の全画素の平均値を取得する
+        /// </summary>
+        /// <param name="imagePath">対象画像PATH</param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns>Gamut</returns>
         public static Gamut GetPixelAverage(this string imagePath, int x, int y, int width, int height)
         {
             try
             {
                 var rect = new Rectangle(x, y, width, height);
-                return imagePath.GetPixelAverage(rect);
+                return imagePath.GetPixelAverage(ref rect);
             }
             catch (Exception) { throw; }
         }
 
-        private static Gamut GetPixelAverage(this string imagePath, Rectangle rect)
+        /// <summary>
+        /// 引数画像の全画素の平均値を取得する
+        /// </summary>
+        /// <param name="imagePath">対象画像PATH</param>
+        /// <param name="rect"></param>
+        /// <returns>Gamut</returns>
+        private static Gamut GetPixelAverage(this string imagePath, ref Rectangle rect)
         {
+            if (imagePath == null) throw new ArgumentNullException();
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
             try
             {

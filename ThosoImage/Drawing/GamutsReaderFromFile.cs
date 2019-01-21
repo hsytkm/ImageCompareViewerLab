@@ -8,9 +8,14 @@ namespace ThosoImage.Drawing
 {
     public static class GamutsReaderFromFile
     {
-        // 9分割
+        /// <summary>
+        /// 引数画像の9分割Gamutを求める
+        /// </summary>
+        /// <param name="imagePath">対象画像PATH</param>
+        /// <returns>9分割Gamut</returns>
         public static Gamut9d Get9DivisionPixelAverage(this string imagePath)
         {
+            if (imagePath == null) throw new ArgumentNullException();
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
             try
             {
@@ -44,9 +49,14 @@ namespace ThosoImage.Drawing
             catch (Exception) { throw; }
         }
 
-        // 49分割の中央部のみ
+        /// <summary>
+        /// 49分割の中央部のみ
+        /// </summary>
+        /// <param name="imagePath">対象画像PATH</param>
+        /// <returns>9分割Gamut</returns>
         public static Gamut Get49DivCenterPixelAverage(this string imagePath)
         {
+            if (imagePath == null) throw new ArgumentNullException();
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
             try
             {

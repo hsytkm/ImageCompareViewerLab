@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Imaging
 {
-    private static class BitmapSourceReadImplement
+    static class BitmapSourceReadImplement
     {
         // Rectの範囲制限
         private static Int32Rect ClipRect(ref Int32Rect rectInput, int width, int height)

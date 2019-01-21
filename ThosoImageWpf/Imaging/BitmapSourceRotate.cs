@@ -7,8 +7,11 @@ namespace ThosoImage.Wpf.Imaging
     public static class BitmapSourceRotate
     {
         /// <summary>
-        /// 画像の回転
+        /// 回転した画像を取得する
         /// </summary>
+        /// <param name="source">基準画像</param>
+        /// <param name="angle">回転角</param>
+        /// <returns>回転した画像</returns>
         public static BitmapSource Rotation(this BitmapSource source, int angle)
         {
             if (source == null) throw new ArgumentNullException();

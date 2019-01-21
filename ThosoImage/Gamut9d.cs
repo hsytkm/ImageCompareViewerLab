@@ -12,7 +12,10 @@ namespace ThosoImage
             Gamuts = gamuts;
         }
 
-        // Gamutを名前付きで返す
+        /// <summary>
+        /// 9分割Gamutを名前付きで返す
+        /// </summary>
+        /// <returns>名前付きGamut</returns>
         public IEnumerable<(string Name, Gamut Gamut)> GetGamuts()
         {
             var names = new[]
@@ -31,6 +34,10 @@ namespace ThosoImage
         #region 全画面平均
 
         private Gamut _AllAreaGamut = null;
+
+        /// <summary>
+        /// 全画面Gamut(9分割領域から求めるので厳密には精度出ない)
+        /// </summary>
         public Gamut AllAreaGamut
         {
             get
