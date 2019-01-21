@@ -11,7 +11,10 @@ namespace ThosoImage
 
         // 整数(1画素から求めたデータなら設定される)
         private (byte R, byte G, byte B)? IntRgb { get; }
+
         public bool IsInteger { get => IntRgb.HasValue; }
+
+        private string RgbFormat { get => IntRgb.HasValue ? "f0" : "f2"; }
 
         #endregion
 
@@ -128,9 +131,8 @@ namespace ThosoImage
 
         public override string ToString()
         {
-            return IntRgb.HasValue ?
-                $"R={IntRgb.Value.R} G={IntRgb.Value.G} B={IntRgb.Value.B}" :
-                $"R={Rgb.R:f2} G={Rgb.G:f2} B={Rgb.B:f2}";
+            var format = RgbFormat;
+            return $"R={Rgb.R.ToString(format)} G={Rgb.G.ToString(format)} B={Rgb.B.ToString(format)}";
         }
 
     }

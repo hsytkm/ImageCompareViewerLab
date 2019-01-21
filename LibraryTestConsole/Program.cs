@@ -15,6 +15,7 @@ namespace LibraryTestConsole
 
             // 画素平均
             var gamut = path.GetAllPixelAverage();
+            Console.WriteLine(gamut);
             Console.WriteLine($"R={gamut.Rgb.R:f2} G={gamut.Rgb.G:f2} B={gamut.Rgb.B:f2}");
             Console.WriteLine($"Y={gamut.Y:f2}");
             Console.WriteLine($"L={gamut.Lab.L:f2} a={gamut.Lab.a:f2} b={gamut.Lab.b:f2}");
