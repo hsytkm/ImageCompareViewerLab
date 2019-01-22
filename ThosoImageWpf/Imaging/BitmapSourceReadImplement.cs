@@ -55,7 +55,7 @@ namespace ThosoImage.Wpf.Imaging
         // 指定領域の平均輝度の読み込み
         private static Gamut GetPixelAverage(this BitmapSource bitmap, Int32Rect rectInput)
         {
-            if (bitmap == null) throw new ArgumentNullException(nameof(bitmap));
+            if (bitmap is null) throw new ArgumentNullException(nameof(bitmap));
             if (rectInput.Width * rectInput.Height == 0) throw new ArgumentException("RectArea");
 
             int pixelsByte = (bitmap.Format.BitsPerPixel + 7) / 8; // bit→Byte変換

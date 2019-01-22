@@ -17,7 +17,7 @@ namespace ThosoImage.Wpf.Imaging
         /// <returns></returns>
         public static BitmapSource LoadThumbnail(this string imagePath, double width = DefaultThumbnailWidth)
         {
-            if (imagePath == null) throw new ArgumentNullException();
+            if (imagePath is null) throw new ArgumentNullException();
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
 
             BitmapSource bmp = null;

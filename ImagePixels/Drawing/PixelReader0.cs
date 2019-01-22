@@ -24,7 +24,7 @@ namespace ImagePixels.Drawing
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
 
             var bmp = ToBitmapImage(imagePath);
-            if (bmp == null) throw new ArgumentNullException(nameof(bmp));
+            if (bmp is null) throw new ArgumentNullException(nameof(bmp));
 
             var rect = new Int32Rect(0, 0, bmp.PixelWidth, bmp.PixelHeight);
             return GetAverageY(bmp, ref rect);
@@ -70,7 +70,7 @@ namespace ImagePixels.Drawing
         // 指定領域の平均輝度の読み込み
         private static double GetAverageY(BitmapImage bmp, ref Int32Rect rect)
         {
-            if (bmp == null) throw new ArgumentNullException(nameof(bmp));
+            if (bmp is null) throw new ArgumentNullException(nameof(bmp));
             if (rect.Width * rect.Height == 0) throw new ArgumentException("RectArea");
 
             int pixelsByte = (bmp.Format.BitsPerPixel + 7) / 8; // bit→Byte変換

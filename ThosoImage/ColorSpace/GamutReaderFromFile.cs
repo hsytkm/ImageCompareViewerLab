@@ -48,7 +48,7 @@ namespace ThosoImage.ColorSpace
         /// <returns>Gamut</returns>
         private static Gamut GetPixelAverage(this string imagePath, ref Rectangle rect)
         {
-            if (imagePath == null) throw new ArgumentNullException();
+            if (imagePath is null) throw new ArgumentNullException();
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
             try
             {

@@ -15,7 +15,7 @@ namespace ThosoImage.ColorSpace
         /// <returns>9分割Gamut</returns>
         public static Gamut9d Get9DivisionPixelAverage(this string imagePath)
         {
-            if (imagePath == null) throw new ArgumentNullException();
+            if (imagePath is null) throw new ArgumentNullException();
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
             try
             {
@@ -56,7 +56,7 @@ namespace ThosoImage.ColorSpace
         /// <returns>9分割Gamut</returns>
         public static Gamut Get49DivCenterPixelAverage(this string imagePath)
         {
-            if (imagePath == null) throw new ArgumentNullException();
+            if (imagePath is null) throw new ArgumentNullException();
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
             try
             {

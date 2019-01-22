@@ -42,7 +42,7 @@ namespace ThosoImage.ColorSpace
         {
             get
             {
-                if (_AllAreaGamut == null)
+                if (_AllAreaGamut is null)
                 {
                     double sumaver = 0, sumaveg = 0, sumaveb = 0;
                     double sumrmsr = 0, sumrmsg = 0, sumrmsb = 0, sumrmsy = 0;

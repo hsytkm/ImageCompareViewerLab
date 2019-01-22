@@ -1,14 +1,13 @@
 ﻿using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Drawing
 {
     public static class BitmapImageReaderFromBitmap
     {
-#if false   // Drawingを参照するのイヤなので無効化
-
         /// <summary>
         /// BitmapをBitmapImageに変換
         /// </summary>
@@ -16,7 +15,7 @@ namespace ThosoImage.Wpf.Drawing
         /// <returns>BitmapImage画像</returns>
         public static BitmapImage ToBitmapImage(this Bitmap bitmap)
         {
-            if (bitmap == null) throw new ArgumentNullException();
+            if (bitmap is null) throw new ArgumentNullException();
 
             var image = new BitmapImage();
             using (var ms = new MemoryStream())
@@ -32,7 +31,6 @@ namespace ThosoImage.Wpf.Drawing
             }
             return image;
         }
-#endif
 
     }
 }
