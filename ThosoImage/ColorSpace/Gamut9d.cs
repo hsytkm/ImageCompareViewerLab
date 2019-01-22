@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ThosoImage
+namespace ThosoImage.ColorSpace
 {
     public class Gamut9d
     {

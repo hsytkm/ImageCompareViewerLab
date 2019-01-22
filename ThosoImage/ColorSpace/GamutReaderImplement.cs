@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 
-namespace ThosoImage.Drawing
+namespace ThosoImage.ColorSpace
 {
     internal static class GamutReaderImplement
     {

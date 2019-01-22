@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.IO;
 
-namespace ThosoImage.Drawing
+namespace ThosoImage.ColorSpace
 {
     public static class GamutReaderFromFile
     {
