@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using ThosoImage.Drawing;
+using ThosoImage.ColorSpace;
 
 namespace LibraryTestConsole
 {
