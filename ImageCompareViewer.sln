@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThosoImageWpf", "ThosoImage
 		{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04} = {9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThosoImageMeta", "ThosoImageMeta\ThosoImageMeta.csproj", "{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,10 @@ Global
 		{023355A3-8C55-49EF-A5A1-D81DEFFE72A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{023355A3-8C55-49EF-A5A1-D81DEFFE72A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{023355A3-8C55-49EF-A5A1-D81DEFFE72A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
