@@ -31,6 +31,9 @@ namespace ThosoImage.Drawing
         /// <param name="thickness">重畳する図形の太さ</param>
         public static Bitmap GetPolygonOverlapBitmap(this Bitmap source, Point[] points, Color color, double thickness)
         {
+            if (source is null) throw new ArgumentNullException();
+            if (points is null) throw new ArgumentNullException();
+
             var canvas = new Bitmap(source.Width, source.Height);
 
             using (var g = Graphics.FromImage(canvas))

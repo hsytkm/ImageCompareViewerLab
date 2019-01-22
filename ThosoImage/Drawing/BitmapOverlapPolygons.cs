@@ -33,6 +33,9 @@ namespace ThosoImage.Drawing
         public static Bitmap GetPolygonOverlapBitmap(this Bitmap source,
             IReadOnlyList<Point[]> pointsList, Color color, double thickness)
         {
+            if (source is null) throw new ArgumentNullException();
+            if (pointsList is null) throw new ArgumentNullException();
+
             var canvas = new Bitmap(source.Width, source.Height);
 
             using (var g = Graphics.FromImage(canvas))

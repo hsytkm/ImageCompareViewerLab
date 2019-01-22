@@ -15,6 +15,7 @@ namespace ThosoImage.Wpf.Imaging
         /// <returns>BitmapImage</returns>
         public static BitmapImage ToBitmapImage(this string imagePath, bool isCanGC = true)
         {
+            if (imagePath is null) throw new ArgumentNullException();
             if (!File.Exists(imagePath)) throw new FileNotFoundException();
 
             var bi = new BitmapImage();

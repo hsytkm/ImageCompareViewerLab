@@ -15,8 +15,9 @@ namespace ThosoImage.ColorSpace
         {
             try
             {
+                if (imagePath is null) throw new ArgumentNullException();
                 var rect = new Rectangle(0, 0, int.MaxValue, int.MaxValue);
-                return imagePath.GetPixelAverage(ref rect);
+                return GetPixelAverage(imagePath, ref rect);
             }
             catch (Exception) { throw; }
         }
@@ -35,7 +36,7 @@ namespace ThosoImage.ColorSpace
             try
             {
                 var rect = new Rectangle(x, y, width, height);
-                return imagePath.GetPixelAverage(ref rect);
+                return GetPixelAverage(imagePath, ref rect);
             }
             catch (Exception) { throw; }
         }

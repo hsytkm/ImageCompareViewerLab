@@ -26,6 +26,8 @@ namespace ThosoImage.ColorSpace
         // 単一エリアの計算
         internal static Gamut ReadGamutRgb(this Bitmap bitmap, Rectangle rectInput)
         {
+            if (bitmap is null) throw new ArgumentNullException();
+
             int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
             var bitmapData = bitmap.LockBits(
                 new Rectangle(0, 0, bitmap.Width, bitmap.Height),
