@@ -16,7 +16,6 @@ namespace ThosoImage.Extensions
         {
             if (sequence is null) throw new ArgumentNullException(nameof(sequence));
             if (action is null) throw new ArgumentNullException(nameof(action));
-
             foreach (T item in sequence)
                 action(item);
         }
@@ -30,7 +29,7 @@ namespace ThosoImage.Extensions
         /// <returns>SequenceWithIndex</returns>
         public static IEnumerable<(T item, int index)> WithIndex<T>(this IEnumerable<T> source)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (source is null) throw new ArgumentNullException(nameof(source));
             IEnumerable<(T item, int index)> impl()
             {
                 var i = 0;
@@ -51,7 +50,7 @@ namespace ThosoImage.Extensions
         /// <returns>SequenceWithIndex&Count</returns>
         public static IEnumerable<(T item, int index, int count)> WithRate<T>(this IEnumerable<T> source)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (source is null) throw new ArgumentNullException(nameof(source));
             IEnumerable<(T item, int index, int count)> impl()
             {
                 var count = source.Count();

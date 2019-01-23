@@ -32,11 +32,11 @@ namespace ThosoImage.Extensions
         public static T Limit<T>(this T val, T min, T max) where T : IComparable
         {
             if (0 > max.CompareTo(min)) throw new ArgumentException("Inverse(min>max)");
-            if (0 > val.CompareTo(min))
+            if (0 >= val.CompareTo(min))
             {
                 return min;
             }
-            else if (val.CompareTo(max) > 0)
+            else if (val.CompareTo(max) >= 0)
             {
                 return max;
             }
