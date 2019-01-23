@@ -51,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Drawing\BitmapImageReaderFromBitmap.cs" />
+    <Compile Include="Extensions\WindowsPointExtension.cs" />
+    <Compile Include="Extensions\WindowsRectExtension.cs" />
+    <Compile Include="Extensions\WindowsSizeExtension.cs" />
     <Compile Include="Imaging\BitmapSourceToFile.cs" />
     <Compile Include="Imaging\BitmapSourceReadImplement.cs" />
     <Compile Include="Imaging\BitmapImageReaderFromFile.cs" />
