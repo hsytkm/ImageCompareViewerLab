@@ -58,8 +58,10 @@ namespace PrismDropNavigation.TabItem.ViewModels
         // ナビゲーションが移ってきた時にコールされる
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
+            var message = "";
             if (navigationContext.Parameters["image0"] is string message0)
-                Message = message0;
+                message = message0;
+            Message = message;
         }
 
         #endregion

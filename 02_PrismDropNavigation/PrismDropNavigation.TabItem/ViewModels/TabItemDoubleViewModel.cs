@@ -63,7 +63,8 @@ namespace PrismDropNavigation.TabItem.ViewModels
                 messages.Add(message0);
             if (navigationContext.Parameters["image1"] is string message1)
                 messages.Add(message1);
-            Message = string.Join(" | ", messages);
+
+            Message = messages.Any() ? string.Join(" | ", messages) : "";
         }
 
         #endregion

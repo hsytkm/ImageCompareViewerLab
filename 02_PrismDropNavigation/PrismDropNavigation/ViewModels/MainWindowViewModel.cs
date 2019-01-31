@@ -11,6 +11,8 @@ namespace PrismDropNavigation.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
+        private static readonly int InitializeTabIndex = 1;     //0=Tab1
+
         private readonly IRegionManager _regionManager;
 
         private string _text = "Jonathan,Joseph,Jotaro";
@@ -20,6 +22,14 @@ namespace PrismDropNavigation.ViewModels
             set => SetProperty(ref _text, value);
         }
 
+        // TabItemsのView名(モジュール側と名前を揃えないとダメ)
+        private static readonly string[] TabItemViewNames = new[]
+        {
+            "TabItemSingle", "TabItemDouble"
+        };
+
+        public DelegateCommand InitializeCommand { get; }
+
         public DelegateCommand<string> UpdateCommand { get; }
 
         public DelegateCommand<string> NavigateCommand { get; }
@@ -28,22 +38,24 @@ namespace PrismDropNavigation.ViewModels
         {
             _regionManager = regionManager;
 
+            // 起動時の初期タブ位置を変更
+            InitializeCommand = new DelegateCommand(() =>
+            {
+                _regionManager.RequestNavigate("TabContentRegion", TabItemViewNames[InitializeTabIndex]);
+            });
+
             UpdateCommand = new DelegateCommand<string>(text =>
             {
                 if (string.IsNullOrEmpty(text)) return;
                 var sep = text.Split(',');
-                var targetViewNames = new[]
-                {
-                    "TabItemSingle", "TabItemDouble"
-                };
-                int count = Math.Min(sep.Length, targetViewNames.Length);
+                int count = Math.Min(sep.Length, TabItemViewNames.Length);
 
                 var parameters = new NavigationParameters();
                 for (int i = 0; i < count; i++)
                 {
                     parameters.Add($"image{i}", sep[i]);
                 }
-                _regionManager.RequestNavigate("TabContentRegion", targetViewNames[count - 1], parameters);
+                _regionManager.RequestNavigate("TabContentRegion", TabItemViewNames[count - 1], parameters);
             });
 
             NavigateCommand = new DelegateCommand<string>(x => _regionManager.RequestNavigate("TabContentRegion", x));
