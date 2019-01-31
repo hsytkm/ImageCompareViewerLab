@@ -17,7 +17,7 @@ namespace PrismDropNavigation.ViewModels
         public string Text
         {
             get => _text;
-            //set => SetProperty(ref _text, value);
+            set => SetProperty(ref _text, value);
         }
 
         public DelegateCommand<string> UpdateCommand { get; }

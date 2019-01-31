@@ -33,7 +33,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <TextBox Text="{Binding Text, Mode=OneWay}" />
+            <TextBox Text="{Binding Text, Mode=TwoWay}" />
             <Button Grid.Column="1" Content="Update"
                     Command="{Binding UpdateCommand}"
                     CommandParameter="{Binding Path=Text, Mode=OneWay}"/>
