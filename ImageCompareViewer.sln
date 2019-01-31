@@ -17,6 +17,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThosoImageMeta", "ThosoImageMeta\ThosoImageMeta.csproj", "{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02_PrismDropNavigation", "02_PrismDropNavigation", "{9713E667-DF9F-4D1E-8A5C-ECEF14863F75}"
+	ProjectSection(SolutionItems) = preProject
+		02_PrismDropNavigation\README.md = 02_PrismDropNavigation\README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrismDropNavigation", "02_PrismDropNavigation\PrismDropNavigation\PrismDropNavigation.csproj", "{8FC0DD5F-AFBE-4BB7-B34E-7301A5263FDF}"
 EndProject
