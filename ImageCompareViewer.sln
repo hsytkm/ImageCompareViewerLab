@@ -5,8 +5,6 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01_Pixels", "01_Pixels", "{5BACA4D2-50DD-404A-840F-A674314E3242}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePixels", "ImagePixels\ImagePixels.csproj", "{BB116C6B-8CFF-4204-B19F-5541AB534883}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThosoImage", "ThosoImage\ThosoImage.csproj", "{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibraryTestConsole", "LibraryTestConsole\LibraryTestConsole.csproj", "{4FAB9D38-EB02-49BB-BE66-F4AC507C16D4}"
@@ -16,7 +14,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThosoImageWpf", "ThosoImage
 		{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04} = {9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThosoImageMeta", "ThosoImageMeta\ThosoImageMeta.csproj", "{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ThosoImageMeta", "ThosoImageMeta\ThosoImageMeta.csproj", "{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02_PrismDropNavigation", "02_PrismDropNavigation", "{9713E667-DF9F-4D1E-8A5C-ECEF14863F75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrismDropNavigation", "02_PrismDropNavigation\PrismDropNavigation\PrismDropNavigation.csproj", "{8FC0DD5F-AFBE-4BB7-B34E-7301A5263FDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrismDropNavigation.TabItem", "02_PrismDropNavigation\PrismDropNavigation.TabItem\PrismDropNavigation.TabItem.csproj", "{D2DF1575-195D-459F-A971-2B6CCD736A54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImagePixels", "01_Pixels\ImagePixels\ImagePixels.csproj", "{BB116C6B-8CFF-4204-B19F-5541AB534883}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,29 +30,37 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{BB116C6B-8CFF-4204-B19F-5541AB534883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB116C6B-8CFF-4204-B19F-5541AB534883}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F6BEE93-C0B6-4A55-88A6-B6DD1CDAEF04}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4FAB9D38-EB02-49BB-BE66-F4AC507C16D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FAB9D38-EB02-49BB-BE66-F4AC507C16D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FAB9D38-EB02-49BB-BE66-F4AC507C16D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FAB9D38-EB02-49BB-BE66-F4AC507C16D4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{023355A3-8C55-49EF-A5A1-D81DEFFE72A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{023355A3-8C55-49EF-A5A1-D81DEFFE72A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{023355A3-8C55-49EF-A5A1-D81DEFFE72A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{023355A3-8C55-49EF-A5A1-D81DEFFE72A2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81D24CC1-C7A7-4373-AFA9-97E9866E47EB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FC0DD5F-AFBE-4BB7-B34E-7301A5263FDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FC0DD5F-AFBE-4BB7-B34E-7301A5263FDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FC0DD5F-AFBE-4BB7-B34E-7301A5263FDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FC0DD5F-AFBE-4BB7-B34E-7301A5263FDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2DF1575-195D-459F-A971-2B6CCD736A54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2DF1575-195D-459F-A971-2B6CCD736A54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2DF1575-195D-459F-A971-2B6CCD736A54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2DF1575-195D-459F-A971-2B6CCD736A54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB116C6B-8CFF-4204-B19F-5541AB534883}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB116C6B-8CFF-4204-B19F-5541AB534883}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB116C6B-8CFF-4204-B19F-5541AB534883}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB116C6B-8CFF-4204-B19F-5541AB534883}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{8FC0DD5F-AFBE-4BB7-B34E-7301A5263FDF} = {9713E667-DF9F-4D1E-8A5C-ECEF14863F75}
+		{D2DF1575-195D-459F-A971-2B6CCD736A54} = {9713E667-DF9F-4D1E-8A5C-ECEF14863F75}
 		{BB116C6B-8CFF-4204-B19F-5541AB534883} = {5BACA4D2-50DD-404A-840F-A674314E3242}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
