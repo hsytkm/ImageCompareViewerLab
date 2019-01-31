@@ -1,4 +1,6 @@
-﻿using Prism.Commands;
+﻿using Prism;
+using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using System;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace PrismDropNavigation.TabItem.ViewModels
 {
-    public class TabItemSingleViewModel : BindableBase, INavigationAware, ITabItemViewModel
+    public class TabItemSingleViewModel : BindableBase, IActiveAware, INavigationAware, ITabItemViewModel
     {
         public string Title { get; set; }
 
@@ -23,22 +25,44 @@ namespace PrismDropNavigation.TabItem.ViewModels
         public TabItemSingleViewModel()
         {
             Message = "Single from your Prism Module";
+
+            IsActiveChanged += (object sender, EventArgs e) =>
+            {
+                if (e is DataEventArgs<bool> e2)
+                    Console.WriteLine($"Single-IsActive: {e2.Value}");
+            };
         }
 
-        // ナビゲーション移行時に移行先になるか判定のためコールされる
-        public bool IsNavigationTarget(NavigationContext navigationContext) => true;
+        #region IActiveAware
 
-        // ナビゲーションが他に移る時にコールされる
-        public void OnNavigatedFrom(NavigationContext navigationContext)
+        private bool _isActive;
+        public bool IsActive
         {
-
+            get => _isActive;
+            set
+            {
+                if (SetProperty(ref _isActive, value))
+                    IsActiveChanged?.Invoke(this, new DataEventArgs<bool>(value));
+            }
         }
+
+        public event EventHandler IsActiveChanged;
+
+        #endregion
+
+        #region INavigationAware
+
+        public bool IsNavigationTarget(NavigationContext navigationContext) => true;
+        public void OnNavigatedFrom(NavigationContext navigationContext) { }
 
         // ナビゲーションが移ってきた時にコールされる
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
-
+            if (navigationContext.Parameters["image0"] is string message0)
+                Message = message0;
         }
+
+        #endregion
 
     }
 }

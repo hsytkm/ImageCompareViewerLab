@@ -7,21 +7,40 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
-        Title="{Binding Title, Mode=OneTime}"
+        Title="PrismDropNavigation"
         Height="250" Width="400">
 
     <Window.Resources>
         <Style TargetType="TabItem">
-            <Setter Property="Header" Value="{Binding DataContext.Title}" />
+            <Setter Property="Header" Value="{Binding DataContext.Title, Mode=OneTime}" />
         </Style>
     </Window.Resources>
 
-    <Grid>
+    <Grid Margin="0,10,0,0">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" >
+
+        <TextBlock Margin="0,3" TextWrapping="Wrap" >
+            Updateボタンがクリックされると、カンマで区切られた文字列の数に応じたタブに切り替えます。(最大2つ)
+        </TextBlock>
+
+        <Grid Grid.Row="1" Margin="0,3" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding Text, Mode=TwoWay}" />
+            <Button Grid.Column="1" Content="Update"
+                    Command="{Binding UpdateCommand}" />
+        </Grid>
+
+        <!-- Collapsed
+        <StackPanel Visibility="Collapsed"
+                    Grid.Row="2" Orientation="Horizontal" >
             <Button Content="ToTab1"
                     Command="{Binding NavigateCommand}"
                     CommandParameter="TabItemSingle"
@@ -31,8 +50,9 @@
                     CommandParameter="TabItemDouble"
                     Margin="5,3" />
         </StackPanel>
+        -->
 
-        <TabControl Grid.Row="1"
+        <TabControl Grid.Row="3"
                     prism:RegionManager.RegionName="TabContentRegion" />
     </Grid>
 </Window>

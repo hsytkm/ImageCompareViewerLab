@@ -13,13 +13,39 @@ namespace PrismDropNavigation.ViewModels
     {
         private readonly IRegionManager _regionManager;
 
-        public string Title { get; } = "PrismDropNavigation";
+        private string _text = "Jonathan,Joseph,Jotaro";
+        public string Text
+        {
+            get => _text;
+            set => SetProperty(ref _text, value);
+        }
+
+        public DelegateCommand UpdateCommand { get; }
 
         public DelegateCommand<string> NavigateCommand { get; }
 
         public MainWindowViewModel(IRegionManager regionManager)
         {
             _regionManager = regionManager;
+
+
+            UpdateCommand = new DelegateCommand(() =>
+            {
+                if (string.IsNullOrEmpty(Text)) return;
+                var sep = Text.Split(',');
+                var targetViewNames = new[]
+                {
+                    "TabItemSingle", "TabItemDouble"
+                };
+                int count = Math.Min(sep.Length, targetViewNames.Length);
+
+                var parameters = new NavigationParameters();
+                for (int i = 0; i < count; i++)
+                {
+                    parameters.Add($"image{i}", sep[i]);
+                }
+                _regionManager.RequestNavigate("TabContentRegion", targetViewNames[count - 1], parameters);
+            });
 
             NavigateCommand = new DelegateCommand<string>(x =>
             {
