@@ -17,10 +17,10 @@ namespace PrismDropNavigation.ViewModels
         public string Text
         {
             get => _text;
-            set => SetProperty(ref _text, value);
+            //set => SetProperty(ref _text, value);
         }
 
-        public DelegateCommand UpdateCommand { get; }
+        public DelegateCommand<string> UpdateCommand { get; }
 
         public DelegateCommand<string> NavigateCommand { get; }
 
@@ -28,11 +28,10 @@ namespace PrismDropNavigation.ViewModels
         {
             _regionManager = regionManager;
 
-
-            UpdateCommand = new DelegateCommand(() =>
+            UpdateCommand = new DelegateCommand<string>(text =>
             {
-                if (string.IsNullOrEmpty(Text)) return;
-                var sep = Text.Split(',');
+                if (string.IsNullOrEmpty(text)) return;
+                var sep = text.Split(',');
                 var targetViewNames = new[]
                 {
                     "TabItemSingle", "TabItemDouble"
@@ -47,10 +46,7 @@ namespace PrismDropNavigation.ViewModels
                 _regionManager.RequestNavigate("TabContentRegion", targetViewNames[count - 1], parameters);
             });
 
-            NavigateCommand = new DelegateCommand<string>(x =>
-            {
-                _regionManager.RequestNavigate("TabContentRegion", x);
-            });
+            NavigateCommand = new DelegateCommand<string>(x => _regionManager.RequestNavigate("TabContentRegion", x));
 
         }
 
