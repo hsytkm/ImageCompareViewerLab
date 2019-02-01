@@ -11,7 +11,7 @@ namespace PrismDispose.Module1.Views
     /// </summary>
     public partial class ViewA : UserControl, IDisposable
     {
-        public string ViewTitle { get; } = nameof(ViewA);
+        public string ViewName { get; } = nameof(ViewA);
 
         private IRegionManager _regionManager { get; set; }
 

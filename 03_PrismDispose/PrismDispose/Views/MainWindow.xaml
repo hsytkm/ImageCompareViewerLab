@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <Button Content="Add ViewA"
-                Command="{Binding NavigateCommand, Mode=OneWay}" />
+                Command="{Binding AddCommand, Mode=OneWay}" />
 
         <ContentControl Grid.Row="1" prism:RegionManager.RegionName="ContentRegion" />
 

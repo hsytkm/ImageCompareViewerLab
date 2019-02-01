@@ -4,6 +4,7 @@ using Prism.Regions;
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace PrismDispose.Module1.ViewModels
 {
@@ -26,13 +27,18 @@ namespace PrismDispose.Module1.ViewModels
 
             CloseCommand = new DelegateCommand(() =>
             {
-                var viewToRemove = _regionManager.Regions["ContentRegion"].Views
-                    .FirstOrDefault<dynamic>(v => v.ViewTitle == nameof(Views.ViewA));
-                if (viewToRemove != null)
-                {
-                    _regionManager.Regions["ContentRegion"].Remove(viewToRemove);
-                }
+                RemoveModule<Views.ViewA>("ContentRegion");
             });
+        }
+
+        // 指定リージョンからモジュールを削除
+        private void RemoveModule<T>(string regionName) where T : UserControl
+        {
+            var viewToRemove = _regionManager.Regions[regionName].Views
+                .FirstOrDefault<dynamic>(v => v.ViewName == typeof(T).Name);
+
+            if (viewToRemove != null)
+                _regionManager.Regions[regionName].Remove(viewToRemove);
         }
 
         public void Dispose()
