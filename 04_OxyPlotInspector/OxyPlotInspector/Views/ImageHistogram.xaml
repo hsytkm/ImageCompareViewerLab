@@ -10,7 +10,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <oxy:PlotView x:Name="chart"
-                      Model="{Binding OxyHistogram, Mode=OneWay}" />
+        <oxy:PlotView Model="{Binding OxyHistogram.Value, Mode=OneWay}" />
     </Grid>
 </UserControl>
