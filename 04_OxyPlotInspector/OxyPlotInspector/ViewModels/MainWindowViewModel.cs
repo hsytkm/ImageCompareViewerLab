@@ -1,16 +1,18 @@
-﻿using OxyPlotInspector.Views;
+﻿using OxyPlotInspector.Models;
+using OxyPlotInspector.Views;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using System.Linq;
-using System.Windows.Controls;
 
 namespace OxyPlotInspector.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
+        private readonly Histogram Histogram = Histogram.Instance;
+
         private readonly IContainerExtension _container;
         private readonly IRegionManager _regionManager;
 
@@ -21,13 +23,16 @@ namespace OxyPlotInspector.ViewModels
 
         // ダイアログ表示中フラグ(CanExecute対応)
         private bool _IsNotificationRequesting;
-        public bool IsNotificationRequesting
+        private bool IsNotificationRequesting
         {
             get => _IsNotificationRequesting;
-            private set
+            set
             {
                 if (SetProperty(ref _IsNotificationRequesting, value))
+                {
                     NotificationCommand.RaiseCanExecuteChanged();
+                    Histogram.IsShowingHistgramView = value;
+                }
             }
         }
 
@@ -50,7 +55,7 @@ namespace OxyPlotInspector.ViewModels
                 IsNotificationRequesting = true;
             },
             () => !IsNotificationRequesting);   // 非表示中なら押下可能
-            
+
         }
 
     }
