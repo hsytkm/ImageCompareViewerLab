@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="PrismDispose.Views.ViewA"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True" >
+
+    <StackPanel Margin="10" Background="LightGreen" >
+        <TextBlock Text="View A from Module" />
+
+        <Button Content="ViewA Close from View"
+                Click="Button_Click" />
+
+        <Button Content="ViewA Close from ViewModel"
+                Command="{Binding CloseCommand, Mode=OneWay}" />
+
+    </StackPanel>
+</UserControl>

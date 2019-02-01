@@ -4,15 +4,10 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace PrismDispose.Module1.Views
+namespace PrismDispose.Views
 {
-    /// <summary>
-    /// Interaction logic for ViewA.xaml
-    /// </summary>
     public partial class ViewA : UserControl, IDisposable
     {
-        public string ViewName { get; } = nameof(ViewA);
-
         private IRegionManager _regionManager;
 
         public ViewA(IRegionManager regionManager)
@@ -22,15 +17,12 @@ namespace PrismDispose.Module1.Views
             _regionManager = regionManager;
         }
 
-        public void Dispose()
-        {
-            Debug.WriteLine("ViewA.Dispose()");
-        }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             _regionManager.Regions["ContentRegion"].Remove(this);
         }
+
+        public void Dispose() => Debug.WriteLine("ViewA.Dispose()");
 
     }
 }

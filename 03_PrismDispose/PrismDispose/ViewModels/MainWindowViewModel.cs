@@ -2,7 +2,7 @@
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
-using PrismDispose.Module1.Views;
+using PrismDispose.Views;
 using System.Linq;
 using System.Windows.Controls;
 
@@ -33,7 +33,7 @@ namespace PrismDispose.ViewModels
         {
             var name = typeof(T).Name;
             var viewTarget = _regionManager.Regions[regionName].Views
-                .FirstOrDefault<dynamic>(v => v.ViewName == name);
+                .FirstOrDefault(x => x.GetType().Name == name);
 
             if (viewTarget == null)
             {

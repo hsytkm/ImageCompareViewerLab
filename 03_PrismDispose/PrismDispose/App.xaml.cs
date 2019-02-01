@@ -13,20 +13,11 @@ namespace PrismDispose
     /// </summary>
     public partial class App : PrismApplication
     {
-        protected override Window CreateShell()
-        {
-            return Container.Resolve<MainWindow>();
-        }
+        protected override Window CreateShell() => Container.Resolve<MainWindow>();
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
-        {
+        protected override void RegisterTypes(IContainerRegistry containerRegistry) { }
 
-        }
-
-        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
-        {
-            moduleCatalog.AddModule<Module1.Module1Module>();
-        }
+        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog) { }
 
         protected override void ConfigureDefaultRegionBehaviors(IRegionBehaviorFactory regionBehaviors)
         {
