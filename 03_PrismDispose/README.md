@@ -20,7 +20,7 @@ Disposeを呼ぶために別途対応が必要。
 MainWindow の Closedイベントで対象RegionのViewを全て Remove することで対応した。
 
 
-## 参考にしたページ
+## 参考にさせて頂いたページ
 
 https://github.com/runceel/PrismEdu/tree/master/09.RegionBehavior
 
