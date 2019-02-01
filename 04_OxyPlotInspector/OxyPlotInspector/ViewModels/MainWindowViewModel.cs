@@ -30,7 +30,7 @@ namespace OxyPlotInspector.ViewModels
                 if (SetProperty(ref _IsNotificationRequesting, value))
                 {
                     NotificationCommand.RaiseCanExecuteChanged();
-                    Histogram.IsShowingHistgramView = value;
+                    Histogram.IsShowingHistogramView = value;
                 }
             }
         }

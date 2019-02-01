@@ -38,6 +38,12 @@
     <Reference Include="CommonServiceLocator, Version=2.0.4.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\..\packages\CommonServiceLocator.2.0.4\lib\net46\CommonServiceLocator.dll</HintPath>
     </Reference>
+    <Reference Include="OxyPlot, Version=2.0.0.0, Culture=neutral, PublicKeyToken=638079a8f0bd61e9, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OxyPlot.Core.2.0.0-unstable1035\lib\net45\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf, Version=2.0.0.0, Culture=neutral, PublicKeyToken=75e952ba404cdbb0, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\OxyPlot.Wpf.2.0.0-unstable1035\lib\net452\OxyPlot.Wpf.dll</HintPath>
+    </Reference>
     <Reference Include="Prism, Version=7.2.0.708, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Prism.Core.7.2.0.708-pre\lib\net45\Prism.dll</HintPath>
     </Reference>
@@ -102,6 +108,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\ImageHistogram.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -117,9 +127,13 @@
     <Compile Include="Models\Histogram.cs" />
     <Compile Include="Models\MainImageSource.cs" />
     <Compile Include="Models\ModelMaster.cs" />
+    <Compile Include="ViewModels\ImageHistogramViewModel.cs" />
     <Compile Include="ViewModels\MainImageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\EventConverters\MouseMoveEventToPointConverter.cs" />
+    <Compile Include="Views\ImageHistogram.xaml.cs">
+      <DependentUpon>ImageHistogram.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainImage.xaml.cs">
       <DependentUpon>MainImage.xaml</DependentUpon>
     </Compile>

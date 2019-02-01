@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ThosoImage.Drawing
 {
-    public static class ImageSize
+    public static class ImageFromFile
     {
         /// <summary>
         /// ファイルから画像サイズを取得
