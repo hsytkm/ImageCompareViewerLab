@@ -26,8 +26,7 @@
 
         <Button Margin="5"
                 Content="Analyze"
-                Command="{Binding NotificationCommand}"
-                IsEnabled="{Binding EnableNotificationButton, Mode=OneWay}"/>
+                Command="{Binding NotificationCommand}" />
 
         <ContentControl Grid.Row="1"
                         prism:RegionManager.RegionName="ContentRegion" />

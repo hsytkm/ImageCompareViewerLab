@@ -19,16 +19,17 @@ namespace OxyPlotInspector.ViewModels
         public InteractionRequest<INotification> NotificationRequest { get; }
             = new InteractionRequest<INotification>();
 
-        // ダイアログ表示中フラグ(多重表示回避)
+        // ダイアログ表示中フラグ(CanExecute対応)
         private bool _IsNotificationRequesting;
         public bool IsNotificationRequesting
         {
             get => _IsNotificationRequesting;
-            private set => SetProperty(ref _IsNotificationRequesting, value, nameof(EnableNotificationButton));
+            private set
+            {
+                if (SetProperty(ref _IsNotificationRequesting, value))
+                    NotificationCommand.RaiseCanExecuteChanged();
+            }
         }
-
-        // ボタンの押下可能フラグ(ダイアログ表示中は禁止)
-        public bool EnableNotificationButton { get => !IsNotificationRequesting; }
 
         public MainWindowViewModel(IContainerExtension container, IRegionManager regionManager)
         {
@@ -39,16 +40,16 @@ namespace OxyPlotInspector.ViewModels
 
             NotificationCommand = new DelegateCommand(() =>
             {
-                if (IsNotificationRequesting) return;
                 NotificationRequest.Raise(
                     new Notification
                     {
-                        Content = "Notification Message",
-                        Title = "Notification"
+                        Title = "Histogram Inspector",
+                        Content = "Not Implement",
                     },
-                    r => IsNotificationRequesting = false);
+                    n => IsNotificationRequesting = false);
                 IsNotificationRequesting = true;
-            });
+            },
+            () => !IsNotificationRequesting);   // 非表示中なら押下可能
             
         }
 
