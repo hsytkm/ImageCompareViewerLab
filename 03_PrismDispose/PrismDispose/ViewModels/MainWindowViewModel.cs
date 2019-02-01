@@ -15,6 +15,8 @@ namespace PrismDispose.ViewModels
 
         public DelegateCommand AddCommand { get; }
 
+        public DelegateCommand ClosedCommand { get; }
+
         public MainWindowViewModel(IContainerExtension container, IRegionManager regionManager)
         {
             _container = container;
@@ -22,6 +24,8 @@ namespace PrismDispose.ViewModels
 
             AddCommand = new DelegateCommand(() => AddModule<ViewA>("ContentRegion"));
 
+            ClosedCommand = new DelegateCommand(() =>
+                _regionManager.Regions["ContentRegion"].RemoveAll());
         }
 
         // 指定リージョンにモジュールを追加
