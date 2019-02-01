@@ -32,9 +32,9 @@
         </i:Interaction.Triggers>
 
         <Image Name="_Image"
-               Width="{Binding ImageSource.PixelWidth, Mode=OneTime}"
-               Height="{Binding ImageSource.PixelHeight, Mode=OneTime}"
-               Source="{Binding ImageSource, Mode=OneTime}" />
+               Width="{Binding ImageSource.Value.PixelWidth, Mode=OneTime}"
+               Height="{Binding ImageSource.Value.PixelHeight, Mode=OneTime}"
+               Source="{Binding ImageSource.Value, Mode=OneTime}" />
 
         <Line Stroke="Lime"
               StrokeThickness="2"

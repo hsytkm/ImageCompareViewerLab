@@ -115,6 +115,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\Histogram.cs" />
+    <Compile Include="Models\MainImageSource.cs" />
+    <Compile Include="Models\ModelMaster.cs" />
     <Compile Include="ViewModels\MainImageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\EventConverters\MouseMoveEventToPointConverter.cs" />
@@ -157,6 +159,10 @@
     <ProjectReference Include="..\..\ThosoImageWpf\ThosoImageWpf.csproj">
       <Project>{023355A3-8C55-49EF-A5A1-D81DEFFE72A2}</Project>
       <Name>ThosoImageWpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\ThosoImage\ThosoImage.csproj">
+      <Project>{9f6bee93-c0b6-4a55-88a6-b6dd1cdaef04}</Project>
+      <Name>ThosoImage</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

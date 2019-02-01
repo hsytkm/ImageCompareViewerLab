@@ -1,17 +1,11 @@
 ﻿using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ThosoImage.Drawing;
 
 namespace OxyPlotInspector.Models
 {
     class Histogram : BindableBase
     {
-        public static Histogram Instance { get; } = new Histogram();
-        private Histogram() { }
-
         // ヒストグラムViewの表示状態フラグ
         private bool _IsShowingHistgramView;
         public bool IsShowingHistgramView
@@ -20,15 +14,22 @@ namespace OxyPlotInspector.Models
             set => SetProperty(ref _IsShowingHistgramView, value);
         }
 
-        //private (double X1, double Y1, double X2, double Y2) LinePoints;
-
-        public void SetLinePoints((double X1, double Y1, double X2, double Y2) points)
+        public Histogram()
         {
-            //LinePoints = points;
+            // ◆本質でないので無理やり現画像サイズを取得
+            ImageSize = MainImageSource.ImageSourcePath.GetImageSize();
+        }
 
-            double distance = Math.Sqrt(
-                (points.X1 - points.X2) * (points.X1 - points.X2)
-                + (points.Y1 - points.Y2) * (points.Y1 - points.Y2));
+        private (int Width, int Height) ImageSize;
+
+        // 線の端座標通知(引数の単位は割合)
+        public void SetLinePointsRatio((double X1, double Y1, double X2, double Y2) ratio)
+        {
+            double X1 = ratio.X1 * ImageSize.Width;
+            double Y1 = ratio.Y1 * ImageSize.Height;
+            double X2 = ratio.X2 * ImageSize.Width;
+            double Y2 = ratio.Y2 * ImageSize.Height;
+            double distance = Math.Sqrt((X1 - X2) * (X1 - X2) + (Y1 - Y2) * (Y1 - Y2));
 
             Console.WriteLine(distance);
         }

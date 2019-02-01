@@ -3,25 +3,22 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
 using System;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using ThosoImage.Wpf.Imaging;
 
 namespace OxyPlotInspector.ViewModels
 {
     class MainImageViewModel : BindableBase
     {
-        private readonly string ImageSourcePath = @"C:/data/Image1.jpg";
-        private readonly int ImageSourceWidth = 320;
-        private readonly int ImageSourceHeight = 240;
+        private readonly MainImageSource MainImage = ModelMaster.Instance.MainImage;
+        private readonly Histogram Histogram = ModelMaster.Instance.Histogram;
 
-        private readonly Histogram Histogram = Histogram.Instance;
-
-        public BitmapImage ImageSource { get; }
+        public ReadOnlyReactiveProperty<BitmapImage> ImageSource { get; }
 
         public LinePoints LinePoints { get; } = new LinePoints();
 
@@ -46,8 +43,11 @@ namespace OxyPlotInspector.ViewModels
             _container = container;
             _regionManager = regionManager;
 
-            // サイズを指定して画像を読み込み
-            ImageSource = ImageSourcePath.ToBitmapImage(ImageSourceWidth, ImageSourceHeight);
+            ImageSource = MainImage
+                .ObserveProperty(x => x.ImageSource)
+                .ToReadOnlyReactiveProperty();
+
+            ImageSource.Subscribe(x => LinePoints.SetSourceSize(x.PixelWidth, x.PixelHeight));
 
             // MoveStart
             MouseDown.Subscribe(p => LinePoints.SetPoint1(p.X, p.Y));
@@ -56,16 +56,29 @@ namespace OxyPlotInspector.ViewModels
             MouseDown.Merge(MouseDown.SelectMany(MouseMove.TakeUntil(MouseUp)))
                 .Subscribe(p => {
                     LinePoints.SetPoint2(p.X, p.Y);
-                    Histogram.SetLinePoints(LinePoints.GetPoints());
+                    Histogram.SetLinePointsRatio(LinePoints.GetPointsRatio());
                 });
 
         }
-
     }
 
     class LinePoints : BindableBase
     {
-        public bool IsEnabled { get; private set; }
+        private bool _IsEnabled;
+        public bool IsEnabled
+        {
+            get => _IsEnabled;
+            private set => SetProperty(ref _IsEnabled, value);
+        }
+
+        public int SourceWidth { get; private set; }
+        public int SourceHeight { get; private set; }
+
+        public void SetSourceSize(int width, int height)
+        {
+            SourceWidth = width;
+            SourceHeight = height;
+        }
 
         #region X1,Y1,X2,Y2
 
@@ -75,18 +88,21 @@ namespace OxyPlotInspector.ViewModels
             get => _X1;
             private set => SetProperty(ref _X1, value);
         }
+
         private double _Y1;
         public double Y1
         {
             get => _Y1;
             private set => SetProperty(ref _Y1, value);
         }
+
         private double _X2;
         public double X2
         {
             get => _X2;
             private set => SetProperty(ref _X2, value);
         }
+
         private double _Y2;
         public double Y2
         {
@@ -113,7 +129,22 @@ namespace OxyPlotInspector.ViewModels
 
         #endregion
 
-        public (double X1, double Y1, double X2, double Y2) GetPoints() => (X1, Y1, X2, Y2);
+        // 線端の座標を割合で返す
+        public (double X1, double Y1, double X2, double Y2) GetPointsRatio()
+        {
+            if (SourceWidth == 0) throw new DivideByZeroException(nameof(SourceWidth));
+            if (SourceHeight == 0) throw new DivideByZeroException(nameof(SourceHeight));
+
+            double limit(double x)
+            {
+                if (x < 0) return 0;
+                if (x > 1) return 1;
+                return x;
+            }
+
+            return (limit(X1 / SourceWidth), limit(Y1 / SourceHeight),
+                limit(X2 / SourceWidth), limit(Y2 / SourceHeight));
+        }
 
     }
 }

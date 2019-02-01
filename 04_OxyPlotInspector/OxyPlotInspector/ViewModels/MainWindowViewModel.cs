@@ -5,13 +5,12 @@ using Prism.Interactivity.InteractionRequest;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
-using System.Linq;
 
 namespace OxyPlotInspector.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
-        private readonly Histogram Histogram = Histogram.Instance;
+        private readonly Histogram Histogram = ModelMaster.Instance.Histogram;
 
         private readonly IContainerExtension _container;
         private readonly IRegionManager _regionManager;
