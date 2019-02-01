@@ -21,7 +21,8 @@
                 </r:EventToReactiveProperty>
             </i:EventTrigger>
             <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                <r:EventToReactiveProperty ReactiveProperty="{Binding MouseUp, Mode=OneTime}" IgnoreEventArgs="True" />
+                <r:EventToReactiveProperty ReactiveProperty="{Binding MouseUp, Mode=OneTime}"
+                                           IgnoreEventArgs="True" />
             </i:EventTrigger>
             <i:EventTrigger EventName="PreviewMouseMove">
                 <r:EventToReactiveProperty ReactiveProperty="{Binding MouseMove, Mode=OneTime}" >
@@ -31,7 +32,9 @@
         </i:Interaction.Triggers>
 
         <Image Name="_Image"
-               Source="C:/data/Image1.jpg" />
+               Width="{Binding ImageSource.PixelWidth, Mode=OneTime}"
+               Height="{Binding ImageSource.PixelHeight, Mode=OneTime}"
+               Source="{Binding ImageSource, Mode=OneTime}" />
 
         <Line Stroke="Lime"
               StrokeThickness="2"

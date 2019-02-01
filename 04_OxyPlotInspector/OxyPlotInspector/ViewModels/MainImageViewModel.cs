@@ -8,14 +8,24 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
+using System.Windows.Media.Imaging;
+using ThosoImage.Wpf.Imaging;
 
 namespace OxyPlotInspector.ViewModels
 {
     class MainImageViewModel : BindableBase
     {
+        private readonly string ImageSourcePath = @"C:/data/Image1.jpg";
+        private readonly int ImageSourceWidth = 320;
+        private readonly int ImageSourceHeight = 240;
+
         private readonly Histogram Histogram = Histogram.Instance;
 
+        public BitmapImage ImageSource { get; }
+
         public LinePoints LinePoints { get; } = new LinePoints();
+
+        #region MouseEvents
 
         public ReactiveProperty<Point> MouseDown { get; }
             = new ReactiveProperty<Point>(mode: ReactivePropertyMode.None);
@@ -26,6 +36,8 @@ namespace OxyPlotInspector.ViewModels
         public ReactiveProperty<Point> MouseMove { get; }
             = new ReactiveProperty<Point>(mode: ReactivePropertyMode.None);
 
+        #endregion
+
         private readonly IContainerExtension _container;
         private readonly IRegionManager _regionManager;
 
@@ -34,12 +46,18 @@ namespace OxyPlotInspector.ViewModels
             _container = container;
             _regionManager = regionManager;
 
+            // サイズを指定して画像を読み込み
+            ImageSource = ImageSourcePath.ToBitmapImage(ImageSourceWidth, ImageSourceHeight);
+
             // MoveStart
             MouseDown.Subscribe(p => LinePoints.SetPoint1(p.X, p.Y));
 
             // Moving
             MouseDown.Merge(MouseDown.SelectMany(MouseMove.TakeUntil(MouseUp)))
-                .Subscribe(p => LinePoints.SetPoint2(p.X, p.Y));
+                .Subscribe(p => {
+                    LinePoints.SetPoint2(p.X, p.Y);
+                    Histogram.SetLinePoints(LinePoints.GetPoints());
+                });
 
         }
 
@@ -94,5 +112,8 @@ namespace OxyPlotInspector.ViewModels
         }
 
         #endregion
+
+        public (double X1, double Y1, double X2, double Y2) GetPoints() => (X1, Y1, X2, Y2);
+
     }
 }

@@ -56,7 +56,7 @@
     <Compile Include="Extensions\WindowsSizeExtension.cs" />
     <Compile Include="Imaging\BitmapSourceToFile.cs" />
     <Compile Include="Imaging\BitmapSourceReadImplement.cs" />
-    <Compile Include="Imaging\BitmapImageReaderFromFile.cs" />
+    <Compile Include="Imaging\BitmapImageFromFile.cs" />
     <Compile Include="Imaging\BitmapSourceRotate.cs" />
     <Compile Include="Imaging\BitmapSourceThumbnail.cs" />
     <Compile Include="Imaging\BitmapSourceGray.cs" />
