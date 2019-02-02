@@ -54,7 +54,7 @@ namespace OxyPlotInspector.ViewModels
                 .Subscribe(_ =>
                 {
                     LinePoints.ClearPoints();       // 画像上のLine表示
-                    LineLevels.ClearLinePoints();   // OxyPlot図(次回表示用)
+                    LineLevels.ReleaseLinePoints();   // OxyPlot図(次回表示用)
                 });
 
             // マウス移動開始
