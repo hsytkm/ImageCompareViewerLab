@@ -30,7 +30,9 @@ namespace OxyPlotInspector.ViewModels
 
         private PlotModel GetPlotModelSkelton((byte R, byte G, byte B)[] rgb)
         {
-            var pm = new PlotModel { Title = "Pixel Level" };
+            var pm = new PlotModel();
+            //pm.Title = "Pixel Level";
+
             var rLine = new LineSeries { Color = OxyColors.Red };
             var gLine = new LineSeries { Color = OxyColors.Green };
             var bLine = new LineSeries { Color = OxyColors.Blue };

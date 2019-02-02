@@ -17,7 +17,7 @@ namespace OxyPlotInspector.ViewModels
 
         public DelegateCommand NotificationCommand { get; }
 
-        public InteractionRequest<INotification> NotificationRequest { get; }
+        public InteractionRequest<INotification> CustomPopupRequest { get; }
             = new InteractionRequest<INotification>();
 
         // ダイアログ表示中フラグ(CanExecute対応)
@@ -44,11 +44,11 @@ namespace OxyPlotInspector.ViewModels
 
             NotificationCommand = new DelegateCommand(() =>
             {
-                NotificationRequest.Raise(
+                CustomPopupRequest.Raise(
                     new Notification
                     {
-                        Title = "Histogram Inspector",
-                        Content = "Not Implement",
+                        Title = "Inspector",
+                        Content = "RgbPixels Line",
                     },
                     n => IsNotificationRequesting = false);
                 IsNotificationRequesting = true;

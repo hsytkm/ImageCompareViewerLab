@@ -9,18 +9,27 @@
         xmlns:v="clr-namespace:OxyPlotInspector.Views"
         mc:Ignorable="d"
         Title="OxyPlotInspector"
-        Height="550" Width="400">
+        Height="350" Width="400">
 
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding NotificationRequest}">
+        <prism:InteractionRequestTrigger SourceObject="{Binding CustomPopupRequest}">
             <prism:PopupWindowAction IsModal="False"
-                                     CenterOverAssociatedObject="False" />
+                                     CenterOverAssociatedObject="False" >
+                <prism:PopupWindowAction.WindowStyle>
+                    <Style TargetType="Window">
+                        <Setter Property="Width" Value="400" />
+                        <Setter Property="Height" Value="250" />
+                    </Style>
+                </prism:PopupWindowAction.WindowStyle>
+                <prism:PopupWindowAction.WindowContent>
+                    <v:LineLevels/>
+                </prism:PopupWindowAction.WindowContent>
+            </prism:PopupWindowAction>
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
-
+    
     <Grid Margin="10">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -31,8 +40,5 @@
 
         <ContentControl Grid.Row="1"
                         prism:RegionManager.RegionName="ContentRegion" />
-
-        <v:LineLevels Grid.Row="2" />
-
     </Grid>
 </Window>
