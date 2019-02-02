@@ -49,16 +49,22 @@ namespace OxyPlotInspector.ViewModels
 
             ImageSource.Subscribe(x => LinePoints.SetSourceSize(x.PixelWidth, x.PixelHeight));
 
+            // Viewの非表示時に座標をクリア
+            LineLevels.ObserveProperty(x => x.IsShowingView).Where(b => !b)
+                .Subscribe(_ => LinePoints.ClearPoints());
+
             // マウス移動開始
-            MouseDown.Subscribe(p => LinePoints.SetPoint1(p.X, p.Y));
+            MouseDown.Where(_ => LineLevels.IsShowingView)
+                .Subscribe(p => LinePoints.SetPoint1(p.X, p.Y));
 
             // マウス移動中
-            var mouseMove = MouseDown.Merge(MouseDown.SelectMany(MouseMove.TakeUntil(MouseUp)));
+            var mouseMove = MouseDown.Merge(MouseDown.SelectMany(MouseMove.TakeUntil(MouseUp)))
+                .Where(_ => LineLevels.IsShowingView);
 
             // ViewのLine表示は常時更新
             mouseMove.Subscribe(p => LinePoints.SetPoint2(p.X, p.Y));
 
-            // Lineの画素値取得は重いので計算を間引く
+            // Line画素値の取得は重いので計算を間引く
             mouseMove
                 .Throttle(TimeSpan.FromMilliseconds(500)) // 指定期間分だけ値が通過しなかったら最後の一つを流す
                 .Subscribe(_ => LineLevels.SetLinePointsRatio(LinePoints.GetPointsRatio()));
@@ -68,13 +74,6 @@ namespace OxyPlotInspector.ViewModels
 
     class LinePoints : BindableBase
     {
-        private bool _IsEnabled;
-        public bool IsEnabled
-        {
-            get => _IsEnabled;
-            private set => SetProperty(ref _IsEnabled, value);
-        }
-
         public int SourceWidth { get; private set; }
         public int SourceHeight { get; private set; }
 
@@ -122,7 +121,6 @@ namespace OxyPlotInspector.ViewModels
         {
             X1 = X2 = x1;
             Y1 = Y2 = y1;
-            IsEnabled = true;
         }
 
         public void SetPoint2(double x2, double y2)
@@ -132,6 +130,11 @@ namespace OxyPlotInspector.ViewModels
         }
 
         #endregion
+
+        public void ClearPoints()
+        {
+            X1 = X2 = Y1 = Y2 = 0;
+        }
 
         // 線端の座標を割合で返す
         public (double X1, double Y1, double X2, double Y2) GetPointsRatio()

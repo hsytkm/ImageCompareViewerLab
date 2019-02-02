@@ -38,7 +38,7 @@
 
         <Line Stroke="Lime"
               StrokeThickness="2"
-              IsEnabled="{Binding LinePoints.IsEnabled, Mode=OneWay}"
+              IsHitTestVisible="False"
               X1="{Binding LinePoints.X1, Mode=OneWay}"
               Y1="{Binding LinePoints.Y1, Mode=OneWay}"
               X2="{Binding LinePoints.X2, Mode=OneWay}"
