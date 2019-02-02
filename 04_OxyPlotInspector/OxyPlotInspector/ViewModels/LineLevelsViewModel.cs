@@ -71,6 +71,9 @@ namespace OxyPlotInspector.ViewModels
 
         public LineLevelsViewModel()
         {
+            // 画素値の読み出し要求(Viewの表示中はずっと読み込んでおく)
+            LineLevels.LoadImagePixels();
+
             OxyLineLevels = LineLevels
                 .ObserveProperty(x => x.RgbLevelLine)
                 .Select(x => GetPlotModelSkelton(x))
@@ -126,6 +129,6 @@ namespace OxyPlotInspector.ViewModels
 
             return pm;
         }
-        
+
     }
 }

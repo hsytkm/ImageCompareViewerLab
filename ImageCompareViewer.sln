@@ -35,6 +35,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrismDispose", "03_PrismDispose\PrismDispose\PrismDispose.csproj", "{C23475E0-C8C5-4050-B110-3E2C36DC671B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04_OxyPlotInspector", "04_OxyPlotInspector", "{B22E481F-4809-4157-B1C6-E4D5C92F102E}"
+	ProjectSection(SolutionItems) = preProject
+		04_OxyPlotInspector\README.md = 04_OxyPlotInspector\README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OxyPlotInspector", "04_OxyPlotInspector\OxyPlotInspector\OxyPlotInspector.csproj", "{915DB971-5FA0-49FE-8263-B794C0C8D086}"
 EndProject
