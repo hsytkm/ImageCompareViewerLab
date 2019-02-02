@@ -13,6 +13,55 @@ namespace OxyPlotInspector.ViewModels
     {
         private readonly ImageLineLevels LineLevels = ModelMaster.Instance.LineLevels;
 
+        #region RGB Channels
+
+        private bool _IsVisibleRch = true;
+        public bool IsVisibleRch
+        {
+            get => _IsVisibleRch;
+            set
+            {
+                if (SetProperty(ref _IsVisibleRch, value))
+                    UpdateSeriesVisible(0, value);
+            }
+        }
+
+        private bool _IsVisibleGch = true;
+        public bool IsVisibleGch
+        {
+            get => _IsVisibleGch;
+            set
+            {
+                if (SetProperty(ref _IsVisibleGch, value))
+                    UpdateSeriesVisible(1, value);
+            }
+        }
+
+        private bool _IsVisibleBch = true;
+        public bool IsVisibleBch
+        {
+            get => _IsVisibleBch;
+            set
+            {
+                if (SetProperty(ref _IsVisibleBch, value))
+                    UpdateSeriesVisible(2, value);
+            }
+        }
+
+        // 線の表示を切り替える
+        private void UpdateSeriesVisible(int index, bool isVisible)
+        {
+            var pm = OxyLineLevels.Value;
+            int seriesCount = pm?.Series.Count ?? 0;
+            if (pm != null && seriesCount > index)
+            {
+                pm.Series[index].IsVisible = isVisible;
+                pm.InvalidatePlot(true);   // View更新
+            }
+        }
+
+        #endregion
+
         private ReactiveProperty<PlotModel> _OxyLineLevels;
         public ReactiveProperty<PlotModel> OxyLineLevels
         {
