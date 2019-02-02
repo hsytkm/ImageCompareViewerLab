@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 
 namespace ThosoImage.ColorSpace
 {
-    internal static class GamutReaderImplement
+    internal static class GamutReaderImplementExtension
     {
         // Rectangleの範囲制限
         private static Rectangle ClipRectangle(Rectangle rectInput, int width, int height)

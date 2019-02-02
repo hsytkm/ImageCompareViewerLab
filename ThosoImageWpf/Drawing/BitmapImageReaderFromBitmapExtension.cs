@@ -6,7 +6,7 @@ using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Drawing
 {
-    public static class BitmapImageReaderFromBitmap
+    public static class BitmapImageReaderFromBitmapExtension
     {
         /// <summary>
         /// BitmapをBitmapImageに変換

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
 namespace ThosoImage.Pixels
 {
-    public static class BitmapPixelReader
+    public static class BitmapPixelReaderExtension
     {
 
         /// <summary>

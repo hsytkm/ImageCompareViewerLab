@@ -50,16 +50,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Drawing\BitmapImageReaderFromBitmap.cs" />
+    <Compile Include="Drawing\BitmapImageReaderFromBitmapExtension.cs" />
     <Compile Include="Extensions\WindowsPointExtension.cs" />
     <Compile Include="Extensions\WindowsRectExtension.cs" />
     <Compile Include="Extensions\WindowsSizeExtension.cs" />
-    <Compile Include="Imaging\BitmapSourceToFile.cs" />
-    <Compile Include="Imaging\BitmapSourceReadImplement.cs" />
-    <Compile Include="Imaging\BitmapImageFromFile.cs" />
-    <Compile Include="Imaging\BitmapSourceRotate.cs" />
-    <Compile Include="Imaging\BitmapSourceThumbnail.cs" />
-    <Compile Include="Imaging\BitmapSourceGray.cs" />
+    <Compile Include="Imaging\BitmapSourceToFileExtension.cs" />
+    <Compile Include="Imaging\BitmapSourceReadImplementExtension.cs" />
+    <Compile Include="Imaging\BitmapImageFromFileExtension.cs" />
+    <Compile Include="Imaging\BitmapSourceRotateExtension.cs" />
+    <Compile Include="Imaging\BitmapSourceThumbnailExtension.cs" />
+    <Compile Include="Imaging\BitmapSourceGrayExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

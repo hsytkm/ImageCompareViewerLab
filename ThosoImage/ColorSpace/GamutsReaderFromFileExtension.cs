@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace ThosoImage.ColorSpace
 {
-    public static class GamutsReaderFromFile
+    public static class GamutsReaderFromFileExtension
     {
         /// <summary>
         /// 引数画像の9分割Gamutを求める

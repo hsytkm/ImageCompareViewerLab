@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Imaging
 {
-    public static class BitmapSourceThumbnail
+    public static class BitmapSourceThumbnailExtension
     {
         private const double DefaultThumbnailWidth = 80.0;
 

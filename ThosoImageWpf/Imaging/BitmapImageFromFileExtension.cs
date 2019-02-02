@@ -5,7 +5,7 @@ using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Imaging
 {
-    public static class BitmapImageFromFile
+    public static class BitmapImageFromFileExtension
     {
         /// <summary>
         /// ファイルからBitmapImageを元画像のサイズ読み出す

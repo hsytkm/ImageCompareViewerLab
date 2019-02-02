@@ -4,7 +4,7 @@ using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Imaging
 {
-    public static class BitmapSourceGray
+    public static class BitmapSourceGrayExtension
     {
         /// <summary>
         /// 引数PATHを1CHにする

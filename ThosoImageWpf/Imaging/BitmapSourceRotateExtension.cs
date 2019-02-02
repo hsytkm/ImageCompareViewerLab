@@ -4,7 +4,7 @@ using System.Windows.Media.Imaging;
 
 namespace ThosoImage.Wpf.Imaging
 {
-    public static class BitmapSourceRotate
+    public static class BitmapSourceRotateExtension
     {
         /// <summary>
         /// 回転した画像を取得する

@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace ThosoImage.Drawing
 {
-    public static class BitmapOverlapRectangle
+    public static class BitmapOverlapRectangleExtension
     {
         /// <summary>
         /// 画像に対して四角形を重畳する

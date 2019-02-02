@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace ThosoImage.Drawing
 {
-    public static class BitmapSaveToJpeg
+    public static class BitmapSaveToJpegExtension
     {
         /// <summary>
         /// 画像をJPEGの最高画質で保存

@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ThosoImage.ColorSpace
 {
-    public static class GamutReaderFromFile
+    public static class GamutReaderFromFileExtension
     {
         /// <summary>
         /// 引数画像の全画素の平均値を取得する

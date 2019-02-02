@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 
 namespace ThosoImage.Meta
 {
-    public static class ExposureApex
+    public static class ExposureApexExtension
     {
         private static readonly double Log2 = Math.Log(2.0);
 
