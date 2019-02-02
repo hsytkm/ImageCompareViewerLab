@@ -11,8 +11,19 @@
              xmlns:vec="clr-namespace:OxyPlotInspector.Views.EventConverters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <Grid Width="{Binding ActualWidth, ElementName=_Image}"
           Height="{Binding ActualHeight, ElementName=_Image}" >
+        <Panel.Resources>
+            <Style TargetType="{x:Type Line}">
+                <Setter Property="Stroke"
+                        Value="Lime" />
+                <Setter Property="StrokeThickness"
+                        Value="2" />
+                <Setter Property="IsHitTestVisible"
+                        Value="False" />
+            </Style>
+        </Panel.Resources>
 
         <i:Interaction.Triggers>
             <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
@@ -36,12 +47,20 @@
                Height="{Binding ImageSource.Value.PixelHeight, Mode=OneTime}"
                Source="{Binding ImageSource.Value, Mode=OneTime}" />
 
-        <Line Stroke="Lime"
-              StrokeThickness="2"
-              IsHitTestVisible="False"
-              X1="{Binding LinePoints.X1, Mode=OneWay}"
-              Y1="{Binding LinePoints.Y1, Mode=OneWay}"
-              X2="{Binding LinePoints.X2, Mode=OneWay}"
-              Y2="{Binding LinePoints.Y2, Mode=OneWay}" />
+        <Line X1="{Binding InspectLinePoints.LeftWingPoints.X1, Mode=OneWay}"
+              Y1="{Binding InspectLinePoints.LeftWingPoints.Y1, Mode=OneWay}"
+              X2="{Binding InspectLinePoints.LeftWingPoints.X2, Mode=OneWay}"
+              Y2="{Binding InspectLinePoints.LeftWingPoints.Y2, Mode=OneWay}" />
+
+        <Line X1="{Binding InspectLinePoints.RightWingPoints.X1, Mode=OneWay}"
+              Y1="{Binding InspectLinePoints.RightWingPoints.Y1, Mode=OneWay}"
+              X2="{Binding InspectLinePoints.RightWingPoints.X2, Mode=OneWay}"
+              Y2="{Binding InspectLinePoints.RightWingPoints.Y2, Mode=OneWay}" />
+
+        <Line X1="{Binding InspectLinePoints.X1, Mode=OneWay}"
+              Y1="{Binding InspectLinePoints.Y1, Mode=OneWay}"
+              X2="{Binding InspectLinePoints.X2, Mode=OneWay}"
+              Y2="{Binding InspectLinePoints.Y2, Mode=OneWay}" />
+
     </Grid>
 </UserControl>
