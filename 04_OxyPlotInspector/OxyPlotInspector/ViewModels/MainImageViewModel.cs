@@ -49,9 +49,13 @@ namespace OxyPlotInspector.ViewModels
 
             ImageSource.Subscribe(x => LinePoints.SetSourceSize(x.PixelWidth, x.PixelHeight));
 
-            // Viewの非表示時に座標をクリア
+            // Viewの非表示時のクリア
             LineLevels.ObserveProperty(x => x.IsShowingView).Where(b => !b)
-                .Subscribe(_ => LinePoints.ClearPoints());
+                .Subscribe(_ =>
+                {
+                    LinePoints.ClearPoints();       // 画像上のLine表示
+                    LineLevels.ClearLinePoints();   // OxyPlot図(次回表示用)
+                });
 
             // マウス移動開始
             MouseDown.Where(_ => LineLevels.IsShowingView)

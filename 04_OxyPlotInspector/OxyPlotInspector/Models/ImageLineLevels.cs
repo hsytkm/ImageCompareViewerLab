@@ -32,5 +32,7 @@ namespace OxyPlotInspector.Models
             RgbLevelLine = ImageSourcePath.GetRgbLineLevels(ratio.X1, ratio.Y1, ratio.X2, ratio.Y2);
         }
 
+        public void ClearLinePoints() => RgbLevelLine = null;
+
     }
 }
