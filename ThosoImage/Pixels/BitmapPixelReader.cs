@@ -54,9 +54,8 @@ namespace ThosoImage.Pixels
             {
                 double distance = Math.Sqrt((point1x - point2x) * (point1x - point2x)
                     + (point1y - point2y) * (point1y - point2y));
-                int distFloor = (int)Math.Floor(distance);
 
-                var rgbs = new (byte R, byte G, byte B)[distFloor];
+                var rgbs = new (byte R, byte G, byte B)[(int)distance];
 
                 int bytesPerPixel = Image.GetPixelFormatSize(bitmap.PixelFormat) / 8;
                 var bitmapData = bitmap.LockBits(
@@ -65,17 +64,16 @@ namespace ThosoImage.Pixels
 
                 try
                 {
-                    for (int pt = 0; pt < distFloor; pt++)
+                    unsafe
                     {
-                        int xIndex = (int)Math.Floor(point1x + ((point2x - point1x) * pt / distance));
-                        int yIndex = (int)Math.Floor(point1y + ((point2y - point1y) * pt / distance));
-
-                        unsafe
+                        for (int i = 0; i < rgbs.Length; i++)
                         {
+                            int xIndex = (int)Math.Floor(point1x + ((point2x - point1x) * i / distance));
+                            int yIndex = (int)Math.Floor(point1y + ((point2y - point1y) * i / distance));
                             var pixels = (byte*)bitmapData.Scan0
                                 + (yIndex * bitmapData.Stride)
                                 + (xIndex * bytesPerPixel);
-                            rgbs[pt] = (pixels[2], pixels[1], pixels[0]);
+                            rgbs[i] = (pixels[2], pixels[1], pixels[0]);
                         }
                     }
                 }
