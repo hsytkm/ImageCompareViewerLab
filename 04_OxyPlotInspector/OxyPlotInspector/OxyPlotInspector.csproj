@@ -115,6 +115,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\LineLevelsSurface.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -130,12 +134,16 @@
     <Compile Include="Models\ImageLineLevels.cs" />
     <Compile Include="Models\MainImageSource.cs" />
     <Compile Include="Models\ModelMaster.cs" />
+    <Compile Include="ViewModels\LineLevelsSurfaceViewModel.cs" />
     <Compile Include="ViewModels\LineLevelsViewModel.cs" />
     <Compile Include="ViewModels\MainImageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\EventConverters\MouseMoveEventToPointConverter.cs" />
     <Compile Include="Views\LineLevels.xaml.cs">
       <DependentUpon>LineLevels.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LineLevelsSurface.xaml.cs">
+      <DependentUpon>LineLevelsSurface.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainImage.xaml.cs">
       <DependentUpon>MainImage.xaml</DependentUpon>
