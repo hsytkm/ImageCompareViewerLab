@@ -112,6 +112,8 @@ namespace OxyPlotInspector.ViewModels
                 MinorStep = 16,
                 MinimumMajorStep = 1,
                 MinimumMinorStep = 1,
+                MajorGridlineStyle = LineStyle.Solid,
+                MinorGridlineStyle = LineStyle.Dot,
                 Title = "Level@8bit"
             });
 

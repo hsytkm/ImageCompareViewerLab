@@ -28,14 +28,15 @@
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
     
-    <Grid Margin="10">
+    <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Button Margin="5"
-                Content="Analyze"
+        <Button Margin="0,0,0,5"
+                Height="30"
+                Content="Inspect"
                 Command="{Binding NotificationCommand}" />
 
         <ContentControl Grid.Row="1"
