@@ -49,15 +49,19 @@ namespace OxyPlotInspector.ViewModels
 
             ImageSource.Subscribe(x => LinePoints.SetSourceSize(x.PixelWidth, x.PixelHeight));
 
-            // MoveStart
+            // マウス移動開始
             MouseDown.Subscribe(p => LinePoints.SetPoint1(p.X, p.Y));
 
-            // Moving
-            MouseDown.Merge(MouseDown.SelectMany(MouseMove.TakeUntil(MouseUp)))
-                .Subscribe(p => {
-                    LinePoints.SetPoint2(p.X, p.Y);
-                    Histogram.SetLinePointsRatio(LinePoints.GetPointsRatio());
-                });
+            // マウス移動中
+            var mouseMove = MouseDown.Merge(MouseDown.SelectMany(MouseMove.TakeUntil(MouseUp)));
+
+            // ViewのLine表示は常時更新
+            mouseMove.Subscribe(p => LinePoints.SetPoint2(p.X, p.Y));
+
+            // Lineの画素値取得は重いので計算を間引く
+            mouseMove
+                .Throttle(TimeSpan.FromMilliseconds(500)) // 指定期間分だけ値が通過しなかったら最後の一つを流す
+                .Subscribe(_ => Histogram.SetLinePointsRatio(LinePoints.GetPointsRatio()));
 
         }
     }

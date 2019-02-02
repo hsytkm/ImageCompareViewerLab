@@ -26,14 +26,13 @@ namespace OxyPlotInspector.ViewModels
             OxyHistogram = Histogram
                 .ObserveProperty(x => x.RgbLevelLine)
                 .Where(x => x != null)
-                .Throttle(TimeSpan.FromMilliseconds(100)) // 指定期間に値が通過しなかったら最後の一つを流す
                 .Select(x => GetPlotModelSkelton(x))
                 .ToReactiveProperty();
         }
 
         private PlotModel GetPlotModelSkelton((byte R, byte G, byte B)[] rgb)
         {
-            var pm = new PlotModel { Title = "RGB histogram" };
+            var pm = new PlotModel { Title = "Pixel Level" };
             var rLine = new LineSeries { Color = OxyColors.Red };
             var gLine = new LineSeries { Color = OxyColors.Green };
             var bLine = new LineSeries { Color = OxyColors.Blue };
@@ -56,6 +55,8 @@ namespace OxyPlotInspector.ViewModels
                 Maximum = 256,
                 MajorStep = 64,
                 MinorStep = 16,
+                MinimumMajorStep = 1,
+                MinimumMinorStep = 1,
                 Title = "Level@8bit"
             });
 
@@ -63,8 +64,12 @@ namespace OxyPlotInspector.ViewModels
             {
                 Position = AxisPosition.Bottom,
                 Minimum = 0,
-                //Maximum = 1000,
-                Title = "Pixel Length"
+                //Maximum Auto
+                //MajorStep Auto
+                //MinorStep Auto
+                MinimumMajorStep = 1,
+                MinimumMinorStep = 1,
+                Title = "Length"
             });
 
             return pm;
