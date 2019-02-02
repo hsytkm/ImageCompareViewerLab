@@ -16,7 +16,7 @@ namespace OxyPlotInspector.ViewModels
     class MainImageViewModel : BindableBase
     {
         private readonly MainImageSource MainImage = ModelMaster.Instance.MainImage;
-        private readonly Histogram Histogram = ModelMaster.Instance.Histogram;
+        private readonly ImageLineLevels LineLevels = ModelMaster.Instance.LineLevels;
 
         public ReadOnlyReactiveProperty<BitmapImage> ImageSource { get; }
 
@@ -61,7 +61,7 @@ namespace OxyPlotInspector.ViewModels
             // Lineの画素値取得は重いので計算を間引く
             mouseMove
                 .Throttle(TimeSpan.FromMilliseconds(500)) // 指定期間分だけ値が通過しなかったら最後の一つを流す
-                .Subscribe(_ => Histogram.SetLinePointsRatio(LinePoints.GetPointsRatio()));
+                .Subscribe(_ => LineLevels.SetLinePointsRatio(LinePoints.GetPointsRatio()));
 
         }
     }

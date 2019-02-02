@@ -10,7 +10,7 @@ namespace OxyPlotInspector.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
-        private readonly Histogram Histogram = ModelMaster.Instance.Histogram;
+        private readonly ImageLineLevels LineLevels = ModelMaster.Instance.LineLevels;
 
         private readonly IContainerExtension _container;
         private readonly IRegionManager _regionManager;
@@ -30,7 +30,7 @@ namespace OxyPlotInspector.ViewModels
                 if (SetProperty(ref _IsNotificationRequesting, value))
                 {
                     NotificationCommand.RaiseCanExecuteChanged();
-                    Histogram.IsShowingHistogramView = value;
+                    LineLevels.IsShowingView = value;
                 }
             }
         }

@@ -3,11 +3,11 @@
 namespace OxyPlotInspector.Views
 {
     /// <summary>
-    /// ImageHistogram.xaml の相互作用ロジック
+    /// LineLevels.xaml の相互作用ロジック
     /// </summary>
-    public partial class ImageHistogram : UserControl
+    public partial class LineLevels : UserControl
     {
-        public ImageHistogram()
+        public LineLevels()
         {
             InitializeComponent();
         }

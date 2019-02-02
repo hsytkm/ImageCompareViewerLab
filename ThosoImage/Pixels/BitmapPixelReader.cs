@@ -18,7 +18,7 @@ namespace ThosoImage.Pixels
         /// <param name="point2x">終了点Xの割合(0~1)</param>
         /// <param name="point2y">終了点Yの割合(0~1)</param>
         /// <returns>RGBの画素値配列(8bit)</returns>
-        public static (byte R, byte G, byte B)[] GetRgbLevels(this string imagePath,
+        public static (byte R, byte G, byte B)[] GetRgbLineLevels(this string imagePath,
             double point1XRatio, double point1YRatio, double point2XRatio, double point2YRatio)
         {
             if (imagePath is null) throw new ArgumentNullException();
@@ -32,7 +32,7 @@ namespace ThosoImage.Pixels
                     int point1y = (int)(point1YRatio * bitmap.Height);
                     int point2x = (int)(point2XRatio * bitmap.Width);
                     int point2y = (int)(point2YRatio * bitmap.Height);
-                    return GetRgbLevels(bitmap, point1x, point1y, point2x, point2y);
+                    return GetRgbLineLevels(bitmap, point1x, point1y, point2x, point2y);
                 }
             }
             catch (Exception) { throw; }
@@ -47,7 +47,7 @@ namespace ThosoImage.Pixels
         /// <param name="point2x">終了点Xの実座標</param>
         /// <param name="point2y">終了点Yの実座標</param>
         /// <returns>RGBの画素値配列(8bit)</returns>
-        private static (byte R, byte G, byte B)[] GetRgbLevels(Bitmap bitmap,
+        private static (byte R, byte G, byte B)[] GetRgbLineLevels(Bitmap bitmap,
             int point1x, int point1y, int point2x, int point2y)
         {
             try

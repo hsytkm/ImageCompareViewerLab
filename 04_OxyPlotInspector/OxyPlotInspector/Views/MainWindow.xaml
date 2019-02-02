@@ -32,7 +32,7 @@
         <ContentControl Grid.Row="1"
                         prism:RegionManager.RegionName="ContentRegion" />
 
-        <v:ImageHistogram Grid.Row="2" />
+        <v:LineLevels Grid.Row="2" />
 
     </Grid>
 </Window>

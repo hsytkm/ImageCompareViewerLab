@@ -10,20 +10,20 @@ using System.Reactive.Linq;
 
 namespace OxyPlotInspector.ViewModels
 {
-    class ImageHistogramViewModel : BindableBase
+    class LineLevelsViewModel : BindableBase
     {
-        private readonly Histogram Histogram = ModelMaster.Instance.Histogram;
+        private readonly ImageLineLevels LineLevels = ModelMaster.Instance.LineLevels;
 
-        private ReactiveProperty<PlotModel> _OxyHistogram;
-        public ReactiveProperty<PlotModel> OxyHistogram
+        private ReactiveProperty<PlotModel> _OxyLineLevels;
+        public ReactiveProperty<PlotModel> OxyLineLevels
         {
-            get => _OxyHistogram;
-            private set => SetProperty(ref _OxyHistogram, value);
+            get => _OxyLineLevels;
+            private set => SetProperty(ref _OxyLineLevels, value);
         }
 
-        public ImageHistogramViewModel()
+        public LineLevelsViewModel()
         {
-            OxyHistogram = Histogram
+            OxyLineLevels = LineLevels
                 .ObserveProperty(x => x.RgbLevelLine)
                 .Where(x => x != null)
                 .Select(x => GetPlotModelSkelton(x))

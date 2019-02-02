@@ -111,7 +111,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\ImageHistogram.xaml">
+    <Page Include="Views\LineLevels.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -127,15 +127,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\Histogram.cs" />
+    <Compile Include="Models\ImageLineLevels.cs" />
     <Compile Include="Models\MainImageSource.cs" />
     <Compile Include="Models\ModelMaster.cs" />
-    <Compile Include="ViewModels\ImageHistogramViewModel.cs" />
+    <Compile Include="ViewModels\LineLevelsViewModel.cs" />
     <Compile Include="ViewModels\MainImageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\EventConverters\MouseMoveEventToPointConverter.cs" />
-    <Compile Include="Views\ImageHistogram.xaml.cs">
-      <DependentUpon>ImageHistogram.xaml</DependentUpon>
+    <Compile Include="Views\LineLevels.xaml.cs">
+      <DependentUpon>LineLevels.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainImage.xaml.cs">
       <DependentUpon>MainImage.xaml</DependentUpon>

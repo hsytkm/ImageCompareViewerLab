@@ -9,7 +9,7 @@ namespace OxyPlotInspector.Models
 
         public MainImageSource MainImage = new MainImageSource();
 
-        public Histogram Histogram = new Histogram();
+        public ImageLineLevels LineLevels = new ImageLineLevels();
 
     }
 }
