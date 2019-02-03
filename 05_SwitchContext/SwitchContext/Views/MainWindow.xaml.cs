@@ -15,7 +15,7 @@ namespace SwitchContext.Views
 
             regionManager.RegisterViewWithRegion("TabContentRegion", typeof(SingleImageTabItem));
             regionManager.RegisterViewWithRegion("TabContentRegion", typeof(DoubleImageTabItem));
-
+            regionManager.RegisterViewWithRegion("TabContentRegion", typeof(TripleImageTabItem));
         }
     }
 }

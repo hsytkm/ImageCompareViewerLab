@@ -13,6 +13,8 @@ namespace SwitchContext.Views
         {
             InitializeComponent();
 
+            void SetImageIndex(dynamic fe, int index) => fe.DataContext.Index = index;
+
             var view1 = container.Resolve<ImagePanel>();
             SetImageIndex(view1, 0);
             regionManager.RegisterViewWithRegion("Image2ContentRegion", () => view1);
@@ -29,8 +31,6 @@ namespace SwitchContext.Views
 
             // NG:以下で登録しようとするとRegionが見つからないと言われる謎
             //regionManager.Regions["Image2ContentRegion"].Add(container.Resolve<ImagePanel>());
-
-            void SetImageIndex(dynamic fe, int index) => fe.DataContext.Index = index;
         }
     }
 }

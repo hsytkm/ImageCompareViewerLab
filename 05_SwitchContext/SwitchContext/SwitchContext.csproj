@@ -103,6 +103,7 @@
     </ApplicationDefinition>
     <Compile Include="Common\ApplicationCommands.cs" />
     <Compile Include="Models\MainImages.cs" />
+    <Compile Include="ViewModels\TripleImageTabItemViewModel.cs" />
     <Compile Include="ViewModels\DoubleImageTabItemViewModel.cs" />
     <Compile Include="ViewModels\ImagePanelViewModel.cs" />
     <Compile Include="ViewModels\MultiImageViewModelBase.cs" />
@@ -112,6 +113,9 @@
     </Compile>
     <Compile Include="Views\SingleImageTabItem.xaml.cs">
       <DependentUpon>SingleImageTabItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TripleImageTabItem.xaml.cs">
+      <DependentUpon>TripleImageTabItem.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\DoubleImageTabItem.xaml">
       <SubType>Designer</SubType>
@@ -140,6 +144,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Views\SingleImageTabItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TripleImageTabItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

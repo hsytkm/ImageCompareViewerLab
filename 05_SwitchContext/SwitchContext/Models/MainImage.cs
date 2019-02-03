@@ -19,8 +19,6 @@ namespace SwitchContext.Models
         public MainImage(string path)
         {
             ImageName = Path.GetFileName(path);
-
-            //ImageSource = path.ToBitmapImage(ViewImageWidth, ViewImageHeight);
             ImageSource = path.ToBitmapImage();
         }
 
