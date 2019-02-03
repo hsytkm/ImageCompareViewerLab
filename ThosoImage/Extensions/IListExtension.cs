@@ -6,6 +6,7 @@ namespace ThosoImage.Extensions
 {
     public static class IListExtension
     {
+#if false
         /// <summary>
         /// 要素を昇順方向に回転させる
         /// </summary>
@@ -85,6 +86,6 @@ namespace ThosoImage.Extensions
             }
             return list;
         }
-
+#endif
     }
 }

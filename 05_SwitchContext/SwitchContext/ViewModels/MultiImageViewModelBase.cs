@@ -61,20 +61,19 @@ namespace SwitchContext.ViewModels
             else
             {
                 // 非アクティブ化時
-                MainImages.AdaptImageListTracks();
+                MainImages.AdaptImageListTracks(ContentCount);
             }
         }
 
         // 画像の入れ替え(ViewModelの入れ替え)
         private void SwapImageViewModelsOuterTrack()
         {
+            if (ContentCount <= 1) return;  // 回転する必要なし
             var views = GetRegionViews();
-            var viewsLength = views.Count();
-            if (viewsLength < ContentCount) return;
 
             // 外回り
             var head = views.First().DataContext;
-            for (int i = 0; i < viewsLength - 1; i++)
+            for (int i = 0; i < views.Count() - 1; i++)
             {
                 views.ElementAt(i).DataContext = views.ElementAt(i + 1).DataContext;
             }

@@ -1,6 +1,7 @@
 ﻿using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media.Imaging;
 using ThosoImage.Extensions;
 
@@ -35,9 +36,30 @@ namespace SwitchContext.Models
         }
 
         // Model画像リストの順序を定着させる
-        public void AdaptImageListTracks()
+        public void AdaptImageListTracks(int count)
         {
-            ImageSources.RotateAscendingOrder(OuterTracksCounter);
+            if (count <= 1) return;
+            var list = ImageSources;
+            if (count > list.Count) throw new ArgumentException(nameof(count));
+
+            for (int i = 0; i < OuterTracksCounter; i++)
+            {
+#if false
+                var tail = list.ElementAt(count - 1);
+                for (int j =  count - 1; j > 0; j--)
+                {
+                    list[j] = list[j - 1];
+                }
+                list[0] = tail;
+#else
+                var head = list.First();
+                for (int j = 0; j < count - 1; j++)
+                {
+                    list[j] = list[j + 1];
+                }
+                list[count - 1] = head;
+#endif
+            }
             OuterTracksCounter = 0;
         }
 
