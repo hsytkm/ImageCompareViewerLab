@@ -26,6 +26,8 @@ namespace SwitchContext.ViewModels
 
         private readonly IRegionManager _regionManager;
         private readonly IApplicationCommands _applicationCommands;
+
+        public DelegateCommand SwapImagesInnerCommand { get; }
         public DelegateCommand SwapImagesOuterCommand { get; }
 
         public MultiImageViewModelBase(IRegionManager regionManager, IApplicationCommands applicationCommands)
@@ -33,9 +35,11 @@ namespace SwitchContext.ViewModels
             _regionManager = regionManager;
             _applicationCommands = applicationCommands;
 
-            SwapImagesOuterCommand = new DelegateCommand(SwapImageViewModelsOuterTrack);
+            SwapImagesInnerCommand = new DelegateCommand(SwapImageViewModelsInnerTrack);
+            _applicationCommands.SwapInnerTrackCommand.RegisterCommand(SwapImagesInnerCommand);
 
-            _applicationCommands.SaveCommand.RegisterCommand(SwapImagesOuterCommand);
+            SwapImagesOuterCommand = new DelegateCommand(SwapImageViewModelsOuterTrack);
+            _applicationCommands.SwapOuterTrackCommand.RegisterCommand(SwapImagesOuterCommand);
 
             IsActiveChanged += DoubleImageTabItemViewModel_IsActiveChanged;
         }
@@ -65,13 +69,28 @@ namespace SwitchContext.ViewModels
             }
         }
 
-        // 画像の入れ替え(ViewModelの入れ替え)
+        // 画像(ViewModel)を内回りで入れ替え
+        private void SwapImageViewModelsInnerTrack()
+        {
+            if (ContentCount <= 1) return;  // 回転する必要なし
+            var views = GetRegionViews();
+
+            var tail = views.Last().DataContext;
+            for (int i = views.Count() - 1; i > 0 ; i--)
+            {
+                views.ElementAt(i).DataContext = views.ElementAt(i - 1).DataContext;
+            }
+            views.First().DataContext = tail;
+
+            MainImages.RotateInnerTrack();
+        }
+
+        // 画像(ViewModel)を外回りで入れ替え
         private void SwapImageViewModelsOuterTrack()
         {
             if (ContentCount <= 1) return;  // 回転する必要なし
             var views = GetRegionViews();
 
-            // 外回り
             var head = views.First().DataContext;
             for (int i = 0; i < views.Count() - 1; i++)
             {
@@ -92,6 +111,7 @@ namespace SwitchContext.ViewModels
             {
                 if (SetProperty(ref _isActive, value))
                 {
+                    SwapImagesInnerCommand.IsActive = value;
                     SwapImagesOuterCommand.IsActive = value;
                     IsActiveChanged?.Invoke(this, new DataEventArgs<bool>(value));
                 }

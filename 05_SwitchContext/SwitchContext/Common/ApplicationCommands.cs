@@ -4,11 +4,13 @@ namespace SwitchContext.Common
 {
     public interface IApplicationCommands
     {
-        CompositeCommand SaveCommand { get; }
+        CompositeCommand SwapInnerTrackCommand { get; }
+        CompositeCommand SwapOuterTrackCommand { get; }
     }
 
     public class ApplicationCommands : IApplicationCommands
     {
-        public CompositeCommand SaveCommand { get; } = new CompositeCommand(true);
+        public CompositeCommand SwapInnerTrackCommand { get; } = new CompositeCommand(true);
+        public CompositeCommand SwapOuterTrackCommand { get; } = new CompositeCommand(true);
     }
 }

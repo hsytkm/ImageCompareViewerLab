@@ -29,11 +29,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Content="Swap (OuterTrack)"
-                    Command="{Binding ApplicationCommands.SaveCommand}" />
+            <Button Content="Swap (InnerTrack)"
+                    Command="{Binding ApplicationCommands.SwapInnerTrackCommand}" />
 
             <Button Grid.Column="1"
-                    Content="Swap (InnerTrack)" />
+                    Content="Swap (OuterTrack)"
+                    Command="{Binding ApplicationCommands.SwapOuterTrackCommand}" />
         </Grid>
 
         <TabControl Grid.Row="1"

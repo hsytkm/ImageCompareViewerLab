@@ -27,7 +27,13 @@ namespace SwitchContext.Models
         }
 
         // 画像リストの外回りカウンタ
+        private int InnerTracksCounter;
         private int OuterTracksCounter;
+
+        public void RotateInnerTrack()
+        {
+            InnerTracksCounter = (InnerTracksCounter + 1) % ImageSources.Count;
+        }
 
         public void RotateOuterTrack()
         {
@@ -41,24 +47,34 @@ namespace SwitchContext.Models
             var list = ImageSources;
             if (count > list.Count) throw new ArgumentException(nameof(count));
 
-            for (int i = 0; i < OuterTracksCounter; i++)
+            var loop = InnerTracksCounter - OuterTracksCounter;
+
+            if (loop > 0)
             {
-#if false
-                var tail = list.ElementAt(count - 1);
-                for (int j =  count - 1; j > 0; j--)
+                for (int i = 0; i < loop; i++)
                 {
-                    list[j] = list[j - 1];
+                    var tail = list.ElementAt(count - 1);
+                    for (int j = count - 1; j > 0; j--)
+                    {
+                        list[j] = list[j - 1];
+                    }
+                    list[0] = tail;
                 }
-                list[0] = tail;
-#else
-                var head = list.First();
-                for (int j = 0; j < count - 1; j++)
-                {
-                    list[j] = list[j + 1];
-                }
-                list[count - 1] = head;
-#endif
             }
+            else if(loop < 0)
+            {
+                for (int i = 0; i < -loop; i++)
+                {
+                    var head = list.First();
+                    for (int j = 0; j < count - 1; j++)
+                    {
+                        list[j] = list[j + 1];
+                    }
+                    list[count - 1] = head;
+                }
+            }
+
+            InnerTracksCounter = 0;
             OuterTracksCounter = 0;
         }
 
