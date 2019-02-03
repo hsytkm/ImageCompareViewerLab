@@ -35,7 +35,7 @@ namespace SwitchContext.ViewModels
 
         private void SwapImageViewModels()
         {
-            var region = _regionManager.Regions["Image2ContentRegion"];
+            var region = _regionManager.Regions["Image1ContentRegion"];
             var views = region.Views.Cast<FrameworkElement>();
             var viewsLength = views.Count();
             //if (viewsLength < 2) return;

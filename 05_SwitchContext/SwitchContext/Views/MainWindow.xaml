@@ -9,7 +9,7 @@
         xmlns:v="clr-namespace:SwitchContext.Views"
         mc:Ignorable="d"
         Title="SwitchContext"
-        Height="350" Width="700">
+        Height="350" Width="600">
 
     <Window.Resources>
         <Style TargetType="TabItem">

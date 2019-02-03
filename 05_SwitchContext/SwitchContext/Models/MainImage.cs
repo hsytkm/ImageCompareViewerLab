@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using System.IO;
 using System.Windows.Media.Imaging;
 using ThosoImage.Wpf.Imaging;
 
@@ -6,8 +7,7 @@ namespace SwitchContext.Models
 {
     class MainImage : BindableBase
     {
-        //private static readonly int ViewImageWidth = 320;
-        //private static readonly int ViewImageHeight = 240;
+        public string ImageName { get; }
 
         private BitmapImage _ImageSource;
         public BitmapImage ImageSource
@@ -18,6 +18,8 @@ namespace SwitchContext.Models
 
         public MainImage(string path)
         {
+            ImageName = Path.GetFileName(path);
+
             //ImageSource = path.ToBitmapImage(ViewImageWidth, ViewImageHeight);
             ImageSource = path.ToBitmapImage();
         }
