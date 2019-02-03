@@ -1,0 +1,33 @@
+﻿<Window x:Class="SwitchContext.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        xmlns:v="clr-namespace:SwitchContext.Views"
+        mc:Ignorable="d"
+        Title="SwitchContext"
+        Height="350" Width="400">
+
+    <Window.Resources>
+        <Style TargetType="TabItem">
+            <Setter Property="Header" Value="{Binding DataContext.Title, Mode=OneTime}" />
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="5,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Button Content="Swap"
+                Command="{Binding SwapCommand}"/>
+
+        <TabControl Grid.Row="1"
+                    prism:RegionManager.RegionName="TabContentRegion" />
+
+    </Grid>
+</Window>
