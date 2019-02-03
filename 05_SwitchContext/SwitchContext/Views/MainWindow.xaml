@@ -30,11 +30,11 @@
             </Grid.ColumnDefinitions>
 
             <Button Content="Swap (InnerTrack)"
-                    Command="{Binding ApplicationCommands.SwapInnerTrackCommand}" />
+                    Command="{Binding ApplicationCommands.SwapInnerTrackCommand, Mode=OneTime}" />
 
             <Button Grid.Column="1"
                     Content="Swap (OuterTrack)"
-                    Command="{Binding ApplicationCommands.SwapOuterTrackCommand}" />
+                    Command="{Binding ApplicationCommands.SwapOuterTrackCommand, Mode=OneTime}" />
         </Grid>
 
         <TabControl Grid.Row="1"

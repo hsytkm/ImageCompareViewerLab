@@ -15,19 +15,13 @@ namespace SwitchContext.Views
         {
             InitializeComponent();
 
-            void SetImageIndex(dynamic fe, int index) => fe.DataContext.Index = index;
-
             int count = 3;
             string regionName = $"Image{count}ContentRegion";
-
-            Enumerable.Range(0, count)
-                .Select(x =>
-                {
-                    var v = container.Resolve<ImagePanel>();
-                    SetImageIndex(v, x);
-                    return v;
-                })
-                .ForEach(v => regionManager.RegisterViewWithRegion(regionName, () => v));
+            for (int i = 0; i < count; i++)
+            {
+                regionManager.RegisterViewWithRegion(regionName,
+                    () => container.Resolve<ImagePanel>());
+            }
         }
     }
 }

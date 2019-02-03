@@ -7,18 +7,7 @@ namespace SwitchContext.ViewModels
     class ImagePanelViewModel : BindableBase
     {
         private readonly MainImages MainImages = ModelContext.Instance.MainImages;
-
-        private int _Index;
-        public int Index
-        {
-            get => _Index;
-            set
-            {
-                if (SetProperty(ref _Index, value))
-                    UpdateImageSource(Index);
-            }
-        }
-
+        
         private BitmapImage _ImageSource;
         public BitmapImage ImageSource
         {
@@ -26,15 +15,11 @@ namespace SwitchContext.ViewModels
             private set => SetProperty(ref _ImageSource, value);
         }
 
-        public ImagePanelViewModel()
-        {
-            UpdateImageSource(Index);
-        }
+        public ImagePanelViewModel() { }
 
         public void UpdateImageSource(int index)
         {
             ImageSource = MainImages.GetImageSource(index);
-            Index = index;
         }
 
     }

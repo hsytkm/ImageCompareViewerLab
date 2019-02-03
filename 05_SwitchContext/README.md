@@ -7,7 +7,7 @@ Viewに同Controlを複数並べておいて、ボタンによりControlを入�
 
 
 ## 分からなかったこと
-- View作成時にViewModelに引数渡したい
+- View作成時にViewModelに引数渡したかったけど分からんまま必要なくなった
 
 ## 参考にさせて頂いたページ
 

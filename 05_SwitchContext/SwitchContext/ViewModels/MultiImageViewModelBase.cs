@@ -41,7 +41,7 @@ namespace SwitchContext.ViewModels
             SwapImagesOuterCommand = new DelegateCommand(SwapImageViewModelsOuterTrack);
             _applicationCommands.SwapOuterTrackCommand.RegisterCommand(SwapImagesOuterCommand);
 
-            IsActiveChanged += DoubleImageTabItemViewModel_IsActiveChanged;
+            IsActiveChanged += MultiImageViewModelBase_IsActiveChanged;
         }
 
         // Region内のViewsを取得
@@ -49,10 +49,9 @@ namespace SwitchContext.ViewModels
             _regionManager.Regions[ImageContentRegion].Views.Cast<FrameworkElement>();
 
         // アクティブ状態変化時の処理
-        private void DoubleImageTabItemViewModel_IsActiveChanged(object sender, EventArgs e)
+        private void MultiImageViewModelBase_IsActiveChanged(object sender, EventArgs e)
         {
             if (!(e is DataEventArgs<bool> e2)) return;
-
             if (e2.Value)
             {
                 // アクティブ化時

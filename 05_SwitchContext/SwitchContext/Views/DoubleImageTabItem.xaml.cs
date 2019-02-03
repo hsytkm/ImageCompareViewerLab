@@ -13,15 +13,13 @@ namespace SwitchContext.Views
         {
             InitializeComponent();
 
-            void SetImageIndex(dynamic fe, int index) => fe.DataContext.Index = index;
-
-            var view1 = container.Resolve<ImagePanel>();
-            SetImageIndex(view1, 0);
-            regionManager.RegisterViewWithRegion("Image2ContentRegion", () => view1);
-
-            var view2 = container.Resolve<ImagePanel>();
-            SetImageIndex(view2, 1);
-            regionManager.RegisterViewWithRegion("Image2ContentRegion", () => view2);
+            int count = 2;
+            string regionName = $"Image{count}ContentRegion";
+            for (int i = 0; i < count; i++)
+            {
+                regionManager.RegisterViewWithRegion(regionName,
+                    () => container.Resolve<ImagePanel>());
+            }
 
             // NG:以下では登録できるがViewModelに引数を渡せない
             //regionManager.RegisterViewWithRegion("Image2ContentRegion", typeof(ImagePanel));
