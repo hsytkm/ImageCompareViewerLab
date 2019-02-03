@@ -26,16 +26,16 @@ namespace SwitchContext.ViewModels
 
         private readonly IRegionManager _regionManager;
         private readonly IApplicationCommands _applicationCommands;
-        public DelegateCommand SwapImagesInnerCommand { get; }
+        public DelegateCommand SwapImagesOuterCommand { get; }
 
         public MultiImageViewModelBase(IRegionManager regionManager, IApplicationCommands applicationCommands)
         {
             _regionManager = regionManager;
             _applicationCommands = applicationCommands;
 
-            SwapImagesInnerCommand = new DelegateCommand(SwapImageViewModelsInnerTrack);
+            SwapImagesOuterCommand = new DelegateCommand(SwapImageViewModelsOuterTrack);
 
-            _applicationCommands.SaveCommand.RegisterCommand(SwapImagesInnerCommand);
+            _applicationCommands.SaveCommand.RegisterCommand(SwapImagesOuterCommand);
 
             IsActiveChanged += DoubleImageTabItemViewModel_IsActiveChanged;
         }
@@ -66,7 +66,7 @@ namespace SwitchContext.ViewModels
         }
 
         // 画像の入れ替え(ViewModelの入れ替え)
-        private void SwapImageViewModelsInnerTrack()
+        private void SwapImageViewModelsOuterTrack()
         {
             var views = GetRegionViews();
             var viewsLength = views.Count();
@@ -80,7 +80,7 @@ namespace SwitchContext.ViewModels
             }
             views.Last().DataContext = head;
 
-            MainImages.RotateInnerTrack();
+            MainImages.RotateOuterTrack();
         }
 
         #region IActiveAware
@@ -93,7 +93,7 @@ namespace SwitchContext.ViewModels
             {
                 if (SetProperty(ref _isActive, value))
                 {
-                    SwapImagesInnerCommand.IsActive = value;
+                    SwapImagesOuterCommand.IsActive = value;
                     IsActiveChanged?.Invoke(this, new DataEventArgs<bool>(value));
                 }
             }

@@ -27,18 +27,18 @@ namespace SwitchContext.Models
         }
 
         // 画像リストの内回りカウンタ
-        private int InnerTracksCounter;
+        private int OuterTracksCounter;
 
-        public void RotateInnerTrack()
+        public void RotateOuterTrack()
         {
-            InnerTracksCounter = (InnerTracksCounter + 1) % ImageSources.Count;
+            OuterTracksCounter = (OuterTracksCounter + 1) % ImageSources.Count;
         }
 
         // Model画像リストの順序を定着させる
         public void AdaptImageListTracks()
         {
-            ImageSources.RotateAscendingOrder(InnerTracksCounter);
-            InnerTracksCounter = 0;
+            ImageSources.RotateAscendingOrder(OuterTracksCounter);
+            OuterTracksCounter = 0;
         }
 
     }
