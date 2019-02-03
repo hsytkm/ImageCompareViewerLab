@@ -105,6 +105,7 @@
     <Compile Include="Models\MainImages.cs" />
     <Compile Include="ViewModels\DoubleImageTabItemViewModel.cs" />
     <Compile Include="ViewModels\ImagePanelViewModel.cs" />
+    <Compile Include="ViewModels\MultiImageViewModelBase.cs" />
     <Compile Include="ViewModels\SingleImageTabItemViewModel.cs" />
     <Compile Include="Views\ImagePanel.xaml.cs">
       <DependentUpon>ImagePanel.xaml</DependentUpon>
