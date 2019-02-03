@@ -26,19 +26,14 @@ namespace SwitchContext.Models
             return ImageSources[index].ImageSource;
         }
 
-        // 画像リストの外回りカウンタ
+        // 画像リストの内回りカウンタ
         private int InnerTracksCounter;
-        private int OuterTracksCounter;
 
-        public void RotateInnerTrack()
-        {
+        public void RotateInnerTrack() =>
             InnerTracksCounter = (InnerTracksCounter + 1) % ImageSources.Count;
-        }
 
-        public void RotateOuterTrack()
-        {
-            OuterTracksCounter = (OuterTracksCounter + 1) % ImageSources.Count;
-        }
+        public void RotateOuterTrack() =>
+            InnerTracksCounter = (InnerTracksCounter - 1) % ImageSources.Count;
 
         // Model画像リストの順序を定着させる
         public void AdaptImageListTracks(int count)
@@ -47,8 +42,7 @@ namespace SwitchContext.Models
             var list = ImageSources;
             if (count > list.Count) throw new ArgumentException(nameof(count));
 
-            var loop = InnerTracksCounter - OuterTracksCounter;
-
+            var loop = InnerTracksCounter;
             if (loop > 0)
             {
                 for (int i = 0; i < loop; i++)
@@ -75,7 +69,6 @@ namespace SwitchContext.Models
             }
 
             InnerTracksCounter = 0;
-            OuterTracksCounter = 0;
         }
 
     }
