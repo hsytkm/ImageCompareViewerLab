@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Prism.Regions;
+using System.Windows.Controls;
 
 namespace SwitchContext.Views
 {
@@ -7,9 +8,11 @@ namespace SwitchContext.Views
     /// </summary>
     public partial class SingleImageTabItem : UserControl
     {
-        public SingleImageTabItem()
+        public SingleImageTabItem(IRegionManager regionManager)
         {
             InitializeComponent();
+
+            regionManager.RegisterViewWithRegion("Image1ContentRegion", typeof(ImagePanel));
         }
     }
 }

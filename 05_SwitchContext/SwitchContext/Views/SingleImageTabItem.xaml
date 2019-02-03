@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
-    <Grid>
-        <TextBlock Text="Single" />
-    </Grid>
+
+    <ContentControl prism:RegionManager.RegionName="Image1ContentRegion" />
+
 </UserControl>
