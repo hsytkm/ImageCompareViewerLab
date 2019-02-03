@@ -21,11 +21,14 @@ namespace SwitchContext.Views
             SetImageIndex(view2, 1);
             regionManager.RegisterViewWithRegion("Image2ContentRegion", () => view2);
 
-            // NG:以下だとViewModelに引数を渡せない
+            // NG:以下では登録できるがViewModelに引数を渡せない
             //regionManager.RegisterViewWithRegion("Image2ContentRegion", typeof(ImagePanel));
 
             // NG:以下で登録しようとするとRegionが見つからないと言われる謎
             //regionManager.AddToRegion("Image2ContentRegion", container.Resolve<ImagePanel>());
+
+            // NG:以下で登録しようとするとRegionが見つからないと言われる謎
+            //regionManager.Regions["Image2ContentRegion"].Add(container.Resolve<ImagePanel>());
 
             void SetImageIndex(dynamic fe, int index) => fe.DataContext.Index = index;
         }
