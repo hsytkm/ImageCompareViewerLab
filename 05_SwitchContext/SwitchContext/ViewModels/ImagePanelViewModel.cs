@@ -1,7 +1,6 @@
 ﻿using Prism.Mvvm;
 using SwitchContext.Models;
 using System.Windows.Media.Imaging;
-using ThosoImage.Wpf.Imaging;
 
 namespace SwitchContext.ViewModels
 {
@@ -15,8 +14,7 @@ namespace SwitchContext.ViewModels
             get => _Index;
             set
             {
-                if (SetProperty(ref _Index, value))
-                    ImageSource = MainImages.GetImageSource(Index);
+                if (SetProperty(ref _Index, value)) UpdateImageSource(Index);
             }
         }
 
@@ -29,6 +27,12 @@ namespace SwitchContext.ViewModels
 
         public ImagePanelViewModel()
         {
+            UpdateImageSource(Index);
+        }
+
+        public void UpdateImageSource(int index)
+        {
+            Index = index;
             ImageSource = MainImages.GetImageSource(Index);
         }
 

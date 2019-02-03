@@ -1,6 +1,8 @@
 ﻿using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
+using ThosoImage.Extensions;
 
 namespace SwitchContext.Models
 {
@@ -23,12 +25,18 @@ namespace SwitchContext.Models
         }
 
         // 画像リストの内回りカウンタ
-        public int InnerTracksCounter { get; set; }
+        private int InnerTracksCounter;
+
+        public void RotateInnerTrack()
+        {
+            InnerTracksCounter = (InnerTracksCounter + 1) % ImageSources.Count;
+        }
 
         // Model画像リストの順序を定着させる
         public void AdaptImageListTracks()
         {
-
+            ImageSources.RotateAscendingOrder(InnerTracksCounter);
+            InnerTracksCounter = 0;
         }
 
     }

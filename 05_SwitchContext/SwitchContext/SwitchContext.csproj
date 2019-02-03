@@ -175,6 +175,10 @@
       <Project>{023355a3-8c55-49ef-a5a1-d81deffe72a2}</Project>
       <Name>ThosoImageWpf</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\ThosoImage\ThosoImage.csproj">
+      <Project>{9f6bee93-c0b6-4a55-88a6-b6dd1cdaef04}</Project>
+      <Name>ThosoImage</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
