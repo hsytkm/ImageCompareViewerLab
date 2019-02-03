@@ -1,7 +1,7 @@
 # SwitchContext
 
 ## 実現したいこと
-Viewに同Controlを並べておいて、ボタンでControlを入れ替える
+Viewに同Controlを複数並べておいて、ボタンによりControlを入れ替える
 
 ## 対応したこと
 
