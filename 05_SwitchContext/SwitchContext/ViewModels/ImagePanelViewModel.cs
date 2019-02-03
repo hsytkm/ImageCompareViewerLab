@@ -14,7 +14,8 @@ namespace SwitchContext.ViewModels
             get => _Index;
             set
             {
-                if (SetProperty(ref _Index, value)) UpdateImageSource(Index);
+                if (SetProperty(ref _Index, value))
+                    UpdateImageSource(Index);
             }
         }
 
@@ -32,8 +33,8 @@ namespace SwitchContext.ViewModels
 
         public void UpdateImageSource(int index)
         {
+            ImageSource = MainImages.GetImageSource(index);
             Index = index;
-            ImageSource = MainImages.GetImageSource(Index);
         }
 
     }

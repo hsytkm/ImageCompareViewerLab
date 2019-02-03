@@ -17,15 +17,17 @@ namespace SwitchContext.Views
 
             void SetImageIndex(dynamic fe, int index) => fe.DataContext.Index = index;
 
-            var views = Enumerable.Range(0, 3)
+            int count = 3;
+            string regionName = $"Image{count}ContentRegion";
+
+            Enumerable.Range(0, count)
                 .Select(x =>
                 {
                     var v = container.Resolve<ImagePanel>();
                     SetImageIndex(v, x);
                     return v;
-                });
-
-            views.ForEach(v => regionManager.RegisterViewWithRegion("Image3ContentRegion", () => v));
+                })
+                .ForEach(v => regionManager.RegisterViewWithRegion(regionName, () => v));
         }
     }
 }

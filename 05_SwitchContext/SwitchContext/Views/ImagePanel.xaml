@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
-    <Grid>
-        <Image Source="{Binding ImageSource, Mode=OneWay}" />
-    </Grid>
+
+    <Image Source="{Binding ImageSource, Mode=OneWay}" />
+
 </UserControl>

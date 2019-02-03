@@ -23,8 +23,18 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Button Content="Swap"
-                Command="{Binding ApplicationCommands.SaveCommand}" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Content="Swap (OuterTrack)"
+                    Command="{Binding ApplicationCommands.SaveCommand}" />
+
+            <Button Grid.Column="1"
+                    Content="Swap (InnerTrack)" />
+        </Grid>
 
         <TabControl Grid.Row="1"
                     prism:RegionManager.RegionName="TabContentRegion" />

@@ -12,7 +12,7 @@ namespace SwitchContext.ViewModels
         public SingleImageTabItemViewModel(IRegionManager regionManager, IApplicationCommands applicationCommands)
             : base(regionManager, applicationCommands)
         {
-
         }
+
     }
 }

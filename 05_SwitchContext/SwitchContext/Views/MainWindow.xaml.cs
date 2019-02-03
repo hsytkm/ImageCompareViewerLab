@@ -1,6 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Regions;
 using System.Windows;
+using ThosoImage.Extensions;
 
 namespace SwitchContext.Views
 {
@@ -13,9 +14,13 @@ namespace SwitchContext.Views
         {
             InitializeComponent();
 
-            regionManager.RegisterViewWithRegion("TabContentRegion", typeof(SingleImageTabItem));
-            regionManager.RegisterViewWithRegion("TabContentRegion", typeof(DoubleImageTabItem));
-            regionManager.RegisterViewWithRegion("TabContentRegion", typeof(TripleImageTabItem));
+            new[]
+            {
+                typeof(SingleImageTabItem),
+                typeof(DoubleImageTabItem),
+                typeof(TripleImageTabItem),
+            }
+            .ForEach(x => regionManager.RegisterViewWithRegion("TabContentRegion", x));
         }
     }
 }
