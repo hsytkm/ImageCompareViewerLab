@@ -1,20 +1,15 @@
-﻿using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
-using System;
-using System.Windows;
+﻿using Prism.Mvvm;
+using SwitchContext.Common;
 
 namespace SwitchContext.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
-        public DelegateCommand SwapCommand { get; }
+        public IApplicationCommands ApplicationCommands { get; }
 
-        public MainWindowViewModel(IContainerExtension container, IRegionManager regionManager)
+        public MainWindowViewModel(IApplicationCommands applicationCommands)
         {
-
+            ApplicationCommands = applicationCommands;
         }
 
     }

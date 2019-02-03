@@ -101,6 +101,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\ApplicationCommands.cs" />
     <Compile Include="ViewModels\DoubleImageTabItemViewModel.cs" />
     <Compile Include="ViewModels\ImagePanelViewModel.cs" />
     <Compile Include="ViewModels\SingleImageTabItemViewModel.cs" />

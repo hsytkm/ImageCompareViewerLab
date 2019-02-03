@@ -1,7 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
 using Prism.Unity;
+using SwitchContext.Common;
 using SwitchContext.Views;
 using System.Windows;
 
@@ -19,6 +19,7 @@ namespace SwitchContext
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<IApplicationCommands, ApplicationCommands>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

@@ -24,7 +24,7 @@
         </Grid.RowDefinitions>
 
         <Button Content="Swap"
-                Command="{Binding SwapCommand}"/>
+                Command="{Binding ApplicationCommands.SaveCommand}" />
 
         <TabControl Grid.Row="1"
                     prism:RegionManager.RegionName="TabContentRegion" />
