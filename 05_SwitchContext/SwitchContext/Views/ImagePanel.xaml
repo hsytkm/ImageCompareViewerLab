@@ -9,6 +9,6 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
     <Grid>
-        <Image Source="c:/data/image3_.jpg" />
+        <Image Source="{Binding ImageSource, Mode=OneWay}" />
     </Grid>
 </UserControl>

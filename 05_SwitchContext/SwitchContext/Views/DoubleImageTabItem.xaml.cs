@@ -13,8 +13,21 @@ namespace SwitchContext.Views
         {
             InitializeComponent();
 
-            regionManager.RegisterViewWithRegion("Image2ContentRegion", typeof(ImagePanel));
-            regionManager.RegisterViewWithRegion("Image2ContentRegion", typeof(ImagePanel));
+            var view1 = container.Resolve<ImagePanel>();
+            SetImageIndex(view1, 0);
+            regionManager.RegisterViewWithRegion("Image2ContentRegion", () => view1);
+
+            var view2 = container.Resolve<ImagePanel>();
+            SetImageIndex(view2, 1);
+            regionManager.RegisterViewWithRegion("Image2ContentRegion", () => view2);
+
+            // NG:以下だとViewModelに引数を渡せない
+            //regionManager.RegisterViewWithRegion("Image2ContentRegion", typeof(ImagePanel));
+
+            // NG:以下で登録しようとするとRegionが見つからないと言われる謎
+            //regionManager.AddToRegion("Image2ContentRegion", container.Resolve<ImagePanel>());
+
+            void SetImageIndex(dynamic fe, int index) => fe.DataContext.Index = index;
         }
     }
 }
