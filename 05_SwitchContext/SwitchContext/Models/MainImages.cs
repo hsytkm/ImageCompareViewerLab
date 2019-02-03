@@ -26,7 +26,7 @@ namespace SwitchContext.Models
             return ImageSources[index].ImageSource;
         }
 
-        // 画像リストの内回りカウンタ
+        // 画像リストの外回りカウンタ
         private int OuterTracksCounter;
 
         public void RotateOuterTrack()

@@ -72,7 +72,7 @@ namespace SwitchContext.ViewModels
             var viewsLength = views.Count();
             if (viewsLength < ContentCount) return;
 
-            // 内回り
+            // 外回り
             var head = views.First().DataContext;
             for (int i = 0; i < viewsLength - 1; i++)
             {
