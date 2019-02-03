@@ -6,6 +6,9 @@ namespace SwitchContext.Models
 {
     class MainImage : BindableBase
     {
+        //private static readonly int ViewImageWidth = 320;
+        //private static readonly int ViewImageHeight = 240;
+
         private BitmapImage _ImageSource;
         public BitmapImage ImageSource
         {
@@ -15,6 +18,7 @@ namespace SwitchContext.Models
 
         public MainImage(string path)
         {
+            //ImageSource = path.ToBitmapImage(ViewImageWidth, ViewImageHeight);
             ImageSource = path.ToBitmapImage();
         }
 

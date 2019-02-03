@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using SwitchContext.Models;
 using System.Windows.Media.Imaging;
 using ThosoImage.Wpf.Imaging;
 
@@ -6,6 +7,8 @@ namespace SwitchContext.ViewModels
 {
     class ImagePanelViewModel : BindableBase
     {
+        private readonly MainImages MainImages = ModelContext.Instance.MainImages;
+
         private static readonly string ImagePath1 = @"C:/data/image31.jpg";
         private static readonly string ImagePath2 = @"C:/data/image32.jpg";
 
@@ -15,7 +18,8 @@ namespace SwitchContext.ViewModels
             get => _Index;
             set
             {
-                if (SetProperty(ref _Index, value)) ImageSource = ReadImage(value);
+                if (SetProperty(ref _Index, value))
+                    ImageSource = MainImages.GetImageSource(Index);
             }
         }
 
@@ -28,19 +32,7 @@ namespace SwitchContext.ViewModels
 
         public ImagePanelViewModel()
         {
-            ImageSource = ReadImage(Index);
-        }
-
-        private BitmapImage ReadImage(int pattern)
-        {
-            switch (pattern)
-            {
-                case 0:
-                    return ImagePath1.ToBitmapImage();
-                case 1:
-                    return ImagePath2.ToBitmapImage();
-            }
-            return null;
+            ImageSource = MainImages.GetImageSource(Index);
         }
 
     }

@@ -22,7 +22,7 @@ namespace SwitchContext.ViewModels
             _regionManager = regionManager;
             _applicationCommands = applicationCommands;
 
-            SwapImagesCommand = new DelegateCommand(SwapImages);
+            SwapImagesCommand = new DelegateCommand(SwapImageViewModels);
 
             _applicationCommands.SaveCommand.RegisterCommand(SwapImagesCommand);
 
@@ -33,7 +33,7 @@ namespace SwitchContext.ViewModels
         {
         }
 
-        private void SwapImages()
+        private void SwapImageViewModels()
         {
             var region = _regionManager.Regions["Image2ContentRegion"];
             var views = region.Views.Cast<FrameworkElement>();
