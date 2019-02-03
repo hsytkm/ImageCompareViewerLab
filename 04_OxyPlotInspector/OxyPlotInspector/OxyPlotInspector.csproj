@@ -138,6 +138,8 @@
     <Compile Include="ViewModels\LineLevelsViewModel.cs" />
     <Compile Include="ViewModels\MainImageViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\Behaviors\BehaviorBase.cs" />
+    <Compile Include="Views\Behaviors\MouseCaptureBehavior.cs" />
     <Compile Include="Views\EventConverters\MouseMoveEventToPointConverter.cs" />
     <Compile Include="Views\LineLevels.xaml.cs">
       <DependentUpon>LineLevels.xaml</DependentUpon>

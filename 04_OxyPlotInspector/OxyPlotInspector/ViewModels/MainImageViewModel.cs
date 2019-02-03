@@ -10,6 +10,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using ThosoImage.Extensions;
 
 namespace OxyPlotInspector.ViewModels
 {
@@ -53,8 +54,8 @@ namespace OxyPlotInspector.ViewModels
             LineLevels.ObserveProperty(x => x.IsShowingView).Where(b => !b)
                 .Subscribe(_ =>
                 {
-                    InspectLinePoints.ClearPoints();       // 画像上のLine表示
-                    LineLevels.ReleaseLinePoints();   // OxyPlot図(次回表示用)
+                    InspectLinePoints.ClearPoints();    // 画像上のLine表示
+                    LineLevels.ReleaseLinePoints();     // OxyPlot図(次回表示用)
                 });
 
             // マウス移動開始
@@ -165,6 +166,9 @@ namespace OxyPlotInspector.ViewModels
 
         public new void SetPoint1(double x1, double y1)
         {
+            x1 = x1.Limit(0, SourceWidth - 1);
+            y1 = y1.Limit(0, SourceHeight - 1);
+
             base.SetPoint1(x1, y1);
             LeftWingPoints.SetPoint1(x1, y1);
             RightWingPoints.SetPoint1(x1, y1);
@@ -172,6 +176,9 @@ namespace OxyPlotInspector.ViewModels
 
         public new void SetPoint2(double x2, double y2)
         {
+            x2 = x2.Limit(0, SourceWidth - 1);
+            y2 = y2.Limit(0, SourceHeight - 1);
+
             base.SetPoint2(x2, y2);
 
             // 矢印の始点は解析線の先端
@@ -207,8 +214,8 @@ namespace OxyPlotInspector.ViewModels
 
             double limit(double x)
             {
-                if (x < 0) return 0;
-                if (x > 1) return 1;
+                if (x <= 0D) return 0D;
+                if (x >= 1D) return 1D;
                 return x;
             }
 
