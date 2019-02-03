@@ -14,9 +14,9 @@ using ThosoImage.Extensions;
 namespace SwitchContext.ViewModels
 {
     /// <summary>
-    /// 画像表示の基底ViewModel
+    /// 画像表示の抽象基底ViewModel
     /// </summary>
-    class MultiImageViewModelBase : BindableBase, IActiveAware
+    abstract class MultiImageViewModelBase : BindableBase, IActiveAware
     {
         public virtual int ContentCount { get; } = 0;
         public virtual string ImageContentRegion { get; } = "Region";

@@ -1,6 +1,5 @@
 ﻿using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Windows.Media.Imaging;
 
 namespace SwitchContext.Models
@@ -12,7 +11,7 @@ namespace SwitchContext.Models
         private static readonly string ImagePath3 = @"C:/data/image3.jpg";
 
         // 画像リスト
-        private IList<MainImage> ImageSources = new List<MainImage>()
+        private MainImage[] ImageSources = new[]
         {
             new MainImage(ImagePath1),
             new MainImage(ImagePath2),
@@ -21,7 +20,7 @@ namespace SwitchContext.Models
 
         public BitmapImage GetImageSource(int index)
         {
-            if (ImageSources.Count <= index) return null;
+            if (ImageSources.Length <= index) return null;
             return ImageSources[index].ImageSource;
         }
 
@@ -29,17 +28,17 @@ namespace SwitchContext.Models
         private int InnerTracksCounter;
 
         public void RotateInnerTrack() =>
-            InnerTracksCounter = (InnerTracksCounter + 1) % ImageSources.Count;
+            InnerTracksCounter = (InnerTracksCounter + 1) % ImageSources.Length;
 
         public void RotateOuterTrack() =>
-            InnerTracksCounter = (InnerTracksCounter - 1) % ImageSources.Count;
+            InnerTracksCounter = (InnerTracksCounter - 1) % ImageSources.Length;
 
         // Model画像リストの順序を定着させる
         public void AdaptImageListTracks(int count)
         {
             if (count <= 1) return;
             var list = ImageSources;
-            if (count > list.Count) throw new ArgumentException(nameof(count));
+            if (count > list.Length) throw new ArgumentException(nameof(count));
 
             var loop = InnerTracksCounter;
             if (loop > 0)
