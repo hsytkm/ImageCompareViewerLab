@@ -7,27 +7,15 @@
              d:DesignHeight="300" d:DesignWidth="300"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
-    <Grid>
-        <ListBox prism:RegionManager.RegionName="Image2ContentRegion" >
-            <ListBox.Style>
-                <Style TargetType="{x:Type ListBox}">
-                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility"
-                            Value="Hidden" />
-                    <Setter Property="ItemsPanel">
-                        <Setter.Value>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
-                            </ItemsPanelTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ListBox.Style>
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="Height"
-                            Value="200" />
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
-    </Grid>
+
+    <ListBox prism:RegionManager.RegionName="Image2ContentRegion"
+             Style="{StaticResource ListBoxStyle}" >
+        <ListBox.ItemContainerStyle>
+            <Style TargetType="ListBoxItem">
+                <Setter Property="Height"
+                        Value="200" />
+            </Style>
+        </ListBox.ItemContainerStyle>
+    </ListBox>
+
 </UserControl>
