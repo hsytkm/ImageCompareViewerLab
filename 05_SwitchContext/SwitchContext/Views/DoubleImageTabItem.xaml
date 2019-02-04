@@ -9,13 +9,7 @@
              prism:ViewModelLocator.AutoWireViewModel="True" >
 
     <ListBox prism:RegionManager.RegionName="Image2ContentRegion"
-             Style="{StaticResource ListBoxStyle}" >
-        <ListBox.ItemContainerStyle>
-            <Style TargetType="ListBoxItem">
-                <Setter Property="Height"
-                        Value="200" />
-            </Style>
-        </ListBox.ItemContainerStyle>
-    </ListBox>
+             Style="{StaticResource ListBoxStyle}"
+             ItemContainerStyle="{StaticResource ListBoxItemStyle2}" />
 
 </UserControl>
