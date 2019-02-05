@@ -3,11 +3,37 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True" >
+             xmlns:v="clr-namespace:SwitchContext.Views"
+             prism:ViewModelLocator.AutoWireViewModel="True" 
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300" >
 
+    <!-- ホントは以下だけで良い
     <Image Source="{Binding ImageSource, Mode=OneWay}" />
+    -->
+
+    <!-- 各Imageが同サイズになってるかチェック用 -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Foreground="LimeGreen">
+            <Run Text="UserControl ActiveWidth: " />
+            <Run Text="{Binding ActualWidth, Mode=OneWay,
+                                StringFormat={}{0:f3},
+                                RelativeSource={RelativeSource FindAncestor,
+                                AncestorType={x:Type v:ImagePanel}}}" />
+            <LineBreak />
+            <Run Text="Image ActiveWidth: " />
+            <Run Text="{Binding ActualWidth, ElementName=_image, Mode=OneWay, StringFormat={}{0:f3}}" />
+        </TextBlock>
+
+        <Image Grid.Row="1"
+               Name="_image"
+               Source="{Binding ImageSource, Mode=OneWay}" />
+    </Grid>
 
 </UserControl>
