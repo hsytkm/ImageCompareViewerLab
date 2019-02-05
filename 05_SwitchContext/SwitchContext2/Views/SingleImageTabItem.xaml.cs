@@ -1,6 +1,7 @@
-﻿using Prism.Regions;
-using System.Windows.Controls;
+﻿using Prism.Ioc;
+using Prism.Regions;
 using SwitchContext.Common;
+using System.Windows.Controls;
 
 namespace SwitchContext.Views
 {
@@ -9,11 +10,20 @@ namespace SwitchContext.Views
     /// </summary>
     public partial class SingleImageTabItem : UserControl
     {
-        public SingleImageTabItem(IRegionManager regionManager)
+        public SingleImageTabItem(IContainerExtension container, IRegionManager regionManager)
         {
             InitializeComponent();
 
-            regionManager.RegisterViewWithRegion(RegionNames.ImageContentRegion1, typeof(ImagePanel));
+            // 以下で動くが他画像に合わせる
+            //regionManager.RegisterViewWithRegion(RegionNames.ImageContentRegion1_0, typeof(ImagePanel));
+
+            int count = 1;
+            for (int i = 0; i < count; i++)
+            {
+                regionManager.RegisterViewWithRegion(
+                    RegionNames.GetImageContentRegionName(count, i),
+                    () => container.Resolve<ImagePanel>());
+            }
         }
     }
 }

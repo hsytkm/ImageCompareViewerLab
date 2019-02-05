@@ -8,14 +8,28 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
 
-    <ListBox prism:RegionManager.RegionName="Image3ContentRegion"
-             Style="{StaticResource ListBoxStyle}" >
-        <ListBox.ItemContainerStyle>
-            <Style TargetType="ListBoxItem">
-                <Setter Property="Height"
-                        Value="130" />
-            </Style>
-        </ListBox.ItemContainerStyle>
-    </ListBox>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ContentControl prism:RegionManager.RegionName="ImageContentRegion3_0" />
+
+        <Border Grid.Column="1"
+                Style="{StaticResource SeparateBorderStyle}" />
+
+        <ContentControl Grid.Column="2"
+                        prism:RegionManager.RegionName="ImageContentRegion3_1" />
+
+        <Border Grid.Column="3"
+                Style="{StaticResource SeparateBorderStyle}" />
+
+        <ContentControl Grid.Column="4"
+                        prism:RegionManager.RegionName="ImageContentRegion3_2" />
+    </Grid>
 
 </UserControl>

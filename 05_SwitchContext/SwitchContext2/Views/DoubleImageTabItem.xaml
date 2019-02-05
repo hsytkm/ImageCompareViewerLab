@@ -8,8 +8,20 @@
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True" >
 
-    <ListBox prism:RegionManager.RegionName="Image2ContentRegion"
-             Style="{StaticResource ListBoxStyle}"
-             ItemContainerStyle="{StaticResource ListBoxItemStyle2}" />
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <ContentControl prism:RegionManager.RegionName="ImageContentRegion2_0" />
+
+        <Border Grid.Column="1"
+                Style="{StaticResource SeparateBorderStyle}" />
+
+        <ContentControl Grid.Column="2"
+                        prism:RegionManager.RegionName="ImageContentRegion2_1" />
+    </Grid>
 
 </UserControl>

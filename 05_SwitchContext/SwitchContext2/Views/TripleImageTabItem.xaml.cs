@@ -1,8 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Regions;
-using System.Linq;
+using SwitchContext.Common;
 using System.Windows.Controls;
-using ThosoImage.Extensions;
 
 namespace SwitchContext.Views
 {
@@ -16,10 +15,10 @@ namespace SwitchContext.Views
             InitializeComponent();
 
             int count = 3;
-            string regionName = $"Image{count}ContentRegion";
             for (int i = 0; i < count; i++)
             {
-                regionManager.RegisterViewWithRegion(regionName,
+                regionManager.RegisterViewWithRegion(
+                    RegionNames.GetImageContentRegionName(count, i),
                     () => container.Resolve<ImagePanel>());
             }
         }

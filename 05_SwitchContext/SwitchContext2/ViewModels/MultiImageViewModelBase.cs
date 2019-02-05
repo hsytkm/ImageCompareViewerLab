@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using ThosoImage.Extensions;
 
 namespace SwitchContext.ViewModels
 {
@@ -19,7 +18,6 @@ namespace SwitchContext.ViewModels
     abstract class MultiImageViewModelBase : BindableBase, IActiveAware
     {
         public virtual int ContentCount { get; } = 0;
-        public virtual string ImageContentRegion { get; } = "Region";
         public virtual string Title { get; } = "Multi";
 
         private readonly MainImages MainImages = ModelContext.Instance.MainImages;
@@ -44,10 +42,6 @@ namespace SwitchContext.ViewModels
             IsActiveChanged += MultiImageViewModelBase_IsActiveChanged;
         }
 
-        // Region内のViewsを取得
-        private IEnumerable<FrameworkElement> GetRegionViews() =>
-            _regionManager.Regions[ImageContentRegion].Views.Cast<FrameworkElement>();
-
         // アクティブ状態変化時の処理
         private void MultiImageViewModelBase_IsActiveChanged(object sender, EventArgs e)
         {
@@ -55,10 +49,11 @@ namespace SwitchContext.ViewModels
             if (e2.Value)
             {
                 // アクティブ化時
-                foreach (var (item, index) in GetRegionViews().WithIndex())
+                for (int i = 0; i < ContentCount; i++)
                 {
-                    if (item.DataContext is ImagePanelViewModel vm)
-                        vm.UpdateImageSource(index);
+                    var view = GetRegionView(i);
+                    if (view?.DataContext is ImagePanelViewModel vm)
+                        vm.UpdateImageSource(i);
                 }
             }
             else
@@ -67,6 +62,23 @@ namespace SwitchContext.ViewModels
                 MainImages.AdaptImageListTracks(ContentCount);
             }
         }
+
+        #region  GetRegionView
+
+        // 指定Indexに対応する画像RegionのViewを取得
+        private FrameworkElement GetRegionView(int index)
+        {
+            var regionName = RegionNames.GetImageContentRegionName(ContentCount, index);
+            return _regionManager.Regions[regionName].Views.Cast<FrameworkElement>().FirstOrDefault();
+        }
+
+        // 指定Countに対応する画像RegionのViewsを取得(2画面なら 2_0 → 2_1 を返す)
+        private IEnumerable<FrameworkElement> GetRegionViews() =>
+            Enumerable.Range(0, ContentCount).Select(i => GetRegionView(i));
+
+        #endregion
+
+        #region  SwapImageViewModels
 
         // 画像(ViewModel)を内回りで入れ替え
         private void SwapImageViewModelsInnerTrack()
@@ -99,6 +111,8 @@ namespace SwitchContext.ViewModels
 
             MainImages.RotateOuterTrack();
         }
+
+        #endregion
 
         #region IActiveAware
 
