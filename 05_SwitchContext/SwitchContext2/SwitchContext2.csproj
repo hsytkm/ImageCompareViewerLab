@@ -57,6 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\ApplicationCommands.cs" />
+    <Compile Include="Common\RegionNames.cs" />
     <Compile Include="Models\MainImage.cs" />
     <Compile Include="Models\MainImages.cs" />
     <Compile Include="Models\ModelContext.cs" />

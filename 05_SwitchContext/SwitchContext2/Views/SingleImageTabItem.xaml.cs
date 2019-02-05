@@ -1,5 +1,6 @@
 ﻿using Prism.Regions;
 using System.Windows.Controls;
+using SwitchContext.Common;
 
 namespace SwitchContext.Views
 {
@@ -12,7 +13,7 @@ namespace SwitchContext.Views
         {
             InitializeComponent();
 
-            regionManager.RegisterViewWithRegion("Image1ContentRegion", typeof(ImagePanel));
+            regionManager.RegisterViewWithRegion(RegionNames.ImageContentRegion1, typeof(ImagePanel));
         }
     }
 }
