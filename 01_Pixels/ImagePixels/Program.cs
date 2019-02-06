@@ -28,8 +28,11 @@ namespace ImagePixels
 
             var readers = new IPixelReader[]
             {
-                new BitmapImageEx(ImagePath),   // 基準
-                new BitmapImageEx(ImagePath),   // 基準(2回目の方がちょい早い気がする)
+                new PixelReaderWpf0(ImagePath),   // 基準
+                new PixelReaderWpf0(ImagePath),   // 基準(2回目の方がちょい早い気がする)
+                new PixelReaderWpf1(ImagePath),   // 
+                new PixelReaderWpf0(ImagePath),   //
+                new PixelReaderWpf1(ImagePath),   // 
                 //new PixelReader1(ImagePath),    // 
                 new PixelReader2(ImagePath),    // 最速候補
                 //new PixelReader3(ImagePath),    // バグってます

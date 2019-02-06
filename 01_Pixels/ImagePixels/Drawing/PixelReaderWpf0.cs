@@ -7,13 +7,13 @@ using System.Windows.Media.Imaging;
 
 namespace ImagePixels.Drawing
 {
-    class BitmapImageEx : IPixelReader
+    class PixelReaderWpf0 : IPixelReader
     {
-        public string Name { get; } = "BitmapImage0";
+        public string Name { get; } = "PixelReaderWpf0";
 
         private readonly string ImagePath;
 
-        public BitmapImageEx(string imagePath)
+        public PixelReaderWpf0(string imagePath)
         {
             ImagePath = imagePath;
         }
@@ -86,12 +86,16 @@ namespace ImagePixels.Drawing
             if (imageHeight < rectY + rect.Height)
                 rectY = imageHeight - rect.Height;
 
-            var cb = new CroppedBitmap(bmp, new Int32Rect(rectX, rectY, rect.Width, rect.Height));
             var pixels = new byte[rectArea * pixelsByte];
+            var bitmapImage = bmp as BitmapSource;
+            if (rectX != 0 || rectY != 0 || rect.Width != imageWidth || rect.Height != imageHeight)
+            {
+                bitmapImage = new CroppedBitmap(bmp, new Int32Rect(rectX, rectY, rect.Width, rect.Height));
+            }
 
             try
             {
-                cb.CopyPixels(pixels, rect.Width * pixelsByte, 0);
+                bitmapImage.CopyPixels(pixels, rect.Width * pixelsByte, 0);
             }
             catch (System.Runtime.InteropServices.COMException ex)
             {

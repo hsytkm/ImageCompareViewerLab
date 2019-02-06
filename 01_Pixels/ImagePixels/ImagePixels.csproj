@@ -67,7 +67,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ImageReader.cs" />
-    <Compile Include="Drawing\PixelReader0.cs" />
+    <Compile Include="Drawing\PixelReaderWpf1.cs" />
+    <Compile Include="Drawing\PixelReaderWpf0.cs" />
     <Compile Include="Drawing\PixelReader1.cs" />
     <Compile Include="Common\Gamut.cs" />
     <Compile Include="Drawing\PixelReader2.cs" />
