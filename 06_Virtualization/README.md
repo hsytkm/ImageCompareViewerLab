@@ -10,5 +10,6 @@ CodeProjectから拾った仮想化のサンプルプロジェクト
 
 ## 参考にさせて頂いたページ
 - [ListView で表示用データを仮想化する](https://clown.hatenablog.jp/entry/20130327/listview_virtualizing)
+- [WPFでコレクションの表示を高速化するオプションとか](http://yuuxxxx.hatenablog.com/entry/2014/02/01/232320)
 
 以上
