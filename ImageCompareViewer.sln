@@ -50,6 +50,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwitchContext", "05_SwitchC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SwitchContext2", "05_SwitchContext\SwitchContext2\SwitchContext2.csproj", "{C4D1B145-3ECD-4172-A868-69D761765577}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06_Virtualization", "06_Virtualization", "{7AD69598-D52B-46E9-A20A-9F10E926A411}"
+	ProjectSection(SolutionItems) = preProject
+		06_Virtualization\README.md = 06_Virtualization\README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataVirtualization", "06_Virtualization\DataVirtualization\DataVirtualization.csproj", "{FE37F2AF-95C2-4EB7-A0F7-E47FE04C1F89}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +100,10 @@ Global
 		{C4D1B145-3ECD-4172-A868-69D761765577}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4D1B145-3ECD-4172-A868-69D761765577}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4D1B145-3ECD-4172-A868-69D761765577}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE37F2AF-95C2-4EB7-A0F7-E47FE04C1F89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE37F2AF-95C2-4EB7-A0F7-E47FE04C1F89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE37F2AF-95C2-4EB7-A0F7-E47FE04C1F89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE37F2AF-95C2-4EB7-A0F7-E47FE04C1F89}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,6 +116,7 @@ Global
 		{915DB971-5FA0-49FE-8263-B794C0C8D086} = {B22E481F-4809-4157-B1C6-E4D5C92F102E}
 		{3C612907-87DF-4A63-B82B-E45B775AA81C} = {4C07A31C-DF2C-48D8-8187-A4B7713FCD83}
 		{C4D1B145-3ECD-4172-A868-69D761765577} = {4C07A31C-DF2C-48D8-8187-A4B7713FCD83}
+		{FE37F2AF-95C2-4EB7-A0F7-E47FE04C1F89} = {7AD69598-D52B-46E9-A20A-9F10E926A411}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A747267B-7393-4543-A070-7F5EC5AA9AB6}
