@@ -50,7 +50,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Drawing\BitmapImageReaderFromBitmapExtension.cs" />
+    <Compile Include="Drawing\BitmapConverterExtension.cs" />
     <Compile Include="Extensions\WindowsPointExtension.cs" />
     <Compile Include="Extensions\WindowsRectExtension.cs" />
     <Compile Include="Extensions\WindowsSizeExtension.cs" />
