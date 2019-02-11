@@ -12,71 +12,75 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <ListBox ItemsSource="{Binding Path=Thumbnails, Mode=OneWay}"
-            SelectedItem="{Binding Path=SelectedItem.Value, Mode=TwoWay}" >
+    <StackPanel>
+        <ListBox ItemsSource="{Binding Path=Thumbnails, Mode=OneWay}"
+                SelectedItem="{Binding Path=SelectedItem.Value, Mode=TwoWay}" >
 
-        <ListBox.Resources>
-            <DataTemplate DataType="{x:Type vm:ThubnailVModel}">
-                <Grid Width="84">
-                    <!-- 明示的に画質落とす(指定しなくても Unspecified => Linear => LowQuality で解釈されるので同じ) -->
-                    <Image Source="{Binding Image, Mode=OneWay}"
-                            Width="80"
-                            Margin="2"
-                            VerticalAlignment="Top"
-                            RenderOptions.BitmapScalingMode="LowQuality" />
-                    <TextBlock Text="{Binding Filename, Mode=OneTime}"
-                                HorizontalAlignment="Center"
-                                TextAlignment="Left"
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type vm:ThubnailVModel}">
+                    <Grid Width="84">
+                        <!-- 明示的に画質落とす(指定しなくても Unspecified => Linear => LowQuality で解釈されるので同じ) -->
+                        <Image Source="{Binding Image, Mode=OneWay}"
+                                Width="80"
                                 Margin="2"
-                                TextWrapping="Wrap"
-                                Foreground="Lime" >
-                        <TextBlock.ToolTip>
-                            <ToolTip>
-                                <TextBlock Text="{Binding Filename, Mode=OneTime}" />
-                            </ToolTip>
-                        </TextBlock.ToolTip>
-                    </TextBlock>
-                </Grid>
-            </DataTemplate>
-        </ListBox.Resources>
+                                VerticalAlignment="Top"
+                                RenderOptions.BitmapScalingMode="LowQuality" />
+                        <TextBlock Text="{Binding Filename, Mode=OneTime}"
+                                    HorizontalAlignment="Center"
+                                    TextAlignment="Left"
+                                    Margin="2"
+                                    TextWrapping="Wrap"
+                                    Foreground="Lime" >
+                            <TextBlock.ToolTip>
+                                <ToolTip>
+                                    <TextBlock Text="{Binding Filename, Mode=OneTime}" />
+                                </ToolTip>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.Resources>
 
-        <ListBox.Style>
-            <Style TargetType="{x:Type ListBox}" >
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="Height" Value="86" />
-                <Setter Property="Background" Value="Pink" />
-                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
-                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Visible" />
-                <Setter Property="ItemsPanel">
-                    <Setter.Value>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </Setter.Value>
-                </Setter>
+            <ListBox.Style>
+                <Style TargetType="{x:Type ListBox}" >
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="Height" Value="86" />
+                    <Setter Property="Background" Value="Pink" />
+                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Visible" />
+                    <Setter Property="ItemsPanel">
+                        <Setter.Value>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </Setter.Value>
+                    </Setter>
 
-                <!-- スクロールバーの水平位置取得 -->
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ListBox">
-                            <Border>
-                                <ScrollViewer>
-                                    <ItemsPresenter />
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="ScrollChanged">
-                                            <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollChangedHorizontal, Mode=OneTime}">
-                                                <v:ScrollChangedEventToViewportConverter/>
-                                            </r:EventToReactiveProperty>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </ScrollViewer>
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </ListBox.Style>
+                    <!-- スクロールバーの水平位置取得 -->
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListBox">
+                                <Border>
+                                    <ScrollViewer>
+                                        <ItemsPresenter />
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="ScrollChanged">
+                                                <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollChangedHorizontal, Mode=OneTime}">
+                                                    <v:ScrollChangedEventToViewportConverter/>
+                                                </r:EventToReactiveProperty>
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </ScrollViewer>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.Style>
 
-    </ListBox>
+        </ListBox>
+
+        <TextBlock Text="{Binding LoadStatus.Value, Mode=OneWay}" />
+    </StackPanel>
 
 </UserControl>

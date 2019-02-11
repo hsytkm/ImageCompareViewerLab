@@ -13,7 +13,7 @@ namespace VirtualizationListItems.Models
         public string FilePath
         {
             get => _FilePath;
-            private set => SetProperty(ref _FilePath, value, nameof(Filename));
+            private set => SetProperty(ref _FilePath, value);
         }
 
         public string Filename { get => Path.GetFileName(_FilePath); }
@@ -25,16 +25,17 @@ namespace VirtualizationListItems.Models
             private set => SetProperty(ref _Thumbnail, value);
         }
 
+        public bool IsThumbnailEmpty { get => Thumbnail == null; }
+
         public ImageSource(string path)
         {
             FilePath = path;
-
-            LoadThmbnail();
         }
 
         public void LoadThmbnail()
         {
-            Thumbnail = FilePath.LoadThumbnail(ThumbnailWidth);
+            if (Thumbnail == null)
+                Thumbnail = FilePath.LoadThumbnail(ThumbnailWidth);
         }
 
         public void UnloadThmbnail()
