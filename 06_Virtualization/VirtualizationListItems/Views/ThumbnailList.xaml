@@ -16,6 +16,18 @@
         <ListBox ItemsSource="{Binding Path=Thumbnails, Mode=OneWay}"
                 SelectedItem="{Binding Path=SelectedItem.Value, Mode=TwoWay}" >
 
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <r:EventToReactiveProperty ReactiveProperty="{Binding ThumbnailSelectionChanged, Mode=OneTime}"
+                                               IgnoreEventArgs="true" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+            <!-- 選択要素が表示されるようにスクロールする -->
+            <i:Interaction.Behaviors>
+                <v:ListBoxSelectionBehavior/>
+            </i:Interaction.Behaviors>
+
             <ListBox.Resources>
                 <DataTemplate DataType="{x:Type vm:ThubnailVModel}">
                     <Grid Width="84">
@@ -81,6 +93,8 @@
         </ListBox>
 
         <TextBlock Text="{Binding LoadStatus.Value, Mode=OneWay}" />
+        <TextBlock Text="{Binding SelectedPath.Value, Mode=OneWay}" />
+
     </StackPanel>
 
 </UserControl>

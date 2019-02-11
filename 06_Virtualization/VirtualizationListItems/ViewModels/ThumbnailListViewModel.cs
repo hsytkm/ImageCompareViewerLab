@@ -5,8 +5,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Media.Imaging;
 using VirtualizationListItems.Models;
@@ -27,9 +27,14 @@ namespace VirtualizationListItems.ViewModels
         public ReactiveProperty<ThubnailVModel> SelectedItem { get; } =
             new ReactiveProperty<ThubnailVModel>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
+        // スクロール変化時
         public ReactiveProperty<(double CenterRatio, double ViewportRatio)> ScrollChangedHorizontal { get; } =
             new ReactiveProperty<(double CenterRatio, double ViewportRatio)>(mode: ReactivePropertyMode.None);
 
+        public ReactiveProperty<Unit> ThumbnailSelectionChanged { get; } =
+            new ReactiveProperty<Unit>(mode: ReactivePropertyMode.None);
+
+        public ReadOnlyReactiveProperty<string> SelectedPath { get; }
         public ReadOnlyReactiveProperty<string> LoadStatus { get; }
 
         public ThumbnailListViewModel()
@@ -67,9 +72,21 @@ namespace VirtualizationListItems.ViewModels
 
             // Clear()なら以下が来るけど、PropertyChanged()の解除ができないので使用しない
             //collectionChanged.Where(e => e.Action == NotifyCollectionChangedAction.Reset)
-
+            
             // 選択PATHのデバッグ表示
-            SelectedItem.Subscribe(x => Debug.WriteLine($"Selected: {x.FilePath}"));
+            SelectedPath = SelectedItem.Select(x => x?.FilePath).ToReadOnlyReactiveProperty();
+
+            // VM→M通知(nullになったらnullを通知する。後で変化エッジを付けるため)
+            SelectedItem.Subscribe(x => ImageSources.SelectedImagePath = x?.FilePath);
+
+            // M→VM通知
+            ImageSources.ObserveProperty(x => x.SelectedImagePath)
+                .Subscribe(x => SelectedItem.Value = Thumbnails.FirstOrDefault(y => x == y.FilePath));
+
+            ScrollChangedHorizontal
+                .CombineLatest(ThumbnailSelectionChanged, (x, y) => x)
+                //.Where(x => !(Double.IsNaN(x.CenterRatio) || Double.IsNaN(x.ViewportRatio)))
+                .Subscribe(x => ImageSources.UpdateThumbnail(x.CenterRatio, x.ViewportRatio));
 
             ScrollChangedHorizontal.Subscribe(x => ImageSources.UpdateThumbnail(x.CenterRatio, x.ViewportRatio));
 
@@ -88,9 +105,7 @@ namespace VirtualizationListItems.ViewModels
 
             if (e.PropertyName == nameof(imageSource.Thumbnail))
             {
-                var vModel = Thumbnails
-                    .Where(x => x.FilePath == imageSource.FilePath)
-                    .FirstOrDefault();
+                var vModel = Thumbnails.FirstOrDefault(x => x.FilePath == imageSource.FilePath);
                 if (vModel != null) vModel.Image = imageSource.Thumbnail;
             }
         }

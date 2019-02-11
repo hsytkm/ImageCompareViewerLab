@@ -17,6 +17,13 @@ namespace VirtualizationListItems.Models
 
         public ObservableCollection<ImageSource> Sources = new ObservableCollection<ImageSource>();
 
+        private string _SelectedImagePath;
+        public string SelectedImagePath
+        {
+            get => _SelectedImagePath;
+            set => SetProperty(ref _SelectedImagePath, value);
+        }
+
         private ImageSources() { }
 
         public void Initialize()
@@ -31,6 +38,11 @@ namespace VirtualizationListItems.Models
             foreach (var path in GetImages(DirPath))
             {
                 Sources.Add(new ImageSource(path));
+            }
+
+            if (Sources.Any())
+            {
+                SelectedImagePath = Sources[0].FilePath;
             }
         }
 
