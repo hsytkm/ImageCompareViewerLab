@@ -21,6 +21,6 @@ namespace DataVirtualization
         /// <summary>
         /// Some dummy data to give the instance a bigger memory footprint.
         /// </summary>
-        private byte[] data = new byte[100];
+        private readonly byte[] data = new byte[100];
     }
 }

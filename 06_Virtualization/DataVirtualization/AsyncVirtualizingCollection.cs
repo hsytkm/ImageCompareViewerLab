@@ -20,7 +20,7 @@ namespace DataVirtualization
         public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider)
             : base(itemsProvider)
         {
-            _synchronizationContext = SynchronizationContext.Current;
+            SynchronizationContext = SynchronizationContext.Current;
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace DataVirtualization
         public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize)
             : base(itemsProvider, pageSize)
         {
-            _synchronizationContext = SynchronizationContext.Current;
+            SynchronizationContext = SynchronizationContext.Current;
         }
 
         /// <summary>
@@ -43,24 +43,15 @@ namespace DataVirtualization
         public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize, int pageTimeout)
             : base(itemsProvider, pageSize, pageTimeout)
         {
-            _synchronizationContext = SynchronizationContext.Current;
+            SynchronizationContext = SynchronizationContext.Current;
         }
-
-        #endregion
-
-        #region SynchronizationContext
-
-        private readonly SynchronizationContext _synchronizationContext;
 
         /// <summary>
         /// Gets the synchronization context used for UI-related operations. This is obtained as
         /// the current SynchronizationContext when the AsyncVirtualizingCollection is created.
         /// </summary>
         /// <value>The synchronization context.</value>
-        protected SynchronizationContext SynchronizationContext
-        {
-            get { return _synchronizationContext; }
-        }
+        protected SynchronizationContext SynchronizationContext { get; }
 
         #endregion
 
@@ -77,9 +68,7 @@ namespace DataVirtualization
         /// <param name="e">The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
         protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
         {
-            NotifyCollectionChangedEventHandler h = CollectionChanged;
-            if (h != null)
-                h(this, e);
+            CollectionChanged?.Invoke(this, e);
         }
 
         /// <summary>
@@ -87,7 +76,7 @@ namespace DataVirtualization
         /// </summary>
         private void FireCollectionReset()
         {
-            NotifyCollectionChangedEventArgs e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+            var e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
             OnCollectionChanged(e);
         }
 
@@ -106,9 +95,7 @@ namespace DataVirtualization
         /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
         protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
         {
-            PropertyChangedEventHandler h = PropertyChanged;
-            if (h != null)
-                h(this, e);
+            PropertyChanged?.Invoke(this, e);
         }
 
         /// <summary>
@@ -117,7 +104,7 @@ namespace DataVirtualization
         /// <param name="propertyName">Name of the property.</param>
         private void FirePropertyChanged(string propertyName)
         {
-            PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+            var e = new PropertyChangedEventArgs(propertyName);
             OnPropertyChanged(e);
         }
 
@@ -141,7 +128,7 @@ namespace DataVirtualization
             }
             set
             {
-                if ( value != _isLoading )
+                if (value != _isLoading)
                 {
                     _isLoading = value;
                 }
@@ -202,7 +189,7 @@ namespace DataVirtualization
         {
             int pageIndex = (int)args;
             IList<T> page = FetchPage(pageIndex);
-            SynchronizationContext.Send(LoadPageCompleted, new object[]{ pageIndex, page });
+            SynchronizationContext.Send(LoadPageCompleted, new object[] { pageIndex, page });
         }
 
         /// <summary>
@@ -211,8 +198,8 @@ namespace DataVirtualization
         /// <param name="args">object[] { int pageIndex, IList(T) page }</param>
         private void LoadPageCompleted(object args)
         {
-            int pageIndex = (int)((object[]) args)[0];
-            IList<T> page = (IList<T>)((object[])args)[1];
+            int pageIndex = (int)((object[])args)[0];
+            var page = (IList<T>)((object[])args)[1];
 
             PopulatePage(pageIndex, page);
             IsLoading = false;

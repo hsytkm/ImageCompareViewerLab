@@ -32,7 +32,7 @@ namespace DataVirtualization
         {
             Trace.WriteLine("FetchCount");
             Thread.Sleep(_fetchDelay);
-            return _count; 
+            return _count;
         }
 
         /// <summary>
@@ -43,13 +43,13 @@ namespace DataVirtualization
         /// <returns></returns>
         public IList<Customer> FetchRange(int startIndex, int count)
         {
-            Trace.WriteLine("FetchRange: "+startIndex+","+count);
+            Trace.WriteLine("FetchRange: " + startIndex + "," + count);
             Thread.Sleep(_fetchDelay);
 
-            List<Customer> list = new List<Customer>();
-            for( int i=startIndex; i<startIndex+count; i++ )
+            var list = new List<Customer>();
+            for (int i = startIndex; i < startIndex + count; i++)
             {
-                Customer customer = new Customer {Id = i+1, Name = "Customer " + (i+1)};
+                var customer = new Customer { Id = i + 1, Name = "Customer " + (i + 1) };
                 list.Add(customer);
             }
             return list;

@@ -29,9 +29,9 @@ namespace DataVirtualization
         /// <param name="pageTimeout">The page timeout.</param>
         public VirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize, int pageTimeout)
         {
-            _itemsProvider = itemsProvider;
-            _pageSize = pageSize;
-            _pageTimeout = pageTimeout;
+            ItemsProvider = itemsProvider;
+            PageSize = pageSize;
+            PageTimeout = pageTimeout;
         }
 
         /// <summary>
@@ -41,8 +41,8 @@ namespace DataVirtualization
         /// <param name="pageSize">Size of the page.</param>
         public VirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize)
         {
-            _itemsProvider = itemsProvider;
-            _pageSize = pageSize;
+            ItemsProvider = itemsProvider;
+            PageSize = pageSize;
         }
 
         /// <summary>
@@ -51,53 +51,26 @@ namespace DataVirtualization
         /// <param name="itemsProvider">The items provider.</param>
         public VirtualizingCollection(IItemsProvider<T> itemsProvider)
         {
-            _itemsProvider = itemsProvider;
+            ItemsProvider = itemsProvider;
         }
-
-        #endregion
-
-        #region ItemsProvider
-
-        private readonly IItemsProvider<T> _itemsProvider;
 
         /// <summary>
         /// Gets the items provider.
         /// </summary>
         /// <value>The items provider.</value>
-        public IItemsProvider<T> ItemsProvider
-        {
-            get { return _itemsProvider; }
-        }
-
-        #endregion
-
-        #region PageSize
-
-        private readonly int _pageSize = 100;
+        public IItemsProvider<T> ItemsProvider { get; }
 
         /// <summary>
         /// Gets the size of the page.
         /// </summary>
         /// <value>The size of the page.</value>
-        public int PageSize
-        {
-            get { return _pageSize; }
-        }
-
-        #endregion
-
-        #region PageTimeout
-
-        private readonly long _pageTimeout = 10000;
+        public int PageSize { get; } = 100;
 
         /// <summary>
         /// Gets the page timeout.
         /// </summary>
         /// <value>The page timeout.</value>
-        public long PageTimeout
-        {
-            get { return _pageTimeout; }
-        }
+        public long PageTimeout { get; } = 10000;
 
         #endregion
 
@@ -119,10 +92,7 @@ namespace DataVirtualization
         {
             get
             {
-                if (_count == -1)
-                {
-                    LoadCount();
-                }
+                if (_count == -1) LoadCount();
                 return _count;
             }
             protected set
@@ -152,11 +122,11 @@ namespace DataVirtualization
                 RequestPage(pageIndex);
 
                 // if accessing upper 50% then request next page
-                if ( pageOffset > PageSize/2 && pageIndex < Count / PageSize)
+                if (pageOffset > PageSize / 2 && pageIndex < Count / PageSize)
                     RequestPage(pageIndex + 1);
 
                 // if accessing lower 50% then request prev page
-                if (pageOffset < PageSize/2 && pageIndex > 0)
+                if (pageOffset < PageSize / 2 && pageIndex > 0)
                     RequestPage(pageIndex - 1);
 
                 // remove stale pages
@@ -171,7 +141,7 @@ namespace DataVirtualization
             }
             set { throw new NotSupportedException(); }
         }
-        
+
         object IList.this[int index]
         {
             get { return this[index]; }
@@ -273,7 +243,7 @@ namespace DataVirtualization
 
         int IList.IndexOf(object value)
         {
-            return IndexOf((T) value);
+            return IndexOf((T)value);
         }
 
         /// <summary>
@@ -373,8 +343,6 @@ namespace DataVirtualization
         /// <paramref name="arrayIndex"/> is equal to or greater than the length of <paramref name="array"/>.
         /// -or-
         /// The number of elements in the source <see cref="T:System.Collections.Generic.ICollection`1"/> is greater than the available space from <paramref name="arrayIndex"/> to the end of the destination <paramref name="array"/>.
-        /// -or-
-        /// Type <paramref name="T"/> cannot be cast automatically to the type of the destination <paramref name="array"/>.
         /// </exception>
         public void CopyTo(T[] array, int arrayIndex)
         {
@@ -387,7 +355,7 @@ namespace DataVirtualization
         }
 
         #endregion
-        
+
         #region Misc
 
         /// <summary>
@@ -436,7 +404,7 @@ namespace DataVirtualization
         }
 
         #endregion
-        
+
         #endregion
 
         #region Paging
@@ -449,11 +417,11 @@ namespace DataVirtualization
         /// </summary>
         public void CleanUpPages()
         {
-            List<int> keys = new List<int>(_pageTouchTimes.Keys);
+            var keys = new List<int>(_pageTouchTimes.Keys);
             foreach (int key in keys)
             {
                 // page 0 is a special case, since WPF ItemsControl access the first item frequently
-                if ( key != 0 && (DateTime.Now - _pageTouchTimes[key]).TotalMilliseconds > PageTimeout )
+                if (key != 0 && (DateTime.Now - _pageTouchTimes[key]).TotalMilliseconds > PageTimeout)
                 {
                     _pages.Remove(key);
                     _pageTouchTimes.Remove(key);
@@ -469,8 +437,8 @@ namespace DataVirtualization
         /// <param name="page">The page.</param>
         protected virtual void PopulatePage(int pageIndex, IList<T> page)
         {
-            Trace.WriteLine("Page populated: "+pageIndex);
-            if ( _pages.ContainsKey(pageIndex) )
+            Trace.WriteLine("Page populated: " + pageIndex);
+            if (_pages.ContainsKey(pageIndex))
                 _pages[pageIndex] = page;
         }
 
@@ -526,7 +494,7 @@ namespace DataVirtualization
         /// <returns></returns>
         protected IList<T> FetchPage(int pageIndex)
         {
-            return ItemsProvider.FetchRange(pageIndex*PageSize, PageSize);
+            return ItemsProvider.FetchRange(pageIndex * PageSize, PageSize);
         }
 
         /// <summary>
