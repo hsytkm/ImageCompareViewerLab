@@ -1,8 +1,10 @@
 ﻿using Prism.Mvvm;
+using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Media.Imaging;
@@ -20,6 +22,13 @@ namespace VirtualizationListItems.ViewModels
             get => _Thumbnails;
             set => SetProperty(ref _Thumbnails, value);
         }
+
+        public ReactiveProperty<ThubnailVModel> SelectedItem { get; } =
+            new ReactiveProperty<ThubnailVModel>(mode: ReactivePropertyMode.DistinctUntilChanged);
+
+        public ReactiveProperty<(double CenterRatio, double ViewportRatio)> ScrollChangedHorizontal { get; } =
+            new ReactiveProperty<(double CenterRatio, double ViewportRatio)>(mode: ReactivePropertyMode.None);
+
 
         public ThumbnailListViewModel()
         {
@@ -54,6 +63,11 @@ namespace VirtualizationListItems.ViewModels
             // Clear()なら以下が来るけど、PropertyChanged()の解除ができないので使用しない
             //collectionChanged.Where(e => e.Action == NotifyCollectionChangedAction.Reset)
 
+
+            // 選択PATHのデバッグ表示
+            SelectedItem.Subscribe(x => Debug.WriteLine($"Selected: {x.FilePath}"));
+
+            ScrollChangedHorizontal.Subscribe(x => Debug.WriteLine($"Event: {x.CenterRatio}, {x.ViewportRatio}"));
         }
 
     }
@@ -61,11 +75,13 @@ namespace VirtualizationListItems.ViewModels
     class ThubnailVModel : BindableBase
     {
         public BitmapSource Image { get; }
+        public string FilePath { get; }
         public string Filename { get; }
 
         public ThubnailVModel(ImageSource source)
         {
             Image = source.Thumbnail;
+            FilePath = source.FilePath;
             Filename = source.Filename;
         }
     }

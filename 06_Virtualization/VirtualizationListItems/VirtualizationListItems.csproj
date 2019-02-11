@@ -62,6 +62,7 @@
     <Compile Include="Models\ImageSources.cs" />
     <Compile Include="ViewModels\ThumbnailListViewModel.cs" />
     <Compile Include="Views\FastCanvas.cs" />
+    <Compile Include="Views\ScrollChangedEventToViewportConverter.cs" />
     <Compile Include="Views\ThumbnailList.xaml.cs">
       <DependentUpon>ThumbnailList.xaml</DependentUpon>
     </Compile>

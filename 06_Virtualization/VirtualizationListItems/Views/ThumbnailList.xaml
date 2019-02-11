@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:r="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.NET46"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:v="clr-namespace:VirtualizationListItems.Views"
              xmlns:vm="clr-namespace:VirtualizationListItems.ViewModels"
              xmlns:prism="http://prismlibrary.com/"
@@ -10,22 +12,24 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <ListBox ItemsSource="{Binding Path=Thumbnails, Mode=OneWay}" >
+    <ListBox ItemsSource="{Binding Path=Thumbnails, Mode=OneWay}"
+            SelectedItem="{Binding Path=SelectedItem.Value, Mode=TwoWay}" >
 
         <ListBox.Resources>
             <DataTemplate DataType="{x:Type vm:ThubnailVModel}">
-                <Grid Width="85">
+                <Grid Width="84">
                     <!-- 明示的に画質落とす(指定しなくても Unspecified => Linear => LowQuality で解釈されるので同じ) -->
                     <Image Source="{Binding Image, Mode=OneWay}"
-                           Margin="3,4,3,0"
-                           VerticalAlignment="Top"
-                           RenderOptions.BitmapScalingMode="LowQuality" />
+                            Width="80"
+                            Margin="2"
+                            VerticalAlignment="Top"
+                            RenderOptions.BitmapScalingMode="LowQuality" />
                     <TextBlock Text="{Binding Filename, Mode=OneTime}"
-                               HorizontalAlignment="Center"
-                               TextAlignment="Left"
-                               Margin="2,4,2,0"
-                               TextWrapping="Wrap"
-                               Foreground="Lime">
+                                HorizontalAlignment="Center"
+                                TextAlignment="Left"
+                                Margin="2"
+                                TextWrapping="Wrap"
+                                Foreground="Lime" >
                         <TextBlock.ToolTip>
                             <ToolTip>
                                 <TextBlock Text="{Binding Filename, Mode=OneTime}" />
@@ -39,7 +43,7 @@
         <ListBox.Style>
             <Style TargetType="{x:Type ListBox}" >
                 <Setter Property="Padding" Value="0" />
-                <Setter Property="Height" Value="83" />
+                <Setter Property="Height" Value="86" />
                 <Setter Property="Background" Value="Pink" />
                 <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
                 <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Visible" />
@@ -51,7 +55,7 @@
                     </Setter.Value>
                 </Setter>
 
-                <!-- スクロールバーの水平位置取得
+                <!-- スクロールバーの水平位置取得 -->
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ListBox">
@@ -60,8 +64,8 @@
                                     <ItemsPresenter />
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="ScrollChanged">
-                                            <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollChangedHorizontal, Mode=OneWay}">
-                                                <vmec:ScrollChangedEventToHorizontalPositionConverter/>
+                                            <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollChangedHorizontal, Mode=OneTime}">
+                                                <v:ScrollChangedEventToViewportConverter/>
                                             </r:EventToReactiveProperty>
                                         </i:EventTrigger>
                                     </i:Interaction.Triggers>
@@ -70,7 +74,6 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                 -->
             </Style>
         </ListBox.Style>
 
