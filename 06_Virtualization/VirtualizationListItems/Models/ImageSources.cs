@@ -26,7 +26,7 @@ namespace VirtualizationListItems.Models
 
         private ImageSources() { }
 
-        public void Initialize()
+        public void Initialize(string dirPath = DirPath)
         {
             // 全削除(ClearだとEventListenerの解除できないので1つずつ削除)
             while (Sources.Any())
@@ -34,12 +34,13 @@ namespace VirtualizationListItems.Models
                 Sources.RemoveAt(0);
             }
 
-            // コンストラクタ内ではサムネイルを読み込まない
-            foreach (var path in GetImages(DirPath))
+            // ImageSourceのコンストラクタ内ではサムネイルを読み込まない
+            foreach (var path in GetImages(dirPath))
             {
                 Sources.Add(new ImageSource(path));
             }
 
+            // とりあえず先頭画像を選択しとく
             if (Sources.Any())
             {
                 SelectedImagePath = Sources[0].FilePath;
@@ -74,27 +75,28 @@ namespace VirtualizationListItems.Models
 
             int margin = 1; // 表示マージン(左右に1個余裕持たせる)
             int centerIndex = (int)Math.Floor(length * centerRatio);        // 切り捨て
-            int count = (int)Math.Ceiling(length * viewportRatio);          // 切り上げ
-            int start = Math.Max(0, centerIndex - (count / 2) - margin);    // 一つ余分に描画する
-            int end = Math.Min(length - 1, start + count + margin);         // 一つ余分に描画する
-            //Debug.WriteLine($"Thumbnail Update() total={length} start={start} end={end} num={end - start + 1}");
+            int countRaw = (int)Math.Ceiling(length * viewportRatio);       // 切り上げ
+            int start = Math.Max(0, centerIndex - (countRaw / 2) - margin); // 一つ余分に描画する
+            int end = Math.Min(length - 1, start + countRaw + margin);      // 一つ余分に描画する
+            int count = end - start + 1;
+            //Debug.WriteLine($"Thumbnail Update() total={length} start={start} end={end} count={count}");
 
             // 解放リスト(表示範囲外で読込み中)
-            var disposes = Enumerable.Range(0, length)
+            var unloads = Enumerable.Range(0, length)
                 .Where(x => !(start <= x && x <= end))
                 .Select(x => list[x])
                 .Where(x => !x.IsThumbnailEmpty);
-            foreach (var source in disposes)
+            foreach (var source in unloads)
             {
                 //Debug.WriteLine($"Thumbnail Update() Unload: {source.FilePath}");
                 source.UnloadThmbnail();
             }
 
             // 読込みリスト(表示範囲の未読込みを対象)
-            var readTargets = Enumerable.Range(start, end - start + 1)
+            var loads = Enumerable.Range(start, count)
                 .Select(x => list[x])
                 .Where(x => x.IsThumbnailEmpty);
-            foreach (var source in readTargets)
+            foreach (var source in loads)
             {
                 //Debug.WriteLine($"Thumbnail Update() Load: {source.FilePath}");
                 source.LoadThmbnail();

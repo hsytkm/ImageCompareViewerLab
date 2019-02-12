@@ -9,14 +9,9 @@ namespace VirtualizationListItems.Models
     {
         private const int ThumbnailWidth = 80;
 
-        private string _FilePath;
-        public string FilePath
-        {
-            get => _FilePath;
-            private set => SetProperty(ref _FilePath, value);
-        }
+        public string FilePath { get; }
 
-        public string Filename { get => Path.GetFileName(_FilePath); }
+        public string Filename { get => Path.GetFileName(FilePath); }
 
         private BitmapSource _Thumbnail;
         public BitmapSource Thumbnail

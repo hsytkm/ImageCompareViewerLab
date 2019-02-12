@@ -17,12 +17,7 @@ namespace VirtualizationListItems.ViewModels
     {
         private readonly ImageSources ImageSources = ImageSources.Instance;
 
-        private ReadOnlyObservableCollection<ThubnailVModel> _Thumbnails;
-        public ReadOnlyObservableCollection<ThubnailVModel> Thumbnails
-        {
-            get => _Thumbnails;
-            set => SetProperty(ref _Thumbnails, value);
-        }
+        public ReadOnlyObservableCollection<ThubnailVModel> Thumbnails { get; }
 
         public ReactiveProperty<ThubnailVModel> SelectedItem { get; } =
             new ReactiveProperty<ThubnailVModel>(mode: ReactivePropertyMode.DistinctUntilChanged);
@@ -89,7 +84,6 @@ namespace VirtualizationListItems.ViewModels
                 .Subscribe(x => ImageSources.UpdateThumbnail(x.CenterRatio, x.ViewportRatio));
 
             ScrollChangedHorizontal.Subscribe(x => ImageSources.UpdateThumbnail(x.CenterRatio, x.ViewportRatio));
-
 
             LoadStatus = ImageSources.ObserveProperty(x => x.LoadStatus).ToReadOnlyReactiveProperty();
         }
