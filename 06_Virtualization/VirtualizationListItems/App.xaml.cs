@@ -1,14 +1,14 @@
-﻿using VirtualizationListItems.Views;
-using Prism.Ioc;
-using Prism.Modularity;
+﻿using Prism.Ioc;
+using Prism.Unity;
 using System.Windows;
+using VirtualizationListItems.Views;
 
 namespace VirtualizationListItems
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App
+    public partial class App : PrismApplication
     {
         protected override Window CreateShell()
         {
