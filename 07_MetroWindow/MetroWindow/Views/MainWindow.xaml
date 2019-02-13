@@ -19,7 +19,8 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Border metro:MetroWindow.IsCaptionBar="True" >
+        <Border metro:MetroWindow.IsCaptionBar="True"
+                Background="{DynamicResource ActiveBackgroundBrushKey}" >
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -29,10 +30,10 @@
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
-                    <RowDefinition Height="4" />
+                    <RowDefinition Height="1" />
                 </Grid.RowDefinitions>
                 <metro:CaptionIcon Grid.Column="0"
-                                   Width="10"/>
+                                   Width="10" />
                 <TextBlock Grid.Column="1"
                            Text="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=Title}"
                            TextTrimming="CharacterEllipsis"
