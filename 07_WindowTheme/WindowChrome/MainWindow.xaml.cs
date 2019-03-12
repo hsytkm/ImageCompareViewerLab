@@ -47,20 +47,6 @@ namespace WindowChrome
 
         #endregion
 
-        private void Window_StateChanged(object sender, System.EventArgs e)
-        {
-            switch (WindowState)
-            {
-                case WindowState.Maximized:
-                    // 右上の×ボタンを押したいので上と右はマージンなしにしてみる
-                    LayoutRoot.Margin = new Thickness(9, 0, 0, 9);
-                    break;
-                default:
-                    LayoutRoot.Margin = new Thickness(0);
-                    break;
-            }
-        }
-
     }
 }
 

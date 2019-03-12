@@ -14,8 +14,7 @@
         TextOptions.TextFormattingMode="Display"
         SizeToContent="WidthAndHeight"
         AllowsTransparency="True"
-        WindowStyle="None"
-        StateChanged="Window_StateChanged" >
+        WindowStyle="None" >
     <!-- 
         Icon="small.ico"
     -->
@@ -38,6 +37,7 @@
             <v:CaptionBackgroundConverter x:Key="CaptionBackgroundConverterKey"/>
              -->
             <v:MaximizeCaptionButtonContentConverter x:Key="MaximizeCaptionButtonContentConverterKey"/>
+            <v:RootGridMarginConverter x:Key="RootGridMarginConverterKey" />
         </ResourceDictionary>
     </Window.Resources>
 
@@ -56,7 +56,9 @@
                       GlassFrameThickness="0,0,0,10"/>
     </WindowChrome.WindowChrome>
 
-    <Grid x:Name="LayoutRoot" >
+    <Grid Margin="{Binding WindowState,
+                           Converter={StaticResource RootGridMarginConverterKey},
+                           RelativeSource={RelativeSource AncestorType={x:Type Window}}}" >
         <!-- 上からタイトルバー、コンテンツ、フッター -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

@@ -56,4 +56,16 @@ namespace WindowChrome
     //        throw new NotImplementedException();
     //}
 
+    /// <summary>
+    /// 最大化時にアプリがタスクバーにめり込まないようにMarginを設定する
+    /// </summary>
+    public sealed class RootGridMarginConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+            (value is WindowState && (WindowState)value == WindowState.Maximized)
+                ? "9,5,5,9" : "0";
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+            throw new NotImplementedException();
+    }
+
 }
