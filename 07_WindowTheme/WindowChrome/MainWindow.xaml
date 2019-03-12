@@ -1,0 +1,225 @@
+﻿<Window x:Class="WindowChrome.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:v="clr-namespace:WindowChrome"
+        mc:Ignorable="d"
+        Title="WindowChrome"
+        Height="240" Width="320"
+        Background="{StaticResource ContentOutlineBackgroundKey}"
+        Foreground="{StaticResource ForegroundBrushKey}"
+        UseLayoutRounding="True"
+        FontFamily="Segoe UI"
+        TextOptions.TextFormattingMode="Display" >
+    <!-- 
+        Icon="small.ico"
+    -->
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/CustomCaptionStyle.xaml"/>
+                <ResourceDictionary Source="Styles/ResizeGripStyle.xaml"/>
+                <ResourceDictionary Source="Styles/MainTabStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converter
+            <v:BorderThicknessByWindowStateConverter x:Key="BorderThicknessByWindowStateConverterKey"/>
+            <v:WindowBorderBrushConverter x:Key="WindowBorderBrushConverterKey"/>
+            <v:MaximizeCaptionButtonTooltipConverter x:Key="MaximizeCaptionButtonTooltipConverter"/>
+            <v:MaximizeCaptionButtonEnableConverter x:Key="MaximizeCaptionButtonEnableConverterKey"/>
+            <v:ResizeCaptionButtonVisibilityConverter x:Key="ResizeCaptionButtonVisibilityConverterKey"/>
+            <v:CaptionForegroundConverter x:Key="CaptionForegroundConverterKey"/>
+            <v:CaptionBackgroundConverter x:Key="CaptionBackgroundConverterKey"/>
+             -->
+            <v:MaximizeCaptionButtonContentConverter x:Key="MaximizeCaptionButtonContentConverterKey"/>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}"
+                        Executed="CloseWindow"/>
+        <CommandBinding Command="{x:Static SystemCommands.MaximizeWindowCommand}"
+                        Executed="MaximizeOrRestoreWindow"/>
+        <CommandBinding Command="{x:Static SystemCommands.MinimizeWindowCommand}"
+                        Executed="MinimizeWindow"/>
+    </Window.CommandBindings>
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="30"
+                      ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}"
+                      GlassFrameThickness="0,0,0,10"/>
+    </WindowChrome.WindowChrome>
+
+    <Border BorderThickness="0">
+        <!--
+            ウィンドウの外枠を狭めるため無効化した
+            BorderThickness="{Binding WindowState,
+                                      Converter={StaticResource BorderThicknessByWindowStateConverterKey},
+                                      ElementName=MainWindow1}"
+            BorderBrush="{Binding IsActive,
+                          Converter={StaticResource WindowBorderBrushConverterKey},
+                          ConverterParameter={StaticResource CaptionBarActiveBorderBrushKey},
+                          RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+        -->
+        <Grid>
+            <!-- 上からタイトルバー、コンテンツ、フッター -->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- タイトルバー -->
+            <Grid Grid.Row="0" >
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}" >
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsActive, Mode=OneWay,
+                                                           RelativeSource={RelativeSource FindAncestor,
+                                                           AncestorType={x:Type v:MainWindow}}}"
+                                         Value="True">
+                                <Setter Property="Background"
+                                        Value="{StaticResource CaptionBarActiveBorderBrushKey}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding IsActive, Mode=OneWay,
+                                                           RelativeSource={RelativeSource FindAncestor,
+                                                           AncestorType={x:Type v:MainWindow}}}"
+                                         Value="False">
+                                <Setter Property="Background"
+                                        Value="{StaticResource InactiveBorderBrushKey}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+
+                <!-- 左からアイコン、タイトル、コマンドボタン -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- アイコンを表示します
+                <Image Grid.Column="0"
+                       Margin="5"
+                       Source="{Binding Icon, ElementName=MainWindow1}"/>
+                 -->
+
+                <!-- ウィンドウタイトルを表示します -->
+                <TextBlock Grid.Column="1"
+                           x:Name="CaptionTitle"
+                           Margin="5,0,0,0"
+                           Text="{Binding Title, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                           TextTrimming="CharacterEllipsis"
+                           FontFamily="Segoe UI Light"
+                           FontSize="18"
+                           Padding="5,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsActive, Mode=OneWay,
+                                                               RelativeSource={RelativeSource FindAncestor,
+                                                               AncestorType={x:Type v:MainWindow}}}"
+                                             Value="False">
+                                    <Setter Property="Foreground"
+                                            Value="{StaticResource InactiveForegroundBrushKey}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <!-- 最小化、最大化、閉じるボタンを設置します -->
+                <Grid Grid.Column="2">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center">
+                        <!-- 最小化ボタン
+                                Visibility="{Binding ResizeMode, Converter={StaticResource ResizeCaptionButtonVisibilityConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                ToolTip="最小化"
+                        -->
+                        <Button Content="0"
+                                Style="{StaticResource CustomCaptionButtonBaseKey}"
+                                Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}"
+                                Command="{x:Static SystemCommands.MinimizeWindowCommand}" />
+                        <!-- 最大化ボタン
+                                IsEnabled="{Binding ResizeMode, Converter={StaticResource MaximizeCaptionButtonEnableConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                Visibility="{Binding ResizeMode, Converter={StaticResource ResizeCaptionButtonVisibilityConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                ToolTip="{Binding WindowState, Converter={StaticResource MaximizeCaptionButtonTooltipConverter}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                        -->
+                        <Button Content="{Binding WindowState,Converter={StaticResource MaximizeCaptionButtonContentConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                                Style="{StaticResource CustomCaptionButtonBaseKey}"
+                                Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}"
+                                Command="{x:Static SystemCommands.MaximizeWindowCommand}"/>
+                        <!-- 閉じるボタン
+                                ToolTip="閉じる"
+                        -->
+                        <Button Content="r"
+                                Style="{StaticResource CustomCaptionButtonBaseKey}"
+                                Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}"
+                                Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <!-- コンテンツ -->
+            <TabControl Grid.Row="1"
+                        Style="{StaticResource MainTabStyleKey}">
+
+                <TabItem>
+                    <TabItem.Header>
+                        <TextBlock Style="{StaticResource MainTabHeaderTextStyleKey}"
+                                   Text="Tab1" />
+                    </TabItem.Header>
+                    <StackPanel>
+                        <TextBlock Text="TextBlock"
+                                   Foreground="{StaticResource ForegroundBrushKey}"/>
+
+                        <Button Margin="5"
+                                Content="Button" />
+
+                    </StackPanel>
+                </TabItem>
+
+                <TabItem>
+                    <TabItem.Header>
+                        <TextBlock Style="{StaticResource MainTabHeaderTextStyleKey}"
+                                   Text="Tab2" />
+                    </TabItem.Header>
+                    <WrapPanel ToolTip="RadioButtons">
+                        <RadioButton Content="b1" />
+                        <RadioButton Content="b2" />
+                        <RadioButton Content="b3" IsChecked="True" />
+                        <RadioButton Content="b4" />
+                        <RadioButton Content="b5" />
+                    </WrapPanel>
+                </TabItem>
+
+            </TabControl>
+
+            <!-- フッター -->
+            <Grid Grid.Row="2"
+                  Background="{StaticResource AccentActiveBrushKey}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Margin="5,0,0,0"
+                           Text="Footer"
+                           Foreground="{StaticResource AccentForegroundBrushKey}"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           Padding="3" />
+
+                <ContentControl Style="{StaticResource ResizeGripKey}"/>
+            </Grid>
+
+        </Grid>
+    </Border>
+</Window>
