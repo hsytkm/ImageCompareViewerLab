@@ -1,7 +1,9 @@
-# MetroWindow
+# 07_WindowTheme
 
-## 実現したいこと
+## MetroRadianceWindow
 
-Prism+MetroRadianceでプロジェクト作ってみる
+Prism+MetroRadianceでプロジェクト作ってみたつもりやったけど、
+しばらく触らんかったらビルド通らんくなってた。
+MetroRadianceは使わない気がしてきたので、まぁいいや。
 
 以上
