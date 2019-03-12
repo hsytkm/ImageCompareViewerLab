@@ -11,7 +11,10 @@
         Foreground="{StaticResource ForegroundBrushKey}"
         UseLayoutRounding="True"
         FontFamily="Segoe UI"
-        TextOptions.TextFormattingMode="Display" >
+        TextOptions.TextFormattingMode="Display"
+        SizeToContent="WidthAndHeight"
+        AllowsTransparency="True"
+        WindowStyle="None" >
     <!-- 
         Icon="small.ico"
     -->

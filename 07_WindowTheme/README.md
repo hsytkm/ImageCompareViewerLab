@@ -16,4 +16,6 @@
 
 	[[WindowChromeを使用したウィンドウでリサイズグリップを有効にする方法](https://qiita.com/P3PPP/items/f4858804869cb01035fe)
 
+	[WindowChromeの問題点](http://iyemon018.hatenablog.com/entry/2015/09/19/182404)
+
 以上
