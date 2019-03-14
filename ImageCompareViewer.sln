@@ -68,6 +68,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetroRadianceWindow", "Metr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowChrome", "07_WindowTheme\WindowChrome\WindowChrome.csproj", "{5E3D91AE-174E-443F-A79D-D4E351C0E276}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "08_BlinkHighlight", "08_BlinkHighlight", "{EF102C62-E2D0-4E74-9828-9F621DBEC7F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlinkHilight", "08_BlinkHighlight\BlinkHilight\BlinkHilight.csproj", "{A969EBEF-DCFC-4599-A42C-B5073E7EF0A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,13 +118,15 @@ Global
 		{E16F1F67-A9F5-48D2-9DD1-8D35679BFA21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E16F1F67-A9F5-48D2-9DD1-8D35679BFA21}.Release|Any CPU.Build.0 = Release|Any CPU
 		{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5E3D91AE-174E-443F-A79D-D4E351C0E276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5E3D91AE-174E-443F-A79D-D4E351C0E276}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E3D91AE-174E-443F-A79D-D4E351C0E276}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E3D91AE-174E-443F-A79D-D4E351C0E276}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A969EBEF-DCFC-4599-A42C-B5073E7EF0A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A969EBEF-DCFC-4599-A42C-B5073E7EF0A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A969EBEF-DCFC-4599-A42C-B5073E7EF0A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A969EBEF-DCFC-4599-A42C-B5073E7EF0A0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,6 +143,7 @@ Global
 		{E16F1F67-A9F5-48D2-9DD1-8D35679BFA21} = {7AD69598-D52B-46E9-A20A-9F10E926A411}
 		{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C} = {7EABD057-3F8A-4BE0-AA97-696D693A1062}
 		{5E3D91AE-174E-443F-A79D-D4E351C0E276} = {7EABD057-3F8A-4BE0-AA97-696D693A1062}
+		{A969EBEF-DCFC-4599-A42C-B5073E7EF0A0} = {EF102C62-E2D0-4E74-9828-9F621DBEC7F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A747267B-7393-4543-A070-7F5EC5AA9AB6}
