@@ -31,8 +31,8 @@ namespace BlinkHilight.Models
             // 差分(飽和画素)がなければ終わり
             if (source == highlight) return;
 
-            int msec = 400;
-            for (int i = 0; i < 3; i++)
+            int msec = 500;
+            for (int i = 0; i < 4; i++)
             {
                 var task0 = Task.Run(() => ImageSource = highlight);
                 var task1 = Task.Delay(msec);
