@@ -14,7 +14,7 @@
 
     <StackPanel>
         <ListBox ItemsSource="{Binding Path=Thumbnails, Mode=OneWay}"
-                SelectedItem="{Binding Path=SelectedItem.Value, Mode=TwoWay}" >
+                 SelectedItem="{Binding Path=SelectedItem.Value, Mode=TwoWay}" >
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
@@ -55,6 +55,10 @@
 
             <ListBox.Style>
                 <Style TargetType="{x:Type ListBox}" >
+                    <!-- UI仮想化 -->
+                    <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+                    <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+                    <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="True"/>
                     <Setter Property="Padding" Value="0" />
                     <Setter Property="Height" Value="86" />
                     <Setter Property="Background" Value="Pink" />
@@ -63,7 +67,7 @@
                     <Setter Property="ItemsPanel">
                         <Setter.Value>
                             <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal"/>
+                                <VirtualizingStackPanel Orientation="Horizontal"/>
                             </ItemsPanelTemplate>
                         </Setter.Value>
                     </Setter>
@@ -92,7 +96,8 @@
 
         </ListBox>
 
-        <TextBlock Text="{Binding LoadStatus.Value, Mode=OneWay}" />
+        <TextBlock Text="{Binding LoadStatus.Value, Mode=OneWay}"
+                   FontSize="6" />
         <TextBlock Text="{Binding SelectedPath.Value, Mode=OneWay}" />
 
     </StackPanel>
