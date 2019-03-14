@@ -69,6 +69,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowChrome", "07_WindowTheme\WindowChrome\WindowChrome.csproj", "{5E3D91AE-174E-443F-A79D-D4E351C0E276}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "08_ImageFunctions", "08_ImageFunctions", "{EE2D4033-3CAB-4458-9EB2-E0C62C22E8B3}"
+	ProjectSection(SolutionItems) = preProject
+		08_ImageFunctions\README.md = 08_ImageFunctions\README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlinkHilight", "08_ImageFunctions\BlinkHilight\BlinkHilight.csproj", "{7B713755-5F56-4AE4-817E-E59C4C5897BE}"
 EndProject
