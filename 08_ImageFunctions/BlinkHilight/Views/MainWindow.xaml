@@ -1,0 +1,23 @@
+﻿<Window x:Class="BlinkHilight.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:v="clr-namespace:BlinkHilight.Views"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        mc:Ignorable="d"
+        Title="BlinkHighlight"
+        Name="RootWindow"
+        Height="400" Width="600">
+
+    <StackPanel>
+        <Button Margin="0,10,0,0"
+                Content="ReadImages"
+                Command="{Binding BlinkHighlightCommand, Mode=OneTime}" />
+
+        <Image Width="{Binding ActualWidth, ElementName=RootWindow}"
+               Height="{Binding ActualHeight, ElementName=RootWindow}" 
+               Source="{Binding ImageSource.Value, Mode=OneWay}" />
+    </StackPanel>
+</Window>
