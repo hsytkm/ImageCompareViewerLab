@@ -75,6 +75,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "08_ImageFunctions", "08_Ima
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlinkHilight", "08_ImageFunctions\BlinkHilight\BlinkHilight.csproj", "{7B713755-5F56-4AE4-817E-E59C4C5897BE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoomThumb", "08_ImageFunctions\ZoomThumb\ZoomThumb.csproj", "{79560E32-9EE9-43C1-B730-43EA1B3AEC03}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,9 +129,12 @@ Global
 		{5E3D91AE-174E-443F-A79D-D4E351C0E276}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E3D91AE-174E-443F-A79D-D4E351C0E276}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7B713755-5F56-4AE4-817E-E59C4C5897BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B713755-5F56-4AE4-817E-E59C4C5897BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7B713755-5F56-4AE4-817E-E59C4C5897BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7B713755-5F56-4AE4-817E-E59C4C5897BE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79560E32-9EE9-43C1-B730-43EA1B3AEC03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79560E32-9EE9-43C1-B730-43EA1B3AEC03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79560E32-9EE9-43C1-B730-43EA1B3AEC03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79560E32-9EE9-43C1-B730-43EA1B3AEC03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,6 +152,7 @@ Global
 		{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C} = {7EABD057-3F8A-4BE0-AA97-696D693A1062}
 		{5E3D91AE-174E-443F-A79D-D4E351C0E276} = {7EABD057-3F8A-4BE0-AA97-696D693A1062}
 		{7B713755-5F56-4AE4-817E-E59C4C5897BE} = {EE2D4033-3CAB-4458-9EB2-E0C62C22E8B3}
+		{79560E32-9EE9-43C1-B730-43EA1B3AEC03} = {EE2D4033-3CAB-4458-9EB2-E0C62C22E8B3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A747267B-7393-4543-A070-7F5EC5AA9AB6}
