@@ -30,9 +30,6 @@ namespace ZoomThumb.ViewModels
         // ScrollViewerコントロールのサイズ(スクロールバー除く)
         public ReactiveProperty<Size> ScrollViewerContentSize { get; } = new ReactiveProperty<Size>(mode: ReactivePropertyMode.None);
 
-        // 等倍表示中フラグ
-        private ReactiveProperty<bool> IsZoomRatioAll { get; } = new ReactiveProperty<bool>(true);
-
         // 表示切替ボタン
         //public ReactiveCommand ZoomX1Command { get; }
         //public ReactiveCommand ZoomAllCommand { get; }
@@ -65,12 +62,15 @@ namespace ZoomThumb.ViewModels
 
         public ImageScrollViewerViewModel(IContainerExtension container, IRegionManager regionManager)
         {
+            // 等倍表示中フラグ
+            var isZoomRatioAll = new ReactivePropertySlim<bool>(true);
+
             // 等倍表示コマンド
-            //ZoomX1Command = new ReactiveCommand(IsZoomRatioAll);
-            //ZoomX1Command.Subscribe(_ => IsZoomRatioAll.Value = false);
+            //ZoomX1Command = new ReactiveCommand(isZoomRatioAll);
+            //ZoomX1Command.Subscribe(_ => isZoomRatioAll.Value = false);
 
             // 等倍表示
-            IsZoomRatioAll.Where(x => !x)
+            isZoomRatioAll.Where(x => !x)
                 .Subscribe(x =>
                 {
                     double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
@@ -124,11 +124,11 @@ namespace ZoomThumb.ViewModels
                 });
 
             // 全画面表示コマンド
-            //ZoomAllCommand = new ReactiveCommand(IsZoomRatioAll.Select(x => !x));
-            //ZoomAllCommand.Subscribe(_ => IsZoomRatioAll.Value = true);
+            //ZoomAllCommand = new ReactiveCommand(isZoomRatioAll.Select(x => !x));
+            //ZoomAllCommand.Subscribe(_ => isZoomRatioAll.Value = true);
 
             // 全画面表示
-            IsZoomRatioAll
+            isZoomRatioAll
                 .CombineLatest(ScrollViewerSize, (b, s) => (b, s))
                 .Where(x => x.b).Select(x => x.s)
                 .Subscribe(x =>
@@ -138,7 +138,7 @@ namespace ZoomThumb.ViewModels
                     //   自動でスクロールバーが消えないので明示的に消す
                     ScrollBarForceVisibilityCollapsed = true;
                     ImageViewSize.Value = GetImageViewSize(ImageSource.Value, x);
-                    Console.WriteLine($"IsZoomRatioAll: ({ImageViewSize.Value.Width}, {ImageViewSize.Value.Height})");
+                    Console.WriteLine($"isZoomRatioAll: ({ImageViewSize.Value.Width}, {ImageViewSize.Value.Height})");
 
                     Size GetImageViewSize(BitmapSource image, Size scrollViewerSize)
                     {
@@ -164,51 +164,45 @@ namespace ZoomThumb.ViewModels
 
             #region DoubleClickZoom
 
-            ScrollViewerMouseDoubleClick.Subscribe(_ => IsZoomRatioAll.Value = !IsZoomRatioAll.Value);
-
-            // マウス押下中のみマウスの移動量を流す
-            ScrollViewerContentMouseMove
-                .Pairwise()                                         // 最新値と前回値を取得
-                .Select(x => -(x.NewItem - x.OldItem))              // 引っ張りと逆方向なので反転
-                .SkipUntil(ScrollViewerContentMouseLeftDownImage)
-                .TakeUntil(ScrollViewerContentMouseLeftUpImage)
-                .Repeat()
-                .Where(_ => !IsZoomRatioAll.Value)                  // 全画面表示中は画像移動不要
-                .Subscribe(v => ScrollOffset.Value = ShiftDraggingScrollOffset(ScrollOffset.Value, ImageViewSize.Value, ScrollViewerContentSize.Value, v));
+            // 表示状態を切り替える
+            ScrollViewerMouseDoubleClick.Subscribe(_ => isZoomRatioAll.Value = !isZoomRatioAll.Value);
 
             #endregion
 
             #region SingleClickZoom
 
             // 一時ズームフラグ
-            var temporaryZoomSubject = new Subject<bool>();
-            bool isTemporaryZooming = false;
+            var temporaryZoomSubject = new ReactivePropertySlim<bool>(false);
 
             // 長押しによる一時ズーム
             ScrollViewerMouseLeftDownImage
-                .Throttle(TimeSpan.FromMilliseconds(300))           // 長押し判定
-                .TakeUntil(ScrollViewerMouseLeftUpImage)            // 押下中のみ対象(ちょん離し後なら弾く)
+                .Throttle(TimeSpan.FromMilliseconds(300))   // 長押し判定
+                .TakeUntil(ScrollViewerMouseLeftUpImage)    // 押下中のみ対象(ちょん離し後なら弾く)
                 .Repeat()
-                .Where(_ => IsZoomRatioAll.Value)                   // 既にズームしてたら入れない(継続ズームを弾く)
-                .Subscribe(_ => temporaryZoomSubject.OnNext(true));
+                .Where(_ => isZoomRatioAll.Value)           // 既にズームしてたら入れない(継続ズームを弾く)
+                .Subscribe(_ => temporaryZoomSubject.Value = true);
 
             // 一時ズーム解除
             ScrollViewerMouseLeftUpImage
-                .Where(_ => isTemporaryZooming)     // 一時ズームなら解除する(継続ズームは解除しない)
-                .Subscribe(_ => temporaryZoomSubject.OnNext(false));
+                .Where(_ => temporaryZoomSubject.Value)     // 一時ズームなら解除する(継続ズームは解除しない)
+                .Subscribe(_ => temporaryZoomSubject.Value = false);
 
-            temporaryZoomSubject.Subscribe(x =>
-            {
-                IsZoomRatioAll.Value = !x;
-                isTemporaryZooming = x;
-            });
+            temporaryZoomSubject.Subscribe(x => isZoomRatioAll.Value = !x);
+            
+            #endregion
 
-            // ドラッグによる画像表示位置の移動 ★DoubleClickの方が動いちゃってる感じ…
-            //ScrollViewerMouseMove
-            //    .Pairwise()                                         // 最新値と前回値を取得
-            //    .Select(x => -(x.NewItem - x.OldItem))              // 引っ張りと逆方向なので反転
-            //    .Where(_ => isScrollViewerMouseLeftPushing.Value)   // ドラッグ中のみ値を流す
-            //    .Subscribe(v => ScrollOffset.Value = ShiftDraggingScrollOffset(ScrollOffset.Value, ImageViewSize.Value, ScrollViewerContentSize.Value, v));
+            #region MouseMove
+
+            // マウス押下中のみマウスの移動量を流す(SingleClickもここを通っっちゃてる。想定外やけどまぁOK)
+            ScrollViewerContentMouseMove
+                .Pairwise()                                         // 最新値と前回値を取得
+                .Select(x => -(x.NewItem - x.OldItem))              // 引っ張りと逆方向なので反転
+                .SkipUntil(ScrollViewerContentMouseLeftDownImage)
+                .TakeUntil(ScrollViewerContentMouseLeftUpImage)
+                .Repeat()
+                .Where(_ => !isZoomRatioAll.Value)                  // 全画面表示中は画像移動不要
+                .Where(_ => !temporaryZoomSubject.Value)            // 一時ズームは移動させない仕様
+                .Subscribe(v => ScrollOffset.Value = ShiftDraggingScrollOffset(ScrollOffset.Value, ImageViewSize.Value, ScrollViewerContentSize.Value, v));
 
             #endregion
         }
