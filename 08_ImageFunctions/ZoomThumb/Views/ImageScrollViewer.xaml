@@ -44,8 +44,8 @@
 
             <!-- マウスホイールによるズーム
             <i:EventTrigger EventName="PreviewMouseWheel">
-                <r:EventToReactiveProperty ReactiveProperty="{Binding MouseWheel, Mode=OneTime}" >
-                    <vmec:MouseWheelCtrlEventToIntConverter/>
+                <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseWheel, Mode=OneTime}" >
+                    <vmec:MouseWheelEventToDeltaConverter/>
                 </r:EventToReactiveProperty>
             </i:EventTrigger>
             -->

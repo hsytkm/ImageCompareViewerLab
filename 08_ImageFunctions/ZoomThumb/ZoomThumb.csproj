@@ -108,6 +108,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ViewModels\EventConverters\MouseMoveEventToPointConverter.cs" />
+    <Compile Include="ViewModels\EventConverters\MouseWheelEventToDeltaConverter.cs" />
     <Compile Include="ViewModels\ImageScrollViewerViewModel.cs" />
     <Compile Include="Views\ImageScrollViewer.xaml.cs">
       <DependentUpon>ImageScrollViewer.xaml</DependentUpon>
