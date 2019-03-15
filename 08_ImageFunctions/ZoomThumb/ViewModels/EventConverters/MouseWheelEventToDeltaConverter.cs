@@ -8,7 +8,7 @@ namespace ZoomThumb.ViewModels.EventConverters
     /// <summary>
     /// MouseWheelイベント(dynamicは MouseWheelEventArgs 想定)
     /// </summary>
-    public class MouseWheelEventToDeltaConverter : ReactiveConverter<dynamic, int>
+    class MouseWheelEventToDeltaConverter : ReactiveConverter<dynamic, int>
     {
         protected override IObservable<int> OnConvert(IObservable<dynamic> source)
         {
