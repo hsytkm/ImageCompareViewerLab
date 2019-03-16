@@ -111,6 +111,9 @@
     <Compile Include="ViewModels\EventConverters\MouseWheelCtrlEventToDeltaConverter.cs" />
     <Compile Include="ViewModels\EventConverters\MouseWheelEventToDeltaConverter.cs" />
     <Compile Include="ViewModels\ImageScrollViewerViewModel.cs" />
+    <Compile Include="Views\BooleanToRenderOptionConverter.cs" >
+      <DependentUpon>ImageScrollViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ImageScrollViewer.xaml.cs">
       <DependentUpon>ImageScrollViewer.xaml</DependentUpon>
     </Compile>

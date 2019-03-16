@@ -61,9 +61,11 @@ namespace ZoomThumb.ViewModels
         private readonly ReactiveProperty<ImageZoomMagnification> ImageZoomMag =
             new ReactiveProperty<ImageZoomMagnification>(ImageZoomMagnification.Entire);
 
+        public ReadOnlyReactiveProperty<bool> BitmapScalingModeResolution { get; }
+
         public ImageScrollViewerViewModel(IContainerExtension container, IRegionManager regionManager)
         {
-            // 等倍表示
+            // ズーム表示
             ImageZoomMag
                 .Where(x => !x.IsEntire)
                 .Select(x => x.MagnificationRatio)
@@ -107,8 +109,6 @@ namespace ZoomThumb.ViewModels
 
                     // 自コントロールへの要求
                     ScrollOffset.Value = zoomNewSize;
-
-
 
                     // ズーム表示からの全画面表示でスクロールバーが消えない対策
                     //   全画面表示中はスクロールバーを非表示にしているので、ズーム表示中は表示に戻す
@@ -178,7 +178,7 @@ namespace ZoomThumb.ViewModels
                 .SkipUntil(ScrollViewerContentMouseLeftDownImage)
                 .TakeUntil(ScrollViewerContentMouseLeftUpImage)
                 .Repeat()
-                .Where(_ => !ImageZoomMag.Value.IsEntire)           // ズーム中のみ流す(全画面表示中は画像移動不要)
+                //.Where(_ => !ImageZoomMag.Value.IsEntire)           // ズーム中のみ流す(全画面表示中は画像移動不要)
                 .Where(_ => !temporaryZoomSubject.Value)            // 一時ズームは移動させない仕様
                 .Subscribe(v => ScrollOffset.Value = ShiftDraggingScrollOffset(ScrollOffset.Value, ImageViewSize.Value, ScrollViewerContentSize.Value, v));
 
@@ -190,16 +190,23 @@ namespace ZoomThumb.ViewModels
                 .Where(x => x != 0)
                 .Subscribe(x =>
                 {
-                    double k = 2;
-
                     var zoomMag = Math.Min(
                         ImageViewSize.Value.Width / ImageSource.Value.PixelWidth,
                         ImageViewSize.Value.Height / ImageSource.Value.PixelHeight);
 
-                    ImageZoomMag.Value = ImageZoomMag.Value.MulMagnification(zoomMag, (x > 0) ? k : 1.0 / k);
+                    ImageZoomMagnification imageZoomMag;
+                    if (x > 0) imageZoomMag = ImageZoomMag.Value.ZoomInMagnification(zoomMag);
+                    else imageZoomMag = ImageZoomMag.Value.ZoomOutMagnification(zoomMag);
+                    ImageZoomMag.Value = imageZoomMag;
 
                     Console.WriteLine($"Mag: {zoomMag:f2} => {ImageZoomMag.Value.MagnificationRatio:f2}");
                 });
+
+            // レンダリングオプションの指定(100%以上の拡大ズームならPixelが見える設定にする)
+            BitmapScalingModeResolution = ImageViewSize
+                .CombineLatest(ImageSource, (x, y) => new { View = x, Source = new Size(y.PixelWidth, y.PixelHeight) })
+                .Select(x => (x.View.Width < x.Source.Width) || (x.View.Height < x.Source.Height))
+                .ToReadOnlyReactiveProperty();
 
             #endregion
 
@@ -241,7 +248,8 @@ namespace ZoomThumb.ViewModels
         struct ImageZoomMagnification
         {
             private static readonly double MagRatioMin = Math.Pow(2, -5);   // 3.1%
-            private static readonly double MagRatioMax = Math.Pow(2, 4);    // 1600%
+            private static readonly double MagRatioMax = Math.Pow(2, 5);    // 3200%
+            private static readonly double MagStep = 2.0;                   // 2倍
 
             public bool IsEntire { get; private set; }
             public double MagnificationRatio { get; private set; }
@@ -260,11 +268,11 @@ namespace ZoomThumb.ViewModels
             }
 
             public static ImageZoomMagnification Entire = new ImageZoomMagnification(true);
-            public static ImageZoomMagnification MagX1 = new ImageZoomMagnification(1.0);
+            private static ImageZoomMagnification MagX1 = new ImageZoomMagnification(1.0);
 
             public ImageZoomMagnification MagnificationToggle() => IsEntire ? MagX1 : Entire;
 
-            public ImageZoomMagnification MulMagnification(double currentMag, double ratio)
+            private ImageZoomMagnification ZoomMagnification(double currentMag, double ratio)
             {
                 // ホイールすると2の冪乗になるよう元の倍率を補正する
                 double currentMagPowerRaw = Math.Log(currentMag) / Math.Log(2);
@@ -275,6 +283,12 @@ namespace ZoomThumb.ViewModels
                 else if (newMag > MagRatioMax) newMag = MagRatioMax;
                 return new ImageZoomMagnification(newMag);
             }
+
+            public ImageZoomMagnification ZoomInMagnification(double currentMag) =>
+                ZoomMagnification(currentMag, MagStep);
+
+            public ImageZoomMagnification ZoomOutMagnification(double currentMag) =>
+                ZoomMagnification(currentMag, 1.0 / MagStep);
 
         }
 

@@ -4,12 +4,11 @@
                     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
                     xmlns:r="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.NET46"
                     xmlns:v="clr-namespace:ZoomThumb.Views"
-                    xmlns:vmec="clr-namespace:ZoomThumb.ViewModels.EventConverters"
-                    >
+                    xmlns:vmec="clr-namespace:ZoomThumb.ViewModels.EventConverters" >
 
     <!-- スクロールバー右下余白の色対応  http://aonasuzutsuki.hatenablog.jp/entry/2015/12/08/214214 -->
     <Style x:Key="ScrollViewerImageStyleKey"
-		   TargetType="ScrollViewer">
+           TargetType="ScrollViewer">
 
         <Setter Property="v:ScrollViewerBinding.ScrollOffset"
                 Value="{Binding ScrollOffset.Value, Mode=TwoWay}" />

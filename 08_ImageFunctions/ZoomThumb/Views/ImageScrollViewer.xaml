@@ -14,7 +14,12 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
-        <ResourceDictionary Source="ImageScrollViewerStyle.xaml" />
+        <ResourceDictionary>
+            <v:BooleanToRenderOptionConverter x:Key="BooleanToRenderOptionConverterKey"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ImageScrollViewerStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <ScrollViewer Style="{StaticResource ScrollViewerImageStyleKey}" >
@@ -58,7 +63,8 @@
 
         <Image Source="{Binding ImageSource.Value, Mode=OneTime}"
                Width="{Binding ImageViewSize.Value.Width, Mode=OneWay}"
-               Height="{Binding ImageViewSize.Value.Height, Mode=OneWay}" />
+               Height="{Binding ImageViewSize.Value.Height, Mode=OneWay}"
+               RenderOptions.BitmapScalingMode="{Binding BitmapScalingModeResolution.Value, Mode=OneWay, Converter={StaticResource BooleanToRenderOptionConverterKey}}" />
 
         <!--
             Width="{Binding ImageControlSize.Value.Width, Mode=OneWay, NotifyOnTargetUpdated=True}"
