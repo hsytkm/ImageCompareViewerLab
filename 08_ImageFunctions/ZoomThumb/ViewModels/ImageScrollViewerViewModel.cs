@@ -138,8 +138,8 @@ namespace ZoomThumb.ViewModels
                 .SkipUntil(ScrollViewerContentMouseLeftDownImage)
                 .TakeUntil(ScrollViewerContentMouseLeftUpImage)
                 .Repeat()
-                //.Where(_ => !ImageZoomMag.Value.IsEntire)           // ズーム中のみ流す(全画面表示中は画像移動不要)
-                .Where(_ => !temporaryZoomSubject.Value)            // 一時ズームは移動させない仕様
+                .Where(_ => !ImageZoomMag.Value.IsEntire)           // ズーム中のみ流す(全画面表示中は画像移動不要)
+                .Where(_ => !temporaryZoomSubject.Value)            // ◆一時ズームは移動させない仕様
                 .Subscribe(v => ScrollOffset.Value = ShiftDraggingScrollOffset(ScrollOffset.Value, ImageViewSize.Value, ScrollViewerContentSize.Value, v));
 
             #endregion
