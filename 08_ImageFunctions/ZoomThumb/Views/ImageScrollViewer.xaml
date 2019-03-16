@@ -42,13 +42,13 @@
                                            IgnoreEventArgs="true" />
             </i:EventTrigger>
 
-            <!-- マウスホイールによるズーム
+            <!-- マウスホイールによるズーム -->
             <i:EventTrigger EventName="PreviewMouseWheel">
                 <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseWheel, Mode=OneTime}" >
                     <vmec:MouseWheelCtrlEventToDeltaConverter/>
                 </r:EventToReactiveProperty>
             </i:EventTrigger>
-            -->
+
         </i:Interaction.Triggers>
 
         <!-- 子画像のサイズ変更時にScrollBar表示を切り替え(Image側にNotifyOnTargetUpdatedが必要) -->
