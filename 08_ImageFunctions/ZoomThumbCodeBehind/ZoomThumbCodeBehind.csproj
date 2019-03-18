@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A2C204F4-6FAA-4469-99AB-0A6C08D8F060}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ZoomThumbCode</RootNamespace>
+    <RootNamespace>ZoomThumb</RootNamespace>
     <AssemblyName>ZoomThumbCodeBehind</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -109,10 +109,11 @@
     <Compile Include="Models\MyImage.cs" />
     <Compile Include="ViewModels\EventConverters\MouseMoveEventToPointConverter.cs" />
     <Compile Include="ViewModels\ImageScrollViewerViewModel.cs" />
+    <Compile Include="ViewModels\ImageZoomMagnification.cs" />
     <Compile Include="Views\ImageScrollViewer.xaml.cs">
       <DependentUpon>ImageScrollViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\MouseCaptureBehavior.cs"/>
+    <Compile Include="Views\MouseCaptureBehavior.cs" />
     <Page Include="Views\ImageScrollViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
