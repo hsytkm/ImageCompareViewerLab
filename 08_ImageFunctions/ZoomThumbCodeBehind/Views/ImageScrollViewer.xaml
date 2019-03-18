@@ -26,6 +26,8 @@
 
     <ScrollViewer x:Name="MyScrollViewer"
                   Style="{StaticResource ScrollViewerImageStyleKey}"
+                  v:ImageScrollViewer.ZoomMag="{Binding ImageZoomMag.Value, Mode=TwoWay}"
+                  v:ImageScrollViewer.ScrollOffset="{Binding ImageScrollViewerScrollOffset.Value, Mode=TwoWay}"
                   SizeChanged="MyScrollViewer_SizeChanged"
                   PreviewMouseWheel="MyScrollViewer_PreviewMouseWheel">
 
@@ -72,8 +74,6 @@
                Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}"
                Width="{Binding ImageViewWidth.Value, Mode=OneWayToSource}"
                Height="{Binding ImageViewHeight.Value, Mode=OneWayToSource}"
-               v:ImageScrollViewer.ZoomMag="{Binding ImageZoomMag.Value, Mode=OneWay}"
-               v:ImageScrollViewer.ScrollOffset="{Binding ImageScrollViewerScrollOffset.Value, Mode=TwoWay}"
                SizeChanged="MainImage_SizeChanged"
                TargetUpdated="MainImage_TargetUpdated" />
 

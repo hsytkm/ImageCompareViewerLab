@@ -55,6 +55,9 @@ namespace ZoomThumb.ViewModels
             ImageSource = myImage.ObserveProperty(x => x.ImageSource).ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.None);
             ImageSource.Subscribe(x => ImageZoomMag.Value = ImageZoomMagnification.Entire);
 
+            //ImageZoomMag.Subscribe(x => Console.WriteLine($"{x.IsEntire}  {x.MagnificationRatio:f2}"));
+            //ImageScrollViewerScrollOffset.Subscribe(x => Console.WriteLine($"{x.Width}  {x.Height}"));
+
             #region DoubleClickZoom
 
             // 表示状態を切り替える
@@ -95,28 +98,31 @@ namespace ZoomThumb.ViewModels
                 .Repeat()
                 .Where(_ => !ImageZoomMag.Value.IsEntire)           // ズーム中のみ流す(全画面表示中は画像移動不要)
                 .Where(_ => !temporaryZoomSubject.Value)            // ◆一時ズームは移動させない仕様
-                .Subscribe(v => ScrollOffset = ShiftDraggingScrollOffset(ScrollOffset, ImageViewSize, ScrollViewerContentSize.Value, v));
+                .Subscribe(v => ImageScrollViewerScrollOffset.Value = ShiftDraggingScrollOffset(ImageScrollViewerScrollOffset.Value, ImageViewSize, v));
 
             #endregion
 
         }
 
         // マウスドラッグ中の表示位置のシフト
-        private static Size ShiftDraggingScrollOffset(Size offsetSize, Size imageSize, Size sviewSize, Vector shift)
+        private Size ShiftDraggingScrollOffset(Size offsetSize, Size imageSize, Vector shift)
         {
             double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
 
-            double widthMax = Math.Max(0.0, imageSize.Width - sviewSize.Width);
-            double heightMax = Math.Max(0.0, imageSize.Height - sviewSize.Height);
+            var shiftRate = new Vector(shift.X / imageSize.Width, shift.Y / imageSize.Height);
 
-            return new Size(
-                clip(offsetSize.Width + shift.X, 0.0, widthMax),
-                clip(offsetSize.Height + shift.Y, 0.0, heightMax));
+
+            var size = new Size(
+                clip(offsetSize.Width + shiftRate.X, 0.0, 1.0),
+                clip(offsetSize.Height + shiftRate.Y, 0.0, 1.0));
+            return size;
         }
 
         // クリックズームの状態を切り替える(全画面⇔等倍)
         private void SwitchClickZoomMag()
         {
+            //◆引っ越し予定なので無効化します。有効にしたらちゃんと動作します。
+            return;
             var mag = ImageZoomMag.Value.MagnificationToggle();
 
             // ズーム表示への切り替えならスクロールバーを移動(ImageViewSizeを変更する前に実施する)
@@ -127,8 +133,7 @@ namespace ZoomThumb.ViewModels
                 var imageSourceSize = new Size(ImageSource.Value.PixelWidth, ImageSource.Value.PixelHeight);
                 var scrollVieweMousePoint = ScrollViewerContentMouseMove.Value;
 
-                //◆引っ越し予定なので無効化します。有効にしたらちゃんと動作します。
-                //ScrollOffset = GetClickZoomScrollOffset(mag.MagnificationRatio, imageViewSize, scrollViewerSize, imageSourceSize, scrollVieweMousePoint);
+                ScrollOffset = GetClickZoomScrollOffset(mag.MagnificationRatio, imageViewSize, scrollViewerSize, imageSourceSize, scrollVieweMousePoint);
             }
 
             ImageZoomMag.Value = mag;
@@ -178,7 +183,7 @@ namespace ZoomThumb.ViewModels
     }
 
     // 画像の倍率管理
-    struct ImageZoomMagnification
+    public struct ImageZoomMagnification
     {
         private static readonly double MagRatioMin = Math.Pow(2, -5);   // 3.1%
         private static readonly double MagRatioMax = Math.Pow(2, 5);    // 3200%

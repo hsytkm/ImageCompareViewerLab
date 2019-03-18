@@ -105,9 +105,11 @@
                                    Value="{TemplateBinding HorizontalOffset}"
                                    Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" >
 
+                            <!-- CodeBehindに引っ越し済み
                             <i:Interaction.Behaviors>
                                 <v:ScrollBarBehavior ForceVisibilityCollapsed="{Binding ScrollBarForceVisibilityCollapsed, Mode=OneWay}" />
                             </i:Interaction.Behaviors>
+                            -->
 
                             <i:Interaction.Triggers>
                                 <!-- スクロールバーのサイズ(スクロールバーを除いたエリアを取得する用)
@@ -141,9 +143,11 @@
                                    Value="{TemplateBinding VerticalOffset}"
                                    Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" >
 
+                            <!-- CodeBehindに引っ越し済み
                             <i:Interaction.Behaviors>
                                 <v:ScrollBarBehavior ForceVisibilityCollapsed="{Binding ScrollBarForceVisibilityCollapsed, Mode=OneWay}" />
                             </i:Interaction.Behaviors>
+                            -->
 
                             <i:Interaction.Triggers>
                                 <!-- スクロールバーのサイズ(スクロールバーを除いたエリアを取得する用)
