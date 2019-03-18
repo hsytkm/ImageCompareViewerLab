@@ -26,8 +26,6 @@ namespace ZoomThumb.Views
         private static readonly ReactivePropertySlim<Size> ScrollViewerSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.None);
         private static readonly ReactivePropertySlim<BitmapSource> ImageSource = new ReactivePropertySlim<BitmapSource>(mode: ReactivePropertyMode.None);
         private static readonly ReactivePropertySlim<int> MouseWheelDelta = new ReactivePropertySlim<int>(mode: ReactivePropertyMode.None);
-
-        // ◆TwoWayのToSource側が未実装
         private static readonly ReactivePropertySlim<Size> ImageScrollOffset = new ReactivePropertySlim<Size>(new Size(0.5, 0.5));
 
         #region ImageZoomMagProperty
@@ -276,12 +274,17 @@ namespace ZoomThumb.Views
         {
             var thumbnail = Thumbnail;
             var scrollViewer = MyScrollViewer;
+            var image = MainImage;
 
-            scrollViewer.ScrollToHorizontalOffset(
-                scrollViewer.HorizontalOffset + (e.HorizontalChange * scrollViewer.ExtentWidth / thumbnail.ActualWidth));
-
-            MyScrollViewer.ScrollToVerticalOffset(
+            var sizePixel = new Size(
+                scrollViewer.HorizontalOffset + (e.HorizontalChange * scrollViewer.ExtentWidth / thumbnail.ActualWidth),
                 scrollViewer.VerticalOffset + (e.VerticalChange * scrollViewer.ExtentHeight / thumbnail.ActualHeight));
+
+            scrollViewer.ScrollToHorizontalOffset(sizePixel.Width);
+            scrollViewer.ScrollToVerticalOffset(sizePixel.Height);
+
+            // スクロール位置クラスの更新(TwoWay)
+            ImageScrollOffset.Value = new Size(sizePixel.Width / image.Width, sizePixel.Height / image.Height);
         }
 
         private void UpdateThumbnailViewport(object sender, ScrollChangedEventArgs e)
