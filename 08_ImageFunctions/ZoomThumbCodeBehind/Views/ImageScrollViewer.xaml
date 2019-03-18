@@ -24,68 +24,99 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <ScrollViewer x:Name="MyScrollViewer"
-                  Style="{StaticResource ScrollViewerImageStyleKey}"
-                  v:ImageScrollViewer.ZoomMag="{Binding ImageZoomMag.Value, Mode=TwoWay}"
-                  v:ImageScrollViewer.ScrollOffset="{Binding ImageScrollOffset.Value, Mode=TwoWay}"
-                  SizeChanged="MyScrollViewer_SizeChanged"
-                  PreviewMouseWheel="MyScrollViewer_PreviewMouseWheel">
+    <Grid>
+        <ScrollViewer x:Name="MyScrollViewer"
+                      Style="{StaticResource ScrollViewerImageStyleKey}"
+                      v:ImageScrollViewer.ZoomMag="{Binding ImageZoomMag.Value, Mode=TwoWay}"
+                      v:ImageScrollViewer.ScrollOffset="{Binding ImageScrollOffset.Value, Mode=TwoWay}"
+                      SizeChanged="MyScrollViewer_SizeChanged"
+                      PreviewMouseWheel="MyScrollViewer_PreviewMouseWheel"
+                      ScrollChanged="UpdateThumbnailViewport" >
 
-        <i:Interaction.Triggers>
-            <!-- 全表示中の拡大表示 Content側のイベントで処理するように変えた
-            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseLeftDownImage, Mode=OneTime}"
-                                           IgnoreEventArgs="True" />
-            </i:EventTrigger>
-            <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseLeftUpImage, Mode=OneTime}"
-                                           IgnoreEventArgs="True" />
-            </i:EventTrigger>
-            <i:EventTrigger EventName="MouseMove">
-                <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseMove, Mode=OneTime}" >
-                    <vmec:MouseMoveEventToPointConverter/>
-                </r:EventToReactiveProperty>
-            </i:EventTrigger>
-            -->
+            <i:Interaction.Triggers>
+                <!-- 全表示中の拡大表示 Content側のイベントで処理するように変えた
+                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseLeftDownImage, Mode=OneTime}"
+                                               IgnoreEventArgs="True" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseLeftUpImage, Mode=OneTime}"
+                                               IgnoreEventArgs="True" />
+                </i:EventTrigger>
+                <i:EventTrigger EventName="MouseMove">
+                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseMove, Mode=OneTime}" >
+                        <vmec:MouseMoveEventToPointConverter/>
+                    </r:EventToReactiveProperty>
+                </i:EventTrigger>
+                -->
 
-            <!-- 拡大/全表示切り替え(Style無いに押し込みたいがPanel/ContentPresenterにMouseDoubleClickイベントがない(Controlのみ))
-                 ◆LeftButtonから自作すればよいけど未対応
+                <!-- 拡大/全表示切り替え(Style無いに押し込みたいがPanel/ContentPresenterにMouseDoubleClickイベントがない(Controlのみ))
+                     ◆LeftButtonから自作すればよいけど未対応
+                -->
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseDoubleClick, Mode=OneTime}"
+                                               IgnoreEventArgs="true" />
+                </i:EventTrigger>
+
+                <!-- マウスホイールによるズーム  コードビハインドで対応した
+                <i:EventTrigger EventName="PreviewMouseWheel">
+                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseWheel, Mode=OneTime}" >
+                        <vmec:MouseWheelCtrlEventToDeltaConverter/>
+                    </r:EventToReactiveProperty>
+                </i:EventTrigger>
+                -->
+            </i:Interaction.Triggers>
+
+            <!-- 子画像のサイズ変更時にScrollBar表示を切り替え(Image側にNotifyOnTargetUpdatedが必要) -->
+            <i:Interaction.Behaviors>
+                <v:ImageScrollViewerBehavior/>
+            </i:Interaction.Behaviors>
+
+            <Image x:Name="MainImage"
+                   Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}"
+                   Width="{Binding ImageViewWidth.Value, Mode=OneWayToSource}"
+                   Height="{Binding ImageViewHeight.Value, Mode=OneWayToSource}"
+                   SizeChanged="MainImage_SizeChanged"
+                   TargetUpdated="MainImage_TargetUpdated" />
+
+            <!--
+                Width="{Binding ImageViewSize.Value.Width, Mode=OneWay}"
+                Height="{Binding ImageViewSize.Value.Height, Mode=OneWay}"
+                RenderOptions.BitmapScalingMode="{Binding BitmapScalingModeResolution.Value, Mode=OneWay, Converter={StaticResource BooleanToRenderOptionConverterKey}}" />
+                Width="{Binding ImageControlSize.Value.Width, Mode=OneWay, NotifyOnTargetUpdated=True}"
+                Height="{Binding ImageControlSize.Value.Height, Mode=OneWay, NotifyOnTargetUpdated=True}" 
             -->
-            <i:EventTrigger EventName="MouseDoubleClick">
-                <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseDoubleClick, Mode=OneTime}"
-                                           IgnoreEventArgs="true" />
-            </i:EventTrigger>
+        </ScrollViewer>
+        
+        <Canvas Width="{Binding ElementName=Thumbnail, Path=ActualWidth}"
+                Height="{Binding ElementName=Thumbnail, Path=ActualHeight}"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="10,10,0,0" >
             
-            <!-- マウスホイールによるズーム  コードビハインドで対応した
-            <i:EventTrigger EventName="PreviewMouseWheel">
-                <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseWheel, Mode=OneTime}" >
-                    <vmec:MouseWheelCtrlEventToDeltaConverter/>
-                </r:EventToReactiveProperty>
-            </i:EventTrigger>
-            -->
-        </i:Interaction.Triggers>
+            <Image x:Name="Thumbnail"
+                   Width="100"
+                   Stretch="Uniform"
+                   Source="{Binding ImageSource.Value, Mode=OneWay}" />
+            
+            <Path Fill="#7FFFFFFF">
+                <Path.Data>
+                    <CombinedGeometry x:Name="CombinedGeometry"
+                                      GeometryCombineMode="Xor" />
+                </Path.Data>
+            </Path>
 
-        <!-- 子画像のサイズ変更時にScrollBar表示を切り替え(Image側にNotifyOnTargetUpdatedが必要) -->
-        <i:Interaction.Behaviors>
-            <v:ImageScrollViewerBehavior/>
-        </i:Interaction.Behaviors>
-
-        <Image x:Name="MainImage"
-               Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}"
-               Width="{Binding ImageViewWidth.Value, Mode=OneWayToSource}"
-               Height="{Binding ImageViewHeight.Value, Mode=OneWayToSource}"
-               SizeChanged="MainImage_SizeChanged"
-               TargetUpdated="MainImage_TargetUpdated" />
-
-
-        <!--
-               Width="{Binding ImageViewSize.Value.Width, Mode=OneWay}"
-               Height="{Binding ImageViewSize.Value.Height, Mode=OneWay}"
-            RenderOptions.BitmapScalingMode="{Binding BitmapScalingModeResolution.Value, Mode=OneWay, Converter={StaticResource BooleanToRenderOptionConverterKey}}" />
-            Width="{Binding ImageControlSize.Value.Width, Mode=OneWay, NotifyOnTargetUpdated=True}"
-            Height="{Binding ImageControlSize.Value.Height, Mode=OneWay, NotifyOnTargetUpdated=True}" 
-        -->
-
-    </ScrollViewer>
+            <Thumb x:Name="ThumbViewport"
+                   DragDelta="OnDragDelta" >
+                <Thumb.Template>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border BorderBrush="Red"
+                                BorderThickness="2"
+                                Background="Transparent" />
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+        </Canvas>
+    </Grid>
 
 </UserControl>

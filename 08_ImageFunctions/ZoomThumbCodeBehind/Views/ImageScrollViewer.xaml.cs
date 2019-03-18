@@ -4,6 +4,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -247,6 +248,54 @@ namespace ZoomThumb.Views
             return Math.Min(
                 imageViewSize.Width / imageSourceSize.Width,
                 imageViewSize.Height / imageSourceSize.Height);
+        }
+
+        #endregion
+
+        #region ThumbnailViewport
+
+        private void OnDragDelta(object sender, DragDeltaEventArgs e)
+        {
+            var thumbnail = Thumbnail;
+            var scrollViewer = MyScrollViewer;
+
+            scrollViewer.ScrollToHorizontalOffset(
+                scrollViewer.HorizontalOffset + (e.HorizontalChange * scrollViewer.ExtentWidth / thumbnail.ActualWidth));
+
+            MyScrollViewer.ScrollToVerticalOffset(
+                scrollViewer.VerticalOffset + (e.VerticalChange * scrollViewer.ExtentHeight / thumbnail.ActualHeight));
+        }
+
+        private void UpdateThumbnailViewport(object sender, ScrollChangedEventArgs e)
+        {
+            var thumbnail = Thumbnail;
+            var thumbViewport = ThumbViewport;
+            var combinedGeometry = CombinedGeometry;
+
+            // ExtentWidth/Height が ScrollViewer 内の広さ
+            // ViewportWidth/Height が ScrollViewer で実際に表示されているサイズ
+
+            var xfactor = thumbnail.ActualWidth / e.ExtentWidth;
+            var yfactor = thumbnail.ActualHeight / e.ExtentHeight;
+
+            var left = e.HorizontalOffset * xfactor;
+            var top = e.VerticalOffset * yfactor;
+
+            var width = e.ViewportWidth * xfactor;
+            if (width > thumbnail.ActualWidth) width = thumbnail.ActualWidth;
+
+            var height = e.ViewportHeight * yfactor;
+            if (height > thumbnail.ActualHeight) height = thumbnail.ActualHeight;
+
+            // Canvas (親パネル) 上での Thumb の位置を、Left/Top 添付プロパティで設定
+            // (XAML で言う <Thumb Canvas.Left="0" ... \> みたいなやつ)
+            Canvas.SetLeft(thumbViewport, left);
+            Canvas.SetTop(thumbViewport, top);
+
+            thumbViewport.Width = width;
+            thumbViewport.Height = height;
+
+            combinedGeometry.Geometry2 = new RectangleGeometry(new Rect(left, top, width, height));
         }
 
         #endregion
