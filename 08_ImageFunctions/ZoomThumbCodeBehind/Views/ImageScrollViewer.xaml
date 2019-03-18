@@ -88,13 +88,15 @@
                 Height="{Binding ImageControlSize.Value.Height, Mode=OneWay, NotifyOnTargetUpdated=True}" 
             -->
         </ScrollViewer>
-        
-        <Canvas Width="{Binding ElementName=Thumbnail, Path=ActualWidth}"
-                Height="{Binding ElementName=Thumbnail, Path=ActualHeight}"
+
+        <Canvas x:Name="ThumbCanvas"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Margin="10,10,0,0" >
-            
+                Margin="10,10,0,0"
+                Visibility="Collapsed"
+                Width="{Binding ElementName=Thumbnail, Path=ActualWidth}"
+                Height="{Binding ElementName=Thumbnail, Path=ActualHeight}" >
+
             <Image x:Name="Thumbnail"
                    Width="100"
                    Stretch="Uniform"

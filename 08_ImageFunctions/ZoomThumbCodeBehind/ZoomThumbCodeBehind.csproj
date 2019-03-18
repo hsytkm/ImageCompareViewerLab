@@ -112,15 +112,7 @@
     <Compile Include="Views\ImageScrollViewer.xaml.cs">
       <DependentUpon>ImageScrollViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ScrollBarBehavior.cs">
-      <DependentUpon>ImageScrollViewerStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\ScrollViewerBinding.cs">
-      <DependentUpon>ImageScrollViewerStyle.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MouseCaptureBehavior.cs">
-      <DependentUpon>ImageScrollViewerStyle.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Views\MouseCaptureBehavior.cs"/>
     <Page Include="Views\ImageScrollViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -99,7 +99,7 @@ namespace ZoomThumb.Views
 
                     var size = new Size(x.image.PixelWidth * x.mag.MagnificationRatio, x.image.PixelHeight * x.mag.MagnificationRatio);
 
-                    UpdateImageSize(MainImage, size, x.mag);    //ToZoom
+                    UpdateImageSize(size, x.mag);    //ToZoom
                 });
 
             // 全画面表示に切り替え
@@ -125,7 +125,7 @@ namespace ZoomThumb.Views
                         size = new Size(x.sview.Height * imageRatio, x.sview.Height);   // 縦パンパン
                     }
 
-                    UpdateImageSize(MainImage, size, x.mag);    //ToAll
+                    UpdateImageSize(size, x.mag);    //ToAll
                 });
 
             // マウスホイールによるズーム倍率変更
@@ -199,13 +199,19 @@ namespace ZoomThumb.Views
         private void MyScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e) =>
             ScrollViewerSize.Value = e.NewSize;
 
-        private void UpdateImageSize(Image image, Size size, ImageZoomMagnification mag)
+        private void UpdateImageSize(Size size, ImageZoomMagnification mag)
         {
-            SetZoomMag(MyScrollViewer, mag);
+            var image = MainImage;
+            var scrollViewer = MyScrollViewer;
+            var thumbCanvas = ThumbCanvas;
+
+            // ズーム倍率クラスの更新(TwoWay)
+            SetZoomMag(scrollViewer, mag);
 
             image.Width = size.Width;
             image.Height = size.Height;
 
+            thumbCanvas.Visibility = mag.IsEntire ? Visibility.Collapsed : Visibility.Visible;
             UpdateBitmapScalingMode(image);
         }
 
