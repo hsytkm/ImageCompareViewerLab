@@ -233,9 +233,21 @@ namespace ZoomThumb.Views
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
+                MouseWheelDelta.Value = e.Delta;
+
                 // 最大ズームでホイールすると画像の表示エリアが移動しちゃうので止める
                 e.Handled = true;
-                MouseWheelDelta.Value = e.Delta;
+            }
+            else if (Keyboard.Modifiers == ModifierKeys.Shift)
+            {
+                if (!(sender is ScrollViewer scrview)) return;
+
+                if (e.Delta < 0)
+                    scrview.LineRight();
+                else
+                    scrview.LineLeft();
+
+                e.Handled = true;
             }
         }
 

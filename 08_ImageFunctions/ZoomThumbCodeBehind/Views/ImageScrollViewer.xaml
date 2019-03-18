@@ -67,11 +67,12 @@
                 -->
             </i:Interaction.Triggers>
 
-            <!-- 子画像のサイズ変更時にScrollBar表示を切り替え(Image側にNotifyOnTargetUpdatedが必要) -->
+            <!-- Shiftで横スクロール  コードビハインドで対応した
             <i:Interaction.Behaviors>
-                <v:ImageScrollViewerBehavior/>
+                <v:ImageScrollViewerBehavior />
             </i:Interaction.Behaviors>
-
+            -->
+            
             <Image x:Name="MainImage"
                    Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}"
                    Width="{Binding ImageViewWidth.Value, Mode=OneWayToSource}"
