@@ -24,9 +24,6 @@ namespace ZoomThumb.ViewModels
 
         // ScrollViewerコントロールのサイズ
         public ReactiveProperty<Size> ScrollViewerSize { get; } = new ReactiveProperty<Size>(mode: ReactivePropertyMode.None);
-
-        // ScrollViewerコントロールのサイズ(スクロールバー除く)
-        public ReactiveProperty<Size> ScrollViewerContentSize { get; } = new ReactiveProperty<Size>(mode: ReactivePropertyMode.None);
         
         public ReactiveProperty<Unit> ScrollViewerContentMouseLeftDownImage { get; } = new ReactiveProperty<Unit>(mode: ReactivePropertyMode.None);
         public ReactiveProperty<Unit> ScrollViewerContentMouseLeftUpImage { get; } = new ReactiveProperty<Unit>(mode: ReactivePropertyMode.None);
@@ -34,21 +31,18 @@ namespace ZoomThumb.ViewModels
 
         public ReactiveProperty<Unit> ScrollViewerMouseDoubleClick { get; } = new ReactiveProperty<Unit>(mode: ReactivePropertyMode.None);
 
-        public ReactiveProperty<int> ScrollViewerMouseWheel { get; } = new ReactiveProperty<int>(mode: ReactivePropertyMode.None);
-
         // ズーム倍率の管理(OneWayやけどTwoWayにしたい)
         public ReactiveProperty<ImageZoomMagnification> ImageZoomMag { get; } = new ReactiveProperty<ImageZoomMagnification>();
 
         // スクロールオフセット位置(TwoWay)
-        public ReactiveProperty<Size> ImageScrollViewerScrollOffset { get; } = new ReactiveProperty<Size>(new Size(0.5, 0.5));
+        public ReactiveProperty<Size> ImageScrollOffset { get; } = new ReactiveProperty<Size>(new Size(0.5, 0.5));
 
         public ImageScrollViewerViewModel(IContainerExtension container, IRegionManager regionManager, MyImage myImage)
         {
             ImageSource = myImage.ObserveProperty(x => x.ImageSource).ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.None);
-            ImageSource.Subscribe(x => ImageZoomMag.Value = ImageZoomMagnification.Entire);
 
-            //ImageZoomMag.Subscribe(x => Console.WriteLine($"{x.IsEntire}  {x.MagnificationRatio:f2}"));
-            //ImageScrollViewerScrollOffset.Subscribe(x => Console.WriteLine($"{x.Width}  {x.Height}"));
+            // 画像読み込み直後は全画面表示にしといてみる
+            ImageSource.Subscribe(x => ImageZoomMag.Value = ImageZoomMagnification.Entire);
 
             #region DoubleClickZoom
 
@@ -89,8 +83,8 @@ namespace ZoomThumb.ViewModels
                 .TakeUntil(ScrollViewerContentMouseLeftUpImage)
                 .Repeat()
                 .Where(_ => !ImageZoomMag.Value.IsEntire)           // ズーム中のみ流す(全画面表示中は画像移動不要)
-                .Where(_ => !temporaryZoom.Value)            // ◆一時ズームは移動させない仕様
-                .Subscribe(v => ImageScrollViewerScrollOffset.Value = ShiftDraggingScrollOffset(ImageScrollViewerScrollOffset.Value, ImageViewSize, v));
+                .Where(_ => !temporaryZoom.Value)                   // ◆一時ズームは移動させない仕様
+                .Subscribe(v => ImageScrollOffset.Value = ShiftDraggingScrollOffset(ImageScrollOffset.Value, ImageViewSize, v));
 
             #endregion
 
@@ -123,7 +117,7 @@ namespace ZoomThumb.ViewModels
                 var imageSourceSize = new Size(ImageSource.Value.PixelWidth, ImageSource.Value.PixelHeight);
                 var scrollVieweMousePoint = ScrollViewerContentMouseMove.Value;
 
-                ImageScrollViewerScrollOffset.Value = GetClickZoomScrollOffset(
+                ImageScrollOffset.Value = GetClickZoomScrollOffset(
                     mag.MagnificationRatio, imageViewSize, scrollViewerSize, scrollVieweMousePoint);
             }
         }

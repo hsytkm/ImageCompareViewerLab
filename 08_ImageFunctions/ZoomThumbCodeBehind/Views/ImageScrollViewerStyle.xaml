@@ -53,20 +53,21 @@
                             </i:Interaction.Behaviors>
 
                             <i:Interaction.Triggers>
-                                <!-- 起動時のScrollViewerのサイズを取得 -->
+                                <!-- 起動時のScrollViewerのサイズを取得
                                 <i:EventTrigger EventName="Loaded">
                                     <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerContentSize, Mode=OneTime}" >
                                         <vmec:LoadedToSizeConverter/>
                                     </r:EventToReactiveProperty>
                                 </i:EventTrigger>
-                                
-                                <!-- ScrollViewerのサイズを取得(ここで取得しないとスクロールバー領域のサイズまで取得してしまい画像端が隠れる) -->
+                                -->
+                                <!-- ScrollViewerのサイズを取得(ここで取得しないとスクロールバー領域のサイズまで取得してしまい画像端が隠れる)
                                 <i:EventTrigger EventName="SizeChanged">
                                     <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerContentSize, Mode=OneTime}" >
                                         <vmec:SizeChangedToSizeConverter/>
                                     </r:EventToReactiveProperty>
                                 </i:EventTrigger>
-
+                                -->
+                                
                                 <!-- マウスドラッグ判定(画像エリアの操作検出用) -->
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
                                     <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerContentMouseLeftDownImage, Mode=OneTime}" IgnoreEventArgs="True" />
