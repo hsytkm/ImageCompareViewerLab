@@ -27,15 +27,7 @@ namespace ZoomThumb.ViewModels
 
         // ScrollViewerコントロールのサイズ(スクロールバー除く)
         public ReactiveProperty<Size> ScrollViewerContentSize { get; } = new ReactiveProperty<Size>(mode: ReactivePropertyMode.None);
-
-        // ScrollViewerのBar位置(TwoWay)
-        private Size _ScrollOffset;
-        public Size ScrollOffset
-        {
-            get => _ScrollOffset;
-            set => SetProperty(ref _ScrollOffset, value);
-        }
-
+        
         public ReactiveProperty<Unit> ScrollViewerContentMouseLeftDownImage { get; } = new ReactiveProperty<Unit>(mode: ReactivePropertyMode.None);
         public ReactiveProperty<Unit> ScrollViewerContentMouseLeftUpImage { get; } = new ReactiveProperty<Unit>(mode: ReactivePropertyMode.None);
         public ReactiveProperty<Point> ScrollViewerContentMouseMove { get; } = new ReactiveProperty<Point>();
@@ -68,7 +60,7 @@ namespace ZoomThumb.ViewModels
             #region SingleClickZoom
 
             // 一時ズームフラグ
-            var temporaryZoomSubject = new ReactivePropertySlim<bool>(false, mode: ReactivePropertyMode.DistinctUntilChanged);
+            var temporaryZoom = new ReactivePropertySlim<bool>(false, mode: ReactivePropertyMode.DistinctUntilChanged);
 
             // 長押しによる一時ズーム
             ScrollViewerContentMouseLeftDownImage               //ScrollViewerMouseLeftDownImage
@@ -76,20 +68,20 @@ namespace ZoomThumb.ViewModels
                 .TakeUntil(ScrollViewerContentMouseLeftUpImage) // 押下中のみ対象(ちょん離し後なら弾く)　ScrollViewerMouseLeftUpImage
                 .Repeat()
                 .Where(_ => ImageZoomMag.Value.IsEntire)        // 全体表示なら流す(継続ズームを弾くため既にズームしてたら流さない)
-                .Subscribe(_ => temporaryZoomSubject.Value = true);
+                .Subscribe(_ => temporaryZoom.Value = true);
 
             // 一時ズーム解除
             ScrollViewerContentMouseLeftUpImage                 //ScrollViewerMouseLeftUpImage
-                .Where(_ => temporaryZoomSubject.Value)         // 一時ズームなら解除する(継続ズームは解除しない)
-                .Subscribe(_ => temporaryZoomSubject.Value = false);
+                .Where(_ => temporaryZoom.Value)                // 一時ズームなら解除する(継続ズームは解除しない)
+                .Subscribe(_ => temporaryZoom.Value = false);
 
-            temporaryZoomSubject.Subscribe(_ => SwitchClickZoomMag());
+            temporaryZoom.Subscribe(_ => SwitchClickZoomMag());
 
             #endregion
 
             #region MouseMove
 
-            // マウス押下中のみマウスの移動量を流す(SingleClickもここを通っっちゃてる。想定外やけどまぁOK)
+            // マウス押下中のみマウスの移動割合をViewに流す
             ScrollViewerContentMouseMove
                 .Pairwise()                                         // 最新値と前回値を取得
                 .Select(x => -(x.NewItem - x.OldItem))              // 引っ張りと逆方向なので反転
@@ -97,7 +89,7 @@ namespace ZoomThumb.ViewModels
                 .TakeUntil(ScrollViewerContentMouseLeftUpImage)
                 .Repeat()
                 .Where(_ => !ImageZoomMag.Value.IsEntire)           // ズーム中のみ流す(全画面表示中は画像移動不要)
-                .Where(_ => !temporaryZoomSubject.Value)            // ◆一時ズームは移動させない仕様
+                .Where(_ => !temporaryZoom.Value)            // ◆一時ズームは移動させない仕様
                 .Subscribe(v => ImageScrollViewerScrollOffset.Value = ShiftDraggingScrollOffset(ImageScrollViewerScrollOffset.Value, ImageViewSize, v));
 
             #endregion
@@ -111,21 +103,19 @@ namespace ZoomThumb.ViewModels
 
             var shiftRate = new Vector(shift.X / imageSize.Width, shift.Y / imageSize.Height);
 
-
-            var size = new Size(
+            return new Size(
                 clip(offsetSize.Width + shiftRate.X, 0.0, 1.0),
                 clip(offsetSize.Height + shiftRate.Y, 0.0, 1.0));
-            return size;
         }
 
         // クリックズームの状態を切り替える(全画面⇔等倍)
         private void SwitchClickZoomMag()
         {
-            //◆引っ越し予定なので無効化します。有効にしたらちゃんと動作します。
-            return;
             var mag = ImageZoomMag.Value.MagnificationToggle();
 
-            // ズーム表示への切り替えならスクロールバーを移動(ImageViewSizeを変更する前に実施する)
+            ImageZoomMag.Value = mag;
+
+            // ズーム表示への切り替えならスクロールバーを移動(ImageViewSizeを変更した後に実施する)
             if (!mag.IsEntire)
             {
                 var imageViewSize = ImageViewSize;
@@ -133,14 +123,13 @@ namespace ZoomThumb.ViewModels
                 var imageSourceSize = new Size(ImageSource.Value.PixelWidth, ImageSource.Value.PixelHeight);
                 var scrollVieweMousePoint = ScrollViewerContentMouseMove.Value;
 
-                ScrollOffset = GetClickZoomScrollOffset(mag.MagnificationRatio, imageViewSize, scrollViewerSize, imageSourceSize, scrollVieweMousePoint);
+                ImageScrollViewerScrollOffset.Value = GetClickZoomScrollOffset(
+                    mag.MagnificationRatio, imageViewSize, scrollViewerSize, scrollVieweMousePoint);
             }
-
-            ImageZoomMag.Value = mag;
         }
 
         // クリックズーム時のスクロールオフセットを取得
-        private static Size GetClickZoomScrollOffset(double magRatio, Size imageViewSize, Size scrollViewerSize, Size imageSourceSize, Point scrollVieweMousePoint)
+        private static Size GetClickZoomScrollOffset(double magRatio, Size imageViewSize, Size scrollViewerSize, Point scrollVieweMousePoint)
         {
             double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
 
@@ -155,30 +144,11 @@ namespace ZoomThumb.ViewModels
                 Math.Max(0, scrollVieweMousePoint.Y - imageControlSizeOffset.Height));
 
             // ズーム後の中心座標の割合
-            var zoomCenterRate = new Point(
+            var zoomCenterRate = new Size(
                 clip(mousePos.X / imageViewSize.Width, 0.0, 1.0),
                 clip(mousePos.Y / imageViewSize.Height, 0.0, 1.0));
-
-            // ズーム後の全画像サイズ
-            var zoomImageSize = new Size(
-                imageSourceSize.Width * magRatio,
-                imageSourceSize.Height * magRatio);
-
-            // ズーム後の表示領域の半分の割合
-            var displayRateHalf = new Size(
-                scrollViewerSize.Width / zoomImageSize.Width / 2.0,
-                scrollViewerSize.Height / zoomImageSize.Height / 2.0);
-
-            // ズーム後の左上座標の割合
-            var zoomRateLeftTop = new Point(
-                clip(zoomCenterRate.X - displayRateHalf.Width, 0.0, 1.0),
-                clip(zoomCenterRate.Y - displayRateHalf.Height, 0.0, 1.0));
-
-            var zoomNewSize = new Size(
-                zoomRateLeftTop.X * zoomImageSize.Width,
-                zoomRateLeftTop.Y * zoomImageSize.Height);
-
-            return zoomNewSize;
+            
+            return zoomCenterRate;
         }
     }
 

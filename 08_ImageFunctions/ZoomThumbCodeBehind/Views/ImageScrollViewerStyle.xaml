@@ -10,9 +10,6 @@
     <Style x:Key="ScrollViewerImageStyleKey"
            TargetType="ScrollViewer">
 
-        <Setter Property="v:ScrollViewerBinding.ScrollOffset"
-                Value="{Binding ScrollOffset, Mode=TwoWay}" />
-
         <!-- ScrollBarの表示はViewModelで管理するのでAutoにしない -->
         <Setter Property="HorizontalScrollBarVisibility"
                 Value="Hidden" />
