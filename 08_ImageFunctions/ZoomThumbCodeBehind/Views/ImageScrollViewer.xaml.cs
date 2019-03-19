@@ -287,12 +287,16 @@ namespace ZoomThumb.Views
             height += scrollViewer.ActualHeight / 2.0;
             height = clip(Math.Round(height), 0.0, image.ActualHeight);
 
+            Console.WriteLine($"Delta: {width} x {height}");
+
             // スクロール位置を更新
             ImageScrollOffsetRatio.Value = new Size(width / image.ActualWidth, height / image.ActualHeight);
         }
 
         private void UpdateThumbnailViewport(object sender, ScrollChangedEventArgs e)
         {
+            double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
+
             var thumbnail = Thumbnail;
             var thumbViewport = ThumbViewport;
             var combinedGeometry = CombinedGeometry;
@@ -303,14 +307,14 @@ namespace ZoomThumb.Views
             var xfactor = thumbnail.ActualWidth / e.ExtentWidth;
             var yfactor = thumbnail.ActualHeight / e.ExtentHeight;
 
-            var left = e.HorizontalOffset * xfactor;
-            var top = e.VerticalOffset * yfactor;
-
             var width = e.ViewportWidth * xfactor;
-            if (width > thumbnail.ActualWidth) width = thumbnail.ActualWidth;
+            width = clip(width, thumbViewport.MinWidth, thumbnail.ActualWidth);
 
             var height = e.ViewportHeight * yfactor;
-            if (height > thumbnail.ActualHeight) height = thumbnail.ActualHeight;
+            height = clip(height, thumbViewport.MinHeight, thumbnail.ActualHeight);
+
+            var left = (e.HorizontalOffset * xfactor) - width;
+            var top = (e.VerticalOffset * yfactor) - height;
 
             Canvas.SetLeft(thumbViewport, left);
             Canvas.SetTop(thumbViewport, top);
