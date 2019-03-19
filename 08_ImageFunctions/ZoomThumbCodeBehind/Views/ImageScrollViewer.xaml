@@ -111,6 +111,8 @@
             </Path>
 
             <Thumb x:Name="ThumbViewport"
+                   MinHeight="4"
+                   MinWidth="4"
                    DragDelta="OnDragDelta" >
                 <Thumb.Template>
                     <ControlTemplate TargetType="{x:Type Thumb}">
