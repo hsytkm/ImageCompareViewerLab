@@ -232,6 +232,10 @@ namespace ZoomThumb.Views
 
         #region MouseWheelZoom
 
+        // ThumbCanvasのPreviewMouseWheelはMyScrollViewerに委託
+        private void ThumbCanvas_PreviewMouseWheel(object sender, MouseWheelEventArgs e) =>
+            MyScrollViewer_PreviewMouseWheel(sender, e);
+
         private void MyScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
