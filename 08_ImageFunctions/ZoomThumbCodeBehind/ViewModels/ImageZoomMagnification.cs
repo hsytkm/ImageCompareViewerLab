@@ -14,25 +14,20 @@ namespace ZoomThumb.ViewModels
         public bool IsEntire { get; private set; }
         public double MagnificationRatio { get; private set; }
 
-        private ImageZoomMagnification(bool flag)
+        public ImageZoomMagnification(bool flag, double mag = double.NaN)
         {
-            if (!flag) throw new ArgumentException(nameof(flag));
-            IsEntire = true;
-            MagnificationRatio = double.NaN;
-        }
-
-        private ImageZoomMagnification(double mag)
-        {
-            IsEntire = false;
+            IsEntire = flag;
             MagnificationRatio = mag;
         }
+
+        private ImageZoomMagnification(double mag) : this(false, mag) { }
 
         public static ImageZoomMagnification Entire = new ImageZoomMagnification(true);
         private static ImageZoomMagnification MagX1 = new ImageZoomMagnification(1.0);
 
         public ImageZoomMagnification MagnificationToggle() => IsEntire ? MagX1 : Entire;
 
-        private ImageZoomMagnification ZoomMagnification(double currentMag, double ratio)
+        private static ImageZoomMagnification ZoomMagnification(double currentMag, double ratio)
         {
             // ホイールすると2の冪乗になるよう元の倍率を補正する
             double currentMagPowerRaw = Math.Log(currentMag) / Math.Log(2);

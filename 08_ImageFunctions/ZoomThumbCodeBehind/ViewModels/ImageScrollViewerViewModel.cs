@@ -44,6 +44,12 @@ namespace ZoomThumb.ViewModels
             // 画像読み込み直後は全画面表示にしといてみる
             ImageSource.Subscribe(x => ImageZoomMag.Value = ImageZoomMagnification.Entire);
 
+            // ズーム倍率のデバッグ表示
+            ImageZoomMag.Subscribe(x =>
+            {
+                if (!double.IsNaN(x.MagnificationRatio)) Console.WriteLine($"ViewModelZoomMag: {x.IsEntire} => {x.MagnificationRatio:f2}");
+            });
+
             #region DoubleClickZoom
 
             // 表示状態を切り替える
