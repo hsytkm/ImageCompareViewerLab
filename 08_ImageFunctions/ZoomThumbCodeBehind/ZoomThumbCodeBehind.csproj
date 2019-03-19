@@ -107,6 +107,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Models\MyImage.cs" />
+    <Compile Include="ViewModels\EventConverters\DropEventToUriConverter.cs" />
     <Compile Include="ViewModels\EventConverters\MouseMoveEventToPointConverter.cs" />
     <Compile Include="ViewModels\ImageScrollViewerViewModel.cs" />
     <Compile Include="ViewModels\ImageZoomMagnification.cs" />

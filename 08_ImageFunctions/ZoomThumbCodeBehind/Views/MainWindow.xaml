@@ -14,12 +14,19 @@
         Title="ZoomThumb"
         Height="400" Width="600">
 
-    <Grid>
-
+    <Grid AllowDrop="True" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Drop">
+                <r:EventToReactiveProperty ReactiveProperty="{Binding DropEvent, Mode=OneTime}">
+                    <vmec:DropEventToUriConverter/>
+                </r:EventToReactiveProperty>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
 
         <Button Margin="0,10,0,0"
                 Content="LoadImage"

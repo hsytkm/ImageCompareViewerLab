@@ -6,6 +6,18 @@ namespace ZoomThumb.Models
 {
     class MyImage : BindableBase
     {
+        private const string DefaultImagePath = @"C:\data\Image1.JPG";
+
+        private string _ImagePath;
+        private string ImagePath
+        {
+            set
+            {
+                if (SetProperty(ref _ImagePath, value))
+                    ImageSource = _ImagePath.ToBitmapImage();
+            }
+        }
+
         private BitmapSource _ImageSource;
         public BitmapSource ImageSource
         {
@@ -15,10 +27,9 @@ namespace ZoomThumb.Models
 
         //public Guid guid = Guid.NewGuid();
 
-        public void LoadImage()
+        public void LoadImage(string imagePath = DefaultImagePath)
         {
-            string ImagePath = @"C:\data\Image1.JPG";
-            ImageSource = ImagePath.ToBitmapImage();
+            ImagePath = imagePath;
         }
 
     }
