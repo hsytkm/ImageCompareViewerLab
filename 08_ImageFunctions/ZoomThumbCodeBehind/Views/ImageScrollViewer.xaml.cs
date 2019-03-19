@@ -276,9 +276,11 @@ namespace ZoomThumb.Views
             var thumbnail = Thumbnail;
 
             var width = scrollViewer.HorizontalOffset + (e.HorizontalChange * scrollViewer.ExtentWidth / thumbnail.ActualWidth);
+            width += scrollViewer.ActualWidth / 2.0;
             width = clip(Math.Round(width), 0.0, image.ActualWidth);
 
             var height = scrollViewer.VerticalOffset + (e.VerticalChange * scrollViewer.ExtentHeight / thumbnail.ActualHeight);
+            height += scrollViewer.ActualHeight / 2.0;
             height = clip(Math.Round(height), 0.0, image.ActualHeight);
 
             // スクロール位置を更新
