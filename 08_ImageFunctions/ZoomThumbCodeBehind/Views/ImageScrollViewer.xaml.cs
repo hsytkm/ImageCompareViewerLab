@@ -65,7 +65,7 @@ namespace ZoomThumb.Views
                 typeof(Size),
                 typeof(ImageScrollViewer),
                 new FrameworkPropertyMetadata(
-                    new Size(),
+                    default(Size),
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                     (d, e) =>
                     {
@@ -191,9 +191,9 @@ namespace ZoomThumb.Views
 
         private void MainImage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var scrollViewer = MyScrollViewer;
-
             if (!(e.OriginalSource is Image image)) return;
+
+            var scrollViewer = MyScrollViewer;
 
             // ズーム倍率クラスの更新(TwoWay)
             UpdateImageZoomMag(scrollViewer, image);
