@@ -45,8 +45,11 @@ namespace ZoomThumb.ViewModels
             // ズーム倍率のデバッグ表示
             ImageZoomMag.Subscribe(x =>
             {
-                if (!double.IsNaN(x.MagnificationRatio)) Console.WriteLine($"ViewModelZoomMag: {x.IsEntire} => {x.MagnificationRatio:f2}");
+                if (!double.IsNaN(x.MagnificationRatio)) Console.WriteLine($"VM-ZoomMag: {x.IsEntire} => {x.MagnificationRatio:f2}");
             });
+
+            // スクロール位置のデバッグ表示
+            ImageScrollOffset.Subscribe(x => Console.WriteLine($"VM-ScrollOffset: {x.Width:f2} x {x.Height:f2}"));
 
             #region DoubleClickZoom
 
