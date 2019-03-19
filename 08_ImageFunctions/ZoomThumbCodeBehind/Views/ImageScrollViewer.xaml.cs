@@ -313,8 +313,8 @@ namespace ZoomThumb.Views
             var height = e.ViewportHeight * yfactor;
             height = clip(height, thumbViewport.MinHeight, thumbnail.ActualHeight);
 
-            var left = (e.HorizontalOffset * xfactor) - width;
-            var top = (e.VerticalOffset * yfactor) - height;
+            var left = Math.Max(0.0, (e.HorizontalOffset * xfactor) - width);
+            var top = Math.Max(0.0, (e.VerticalOffset * yfactor) - height);
 
             Canvas.SetLeft(thumbViewport, left);
             Canvas.SetTop(thumbViewport, top);
