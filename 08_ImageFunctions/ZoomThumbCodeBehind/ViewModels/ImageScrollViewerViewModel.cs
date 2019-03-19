@@ -31,8 +31,9 @@ namespace ZoomThumb.ViewModels
 
         public ReactiveProperty<Unit> ScrollViewerMouseDoubleClick { get; } = new ReactiveProperty<Unit>(mode: ReactivePropertyMode.None);
 
-        // ズーム倍率の管理(OneWayやけどTwoWayにしたい)
-        public ReactiveProperty<ImageZoomMagnification> ImageZoomMag { get; } = new ReactiveProperty<ImageZoomMagnification>();
+        // ズーム倍率の管理(TwoWay)
+        public ReactiveProperty<ImageZoomMagnification> ImageZoomMag { get; } =
+            new ReactiveProperty<ImageZoomMagnification>(default(ImageZoomMagnification));
 
         // スクロールオフセット位置(TwoWay)
         public ReactiveProperty<Size> ImageScrollOffset { get; } = new ReactiveProperty<Size>(new Size(0.5, 0.5));
@@ -40,9 +41,6 @@ namespace ZoomThumb.ViewModels
         public ImageScrollViewerViewModel(IContainerExtension container, IRegionManager regionManager, MyImage myImage)
         {
             ImageSource = myImage.ObserveProperty(x => x.ImageSource).ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.None);
-
-            // 画像読み込み直後は全画面表示にしといてみる
-            ImageSource.Subscribe(x => ImageZoomMag.Value = ImageZoomMagnification.Entire);
 
             // ズーム倍率のデバッグ表示
             ImageZoomMag.Subscribe(x =>

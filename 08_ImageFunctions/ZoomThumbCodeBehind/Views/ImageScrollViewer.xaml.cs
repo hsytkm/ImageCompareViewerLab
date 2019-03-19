@@ -22,7 +22,7 @@ namespace ZoomThumb.Views
     /// </summary>
     public partial class ImageScrollViewer : UserControl
     {
-        private static readonly ReactivePropertySlim<ImageZoomMagnification> ImageZoomMag = new ReactivePropertySlim<ImageZoomMagnification>(mode: ReactivePropertyMode.None);
+        private static readonly ReactivePropertySlim<ImageZoomMagnification> ImageZoomMag = new ReactivePropertySlim<ImageZoomMagnification>(ImageZoomMagnification.Entire, mode: ReactivePropertyMode.None);
         private static readonly ReactivePropertySlim<Size> ScrollViewerSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.None);
         private static readonly ReactivePropertySlim<BitmapSource> ImageSource = new ReactivePropertySlim<BitmapSource>(mode: ReactivePropertyMode.None);
         private static readonly ReactivePropertySlim<int> MouseWheelZoomDelta = new ReactivePropertySlim<int>(mode: ReactivePropertyMode.None);
@@ -38,7 +38,7 @@ namespace ZoomThumb.Views
                 typeof(ImageZoomMagnification),
                 typeof(ImageScrollViewer),
                 new FrameworkPropertyMetadata(
-                    ImageZoomMagnification.Entire,
+                    default(ImageZoomMagnification),
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                     OnZoomMagPropertyChanged));
 
