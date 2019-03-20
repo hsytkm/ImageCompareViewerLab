@@ -5,14 +5,14 @@ namespace ZoomThumb.ViewModels
     /// <summary>
     /// 画像の倍率管理
     /// </summary>
-    public struct ImageZoomMagnification
+    public class ImageZoomMagnification
     {
         private static readonly double MagRatioMin = Math.Pow(2, -5);   // 3.1%
         private static readonly double MagRatioMax = Math.Pow(2, 5);    // 3200%
         private static readonly double MagStep = 2.0;                   // 2倍
 
-        public bool IsEntire { get; private set; }
-        public double MagnificationRatio { get; private set; }
+        public bool IsEntire { get; private set; } = true;
+        public double MagnificationRatio { get; private set; } = double.NaN;
 
         public ImageZoomMagnification(bool flag, double mag = double.NaN)
         {
@@ -23,7 +23,7 @@ namespace ZoomThumb.ViewModels
         private ImageZoomMagnification(double mag) : this(false, mag) { }
 
         public static ImageZoomMagnification Entire = new ImageZoomMagnification(true);
-        private static ImageZoomMagnification MagX1 = new ImageZoomMagnification(1.0);
+        public static ImageZoomMagnification MagX1 = new ImageZoomMagnification(1.0);
 
         public ImageZoomMagnification MagnificationToggle() => IsEntire ? MagX1 : Entire;
 
@@ -43,6 +43,13 @@ namespace ZoomThumb.ViewModels
         {
             var step = isZoomIn ? MagStep : 1.0 / MagStep;
             return ZoomMagnification(currentMag, step);
+        }
+
+        // 全画面表示中の倍率を設定する
+        public void SetsEntireMagnificationRatio(double mag)
+        {
+            if (!IsEntire) throw new NotSupportedException();
+            MagnificationRatio = mag;
         }
 
     }

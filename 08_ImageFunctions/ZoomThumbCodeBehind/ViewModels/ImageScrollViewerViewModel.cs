@@ -29,13 +29,10 @@ namespace ZoomThumb.ViewModels
         public ReactiveProperty<Unit> ScrollViewerContentMouseLeftUpImage { get; } = new ReactiveProperty<Unit>(mode: ReactivePropertyMode.None);
         public ReactiveProperty<Point> ScrollViewerContentMouseMove { get; } = new ReactiveProperty<Point>();
 
-        public ReactiveProperty<Unit> ScrollViewerMouseDoubleClick { get; } = new ReactiveProperty<Unit>(mode: ReactivePropertyMode.None);
+        // ズーム倍率の管理(OneWayToSource)
+        public ReactiveProperty<ImageZoomMagnification> ImageZoomMag { get; } = new ReactiveProperty<ImageZoomMagnification>();
 
-        // ズーム倍率の管理(TwoWay)
-        public ReactiveProperty<ImageZoomMagnification> ImageZoomMag { get; } =
-            new ReactiveProperty<ImageZoomMagnification>(default(ImageZoomMagnification));
-
-        // スクロールオフセット位置(TwoWay)
+        // スクロールオフセット位置(OneWayToSource)
         public ReactiveProperty<Size> ImageScrollOffset { get; } = new ReactiveProperty<Size>(new Size(0.5, 0.5));
 
         public ImageScrollViewerViewModel(IContainerExtension container, IRegionManager regionManager, MyImage myImage)
@@ -43,20 +40,13 @@ namespace ZoomThumb.ViewModels
             ImageSource = myImage.ObserveProperty(x => x.ImageSource).ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.None);
 
             // ズーム倍率のデバッグ表示
-            ImageZoomMag.Subscribe(x =>
-            {
-                if (!double.IsNaN(x.MagnificationRatio)) Console.WriteLine($"VM-ZoomMag: {x.IsEntire} => {x.MagnificationRatio:f2}");
-            });
+            ImageZoomMag
+                .Where(x => x != null)
+                .Where(x => double.IsNaN(x.MagnificationRatio))
+                .Subscribe(x => Console.WriteLine($"VM-ZoomMag: {x.IsEntire} => {x.MagnificationRatio:f2}"));
 
             // スクロール位置のデバッグ表示
             ImageScrollOffset.Subscribe(x => Console.WriteLine($"VM-ScrollOffset: {x.Width:f2} x {x.Height:f2}"));
-
-            #region DoubleClickZoom
-
-            // 表示状態を切り替える
-            ScrollViewerMouseDoubleClick.Subscribe(_ => SwitchClickZoomMag());
-
-            #endregion
 
             #region SingleClickZoom
 
@@ -80,36 +70,13 @@ namespace ZoomThumb.ViewModels
 
             #endregion
 
-            #region MouseMove
-
-            // マウス押下中のみマウスの移動割合をViewに流す
-            ScrollViewerContentMouseMove
-                .Pairwise()                                         // 最新値と前回値を取得
-                .Select(x => -(x.NewItem - x.OldItem))              // 引っ張りと逆方向なので反転
-                .SkipUntil(ScrollViewerContentMouseLeftDownImage)
-                .TakeUntil(ScrollViewerContentMouseLeftUpImage)
-                .Repeat()
-                .Where(_ => !ImageZoomMag.Value.IsEntire)           // ズーム中のみ流す(全画面表示中は画像移動不要)
-                .Where(_ => !temporaryZoom.Value)                   // ◆一時ズームは移動させない仕様
-                .Subscribe(shift =>
-                {
-                    double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
-
-                    // マウスドラッグ中の表示位置のシフト
-                    var shiftRate = new Vector(shift.X / ImageViewSize.Width, shift.Y / ImageViewSize.Height);
-
-                    ImageScrollOffset.Value = new Size(
-                        clip(ImageScrollOffset.Value.Width + shiftRate.X, 0.0, 1.0),
-                        clip(ImageScrollOffset.Value.Height + shiftRate.Y, 0.0, 1.0));
-                });
-
-            #endregion
-
         }
         
         // クリックズームの状態を切り替える(全画面⇔等倍)
         private void SwitchClickZoomMag()
         {
+            return;       // ◆未対応なので無効化
+
             var mag = ImageZoomMag.Value.MagnificationToggle();
             ImageZoomMag.Value = mag;
 

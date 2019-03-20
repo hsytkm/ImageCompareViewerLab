@@ -27,11 +27,8 @@
     <Grid>
         <ScrollViewer x:Name="MyScrollViewer"
                       Style="{StaticResource ScrollViewerImageStyleKey}"
-                      v:ImageScrollViewer.ZoomMag="{Binding ImageZoomMag.Value, Mode=TwoWay}"
-                      v:ImageScrollViewer.ScrollOffset="{Binding ImageScrollOffset.Value, Mode=TwoWay}"
-                      SizeChanged="MyScrollViewer_SizeChanged"
-                      PreviewMouseWheel="MyScrollViewer_PreviewMouseWheel"
-                      ScrollChanged="UpdateThumbnailViewport" >
+                      v:ImageScrollViewer.ZoomMag="{Binding ImageZoomMag.Value, Mode=OneWayToSource}"
+                      v:ImageScrollViewer.ScrollOffset="{Binding ImageScrollOffset.Value, Mode=OneWayToSource}" >
 
             <i:Interaction.Triggers>
                 <!-- 全表示中の拡大表示 Content側のイベントで処理するように変えた
@@ -52,11 +49,11 @@
 
                 <!-- 拡大/全表示切り替え(Style無いに押し込みたいがPanel/ContentPresenterにMouseDoubleClickイベントがない(Controlのみ))
                      ◆LeftButtonから自作すればよいけど未対応
-                -->
                 <i:EventTrigger EventName="MouseDoubleClick">
                     <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseDoubleClick, Mode=OneTime}"
                                                IgnoreEventArgs="true" />
                 </i:EventTrigger>
+                -->
 
                 <!-- マウスホイールによるズーム  コードビハインドで対応した
                 <i:EventTrigger EventName="PreviewMouseWheel">
@@ -76,9 +73,7 @@
             <Image x:Name="MainImage"
                    Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}"
                    Width="{Binding ImageViewWidth.Value, Mode=OneWayToSource}"
-                   Height="{Binding ImageViewHeight.Value, Mode=OneWayToSource}"
-                   SizeChanged="MainImage_SizeChanged"
-                   TargetUpdated="MainImage_TargetUpdated" />
+                   Height="{Binding ImageViewHeight.Value, Mode=OneWayToSource}" />
 
             <!--
                 Width="{Binding ImageViewSize.Value.Width, Mode=OneWay}"
@@ -95,8 +90,7 @@
                 Margin="10,10,0,0"
                 Visibility="Collapsed"
                 Width="{Binding ElementName=Thumbnail, Path=ActualWidth}"
-                Height="{Binding ElementName=Thumbnail, Path=ActualHeight}"
-                PreviewMouseWheel="ThumbCanvas_PreviewMouseWheel" >
+                Height="{Binding ElementName=Thumbnail, Path=ActualHeight}" >
 
             <Image x:Name="Thumbnail"
                    Width="100"
@@ -112,8 +106,7 @@
 
             <Thumb x:Name="ThumbViewport"
                    MinHeight="4"
-                   MinWidth="4"
-                   DragDelta="OnDragDelta" >
+                   MinWidth="4" >
                 <Thumb.Template>
                     <ControlTemplate TargetType="{x:Type Thumb}">
                         <Border BorderBrush="Red"
