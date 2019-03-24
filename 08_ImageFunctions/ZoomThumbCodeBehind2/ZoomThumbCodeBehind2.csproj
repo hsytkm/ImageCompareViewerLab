@@ -110,7 +110,9 @@
     <Compile Include="ViewModels\EventConverters\DropEventToUriConverter.cs" />
     <Compile Include="ViewModels\EventConverters\MouseMoveEventToPointConverter.cs" />
     <Compile Include="ViewModels\ImageScrollViewerViewModel.cs" />
-    <Compile Include="Views\ImageZoomMagnification.cs" />
+    <Compile Include="Views\ImageZoomMagnification.cs" >
+      <DependentUpon>ImageScrollViewer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\ImageZoomPayload.cs" />
     <Compile Include="Views\ImageScrollViewer.xaml.cs">
       <DependentUpon>ImageScrollViewer.xaml</DependentUpon>
