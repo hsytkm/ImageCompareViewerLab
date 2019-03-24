@@ -20,22 +20,6 @@
             <Setter.Value>
                 <ControlTemplate TargetType="ScrollViewer">
                     <Grid Background="{TemplateBinding Background}" >
-                        <i:Interaction.Triggers>
-                            <!-- 起動時のScrollViewerのサイズを取得 -->
-                            <i:EventTrigger EventName="Loaded">
-                                <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerSize, Mode=OneTime}" >
-                                    <vmec:LoadedToSizeConverter/>
-                                </r:EventToReactiveProperty>
-                            </i:EventTrigger>
-
-                            <!-- ScrollBar込みのScrollViewerのサイズを取得 -->
-                            <i:EventTrigger EventName="SizeChanged">
-                                <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerSize, Mode=OneTime}" >
-                                    <vmec:SizeChangedToSizeConverter/>
-                                </r:EventToReactiveProperty>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
@@ -51,23 +35,6 @@
                             <i:Interaction.Behaviors>
                                 <v:MouseCaptureBehavior />
                             </i:Interaction.Behaviors>
-
-                            <i:Interaction.Triggers>
-                                <!-- マウスドラッグ判定(画像エリアの操作検出用) -->
-                                <i:EventTrigger EventName="MouseLeftButtonDown">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerContentMouseLeftDownImage, Mode=OneTime}" IgnoreEventArgs="True" />
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="MouseLeftButtonUp">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerContentMouseLeftUpImage, Mode=OneTime}" IgnoreEventArgs="True" />
-                                </i:EventTrigger>
-
-                                <!-- マウスドラッグによる画像表示位置の移動(ScrollBar押下で反応させたくないのでココで処理) -->
-                                <i:EventTrigger EventName="MouseMove">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerContentMouseMove, Mode=OneTime}" >
-                                        <vmec:MouseMoveEventToPointConverter/>
-                                    </r:EventToReactiveProperty>
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
                         </ScrollContentPresenter>
 
                         <ScrollBar Name="PART_HorizontalScrollBar"

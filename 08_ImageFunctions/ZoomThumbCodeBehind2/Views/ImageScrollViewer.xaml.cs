@@ -40,30 +40,22 @@ namespace ZoomThumb.Views
         private static readonly ReactivePropertySlim<Point> ScrollViewerMouseMove = new ReactivePropertySlim<Point>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private static readonly ReactivePropertySlim<Unit> ScrollContentDoubleClick = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
 
-        #region ZoomMagProperty
+        #region ZoomPayloadProperty
 
-        private static readonly string ZoomMag = nameof(ZoomMag);
+        private static readonly string ZoomPayload = nameof(ZoomPayload);
 
-        private static readonly DependencyProperty ZoomMagProperty =
+        private static readonly DependencyProperty ZoomPayloadProperty =
             DependencyProperty.RegisterAttached(
-                nameof(ZoomMag),
-                typeof(ImageZoomMagnification),
+                nameof(ZoomPayload),
+                typeof(ImageZoomPayload),
                 typeof(ImageScrollViewer),
-                new FrameworkPropertyMetadata(
-                    default(ImageZoomMagnification),
-                    //FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    OnZoomMagPropertyChanged));
+                new FrameworkPropertyMetadata(default(ImageZoomPayload)));
 
-        public static ImageZoomMagnification GetImageZoomMag(DependencyObject depObj) =>
-            (ImageZoomMagnification)depObj.GetValue(ZoomMagProperty);
+        public static ImageZoomPayload GetZoomPayload(DependencyObject depObj) =>
+            (ImageZoomPayload)depObj.GetValue(ZoomPayloadProperty);
 
-        public static void SetZoomMag(DependencyObject depObj, ImageZoomMagnification value) =>
-            depObj.SetValue(ZoomMagProperty, value);
-
-        private static void OnZoomMagPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            //if (e.NewValue is ImageZoomMagnification zoomMag) ImageZoomMag.Value = zoomMag;
-        }
+        public static void SetZoomPayload(DependencyObject depObj, ImageZoomPayload value) =>
+            depObj.SetValue(ZoomPayloadProperty, value);
 
         #endregion
 
@@ -124,6 +116,8 @@ namespace ZoomThumb.Views
                 Debug.WriteLine($"***EventHandler_Image_SizeChanged: New={e.NewSize.Width} x {e.NewSize.Height}");
                 ImageViewActualSize.Value = e.NewSize; //=ActualSize
                 MainImage_SizeChanged(sender, e);
+
+                SetZoomPayload(MyScrollViewer, new ImageZoomPayload(ImageZoomMag.Value.IsEntire, ImageZoomMag.Value.MagnificationRatio));
             };
 
             // ThumbCanvasのPreviewMouseWheelはMyScrollViewerに委託  ◆よりスマートな記述ありそう
@@ -310,7 +304,6 @@ namespace ZoomThumb.Views
                 var entireRatio = GetCurrentZoomMagnificationRatio(ImageZoomMag.Value, image, imageSource);
                 ImageZoomMag.Value.SetsEntireMagnificationRatio(entireRatio);
             }
-            SetZoomMag(scrollViewer, ImageZoomMag.Value);
         }
 
         // レンダリングオプションの指定(100%以上の拡大ズームならPixelが見える設定にする)

@@ -24,13 +24,11 @@
     <Grid>
         <ScrollViewer x:Name="MyScrollViewer"
                       Style="{StaticResource ScrollViewerImageStyleKey}"
-                      v:ImageScrollViewer.ZoomMag="{Binding ImageZoomMag.Value, Mode=OneWayToSource}"
+                      v:ImageScrollViewer.ZoomPayload="{Binding ImageZoomPayload.Value, Mode=OneWayToSource}"
                       v:ImageScrollViewer.ScrollOffset="{Binding ImageScrollOffset.Value, Mode=OneWayToSource}" >
 
             <Image x:Name="MainImage"
-                   Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}"
-                   Width="{Binding ImageViewWidth.Value, Mode=OneWayToSource}"
-                   Height="{Binding ImageViewHeight.Value, Mode=OneWayToSource}" />
+                   Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}" />
 
         </ScrollViewer>
 
