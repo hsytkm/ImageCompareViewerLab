@@ -117,7 +117,8 @@ namespace ZoomThumb.Views
                 ImageViewActualSize.Value = e.NewSize; //=ActualSize
                 MainImage_SizeChanged(sender, e);
 
-                SetZoomPayload(MyScrollViewer, new ImageZoomPayload(ImageZoomMag.Value.IsEntire, ImageZoomMag.Value.MagnificationRatio));
+                var payload = new ImageZoomPayload(ImageZoomMag.Value.IsEntire, GetCurrentZoomMagRatio());
+                SetZoomPayload(MyScrollViewer, payload);
             };
 
             // ThumbCanvasのPreviewMouseWheelはMyScrollViewerに委託  ◆よりスマートな記述ありそう
@@ -185,14 +186,13 @@ namespace ZoomThumb.Views
 
 
             // 画像の現倍率計算
-            ImageViewActualSize
-                .CombineLatest(ImageSourcePixelSize, (viewSize, sourceSize) => (viewSize, sourceSize))
-                .Subscribe(x =>
-                {
-                    var zoomRatio = Math.Min(x.viewSize.Width / x.sourceSize.Width, x.viewSize.Height / x.sourceSize.Height);
-                    Debug.WriteLine($"View_ImageZoomRatio: {zoomRatio * 100.0:f2} %");
-                });
-
+            //ImageViewActualSize
+            //    .CombineLatest(ImageSourcePixelSize, (viewSize, sourceSize) => (viewSize, sourceSize))
+            //    .Subscribe(x =>
+            //    {
+            //        var zoomRatio = Math.Min(x.viewSize.Width / x.sourceSize.Width, x.viewSize.Height / x.sourceSize.Height);
+            //        Debug.WriteLine($"View_ImageZoomRatio: {zoomRatio * 100.0:f2} %");
+            //    });
 
             // マウスホイールによるズーム倍率変更
             //MouseWheelZoomDelta
@@ -257,6 +257,10 @@ namespace ZoomThumb.Views
 
         }
 
+        private double GetCurrentZoomMagRatio() =>
+            Math.Min(ImageViewActualSize.Value.Width / ImageSourcePixelSize.Value.Width,
+                ImageViewActualSize.Value.Height / ImageSourcePixelSize.Value.Height);
+
         private static T GetChildControl<T>(DependencyObject d) where T : DependencyObject
         {
             if (d is T control) return control;
@@ -275,15 +279,13 @@ namespace ZoomThumb.Views
         {
             if (!(e.OriginalSource is Image image)) return;
 
-            var scrollViewer = MyScrollViewer;
-
             // 全画面表示よりもズームしてるかフラグ(e.NewSize == Size of MainImage)
             // 小数点以下がちょいずれして意図通りの判定にならないことがあるので整数化する
             bool isZoomOverEntire = (Math.Floor(e.NewSize.Width) > Math.Floor(ScrollViewerActualSize.Value.Width)
                 || Math.Floor(e.NewSize.Height) > Math.Floor(ScrollViewerActualSize.Value.Height));
 
             // ズーム倍率クラスの更新(TwoWay)
-            UpdateImageZoomMag(scrollViewer, image);
+            //UpdateImageZoomMag(scrollViewer, image);
 
             // 全画面よりズームインしてたらサムネイル
             ThumbCanvas.Visibility = isZoomOverEntire ? Visibility.Visible : Visibility.Collapsed;
@@ -295,16 +297,16 @@ namespace ZoomThumb.Views
         }
 
         // ズーム倍率を設定(ViewModelに全画面表示の倍率を通知するため)
-        private static void UpdateImageZoomMag(ScrollViewer scrollViewer, Image image)
-        {
-            if (!(image.Source is BitmapSource imageSource)) return;
+        //private static void UpdateImageZoomMag(ScrollViewer scrollViewer, Image image)
+        //{
+        //    if (!(image.Source is BitmapSource imageSource)) return;
 
-            if (ImageZoomMag.Value.IsEntire)
-            {
-                var entireRatio = GetCurrentZoomMagnificationRatio(ImageZoomMag.Value, image, imageSource);
-                ImageZoomMag.Value.SetsEntireMagnificationRatio(entireRatio);
-            }
-        }
+        //    if (ImageZoomMag.Value.IsEntire)
+        //    {
+        //        var entireRatio = GetCurrentZoomMagnificationRatio(ImageZoomMag.Value, image, imageSource);
+        //        ImageZoomMag.Value.SetsEntireMagnificationRatio(entireRatio);
+        //    }
+        //}
 
         // レンダリングオプションの指定(100%以上の拡大ズームならPixelが見える設定にする)
         private static void UpdateBitmapScalingMode(Image image)
@@ -343,13 +345,13 @@ namespace ZoomThumb.Views
         }
 
         // 現在の画像のズーム倍率を返す
-        private static double GetCurrentZoomMagnificationRatio(ImageZoomMagnification imageZoomMag, Image image, BitmapSource imageSource)
-        {
-            // 全画面表示でなければ倍率が入っているのでそのまま返す
-            if (!imageZoomMag.IsEntire) return imageZoomMag.MagnificationRatio;
+        //private static double GetCurrentZoomMagnificationRatio(ImageZoomMagnification imageZoomMag, Image image, BitmapSource imageSource)
+        //{
+        //    // 全画面表示でなければ倍率が入っているのでそのまま返す
+        //    if (!imageZoomMag.IsEntire) return imageZoomMag.MagnificationRatio;
 
-            return Math.Min(image.ActualWidth / imageSource.PixelWidth, image.ActualHeight / imageSource.PixelHeight);
-        }
+        //    return Math.Min(image.ActualWidth / imageSource.PixelWidth, image.ActualHeight / imageSource.PixelHeight);
+        //}
 
         #endregion
 
