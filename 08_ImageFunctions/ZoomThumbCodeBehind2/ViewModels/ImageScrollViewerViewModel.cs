@@ -35,11 +35,11 @@ namespace ZoomThumb.ViewModels
 
             // ズーム倍率のデバッグ表示
             ImageZoomPayload
-                .Subscribe(x => Console.WriteLine($"VM-ZoomMag: {x.IsEntire} => {(x.MagRatio * 100.0):f2}"));
+                .Subscribe(x => Console.WriteLine($"VM-ZoomMagRatio: {x.IsEntire} => {(x.MagRatio * 100.0):f2} %"));
 
             // スクロール位置のデバッグ表示
             ImageScrollOffsetCenter
-                .Subscribe(x => Console.WriteLine($"VM-ScrollOffset: {x.Width:f2} x {x.Height:f2}"));
+                .Subscribe(x => Console.WriteLine($"VM-ScrollOffsetRatio: {x.Width:f2} x {x.Height:f2}"));
 
 
             ZoomAllCommand
