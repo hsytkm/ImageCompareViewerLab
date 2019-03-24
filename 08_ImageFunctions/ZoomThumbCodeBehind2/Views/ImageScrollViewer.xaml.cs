@@ -38,7 +38,7 @@ namespace ZoomThumb.Views
         private static readonly ReactivePropertySlim<Unit> ScrollContentMouseLeftDown = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
         private static readonly ReactivePropertySlim<Unit> ScrollContentMouseLeftUp = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
         private static readonly ReactivePropertySlim<Point> ScrollContentMouseMove = new ReactivePropertySlim<Point>(mode: ReactivePropertyMode.None);
-        private static readonly ReactivePropertySlim<Unit> ScrollContentDoubleClick = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
+        //private static readonly ReactivePropertySlim<Unit> ScrollContentDoubleClick = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
 
         #region ZoomPayloadProperty
 
@@ -144,11 +144,11 @@ namespace ZoomThumb.Views
 
             // ダブルクリックの2回が、3クリック目で2度目のダブルクリックになる対策
             // (ダブルクリック後に一定時間が経過するまでダブルクリックを採用しない)
-            var doubleClick = preDoubleClick
+            var ScrollContentDoubleClick = preDoubleClick
                 .Pairwise()
                 //.Do(x => Console.WriteLine($"PreDoubleClick2 {x.OldItem.ToString("HH:mm:ss.fff")}  {x.NewItem.ToString("HH:mm:ss.fff")}"))
                 .Where(x => x.NewItem.Subtract(x.OldItem) >= TimeSpan.FromMilliseconds(200))
-                .Subscribe(_ => ScrollContentDoubleClick.Value = Unit.Default);
+                .ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
             
             ScrollContentDoubleClick.Subscribe(_ => SwitchClickZoomMag());
 
@@ -196,57 +196,54 @@ namespace ZoomThumb.Views
             //    });
 
             // マウスホイールによるズーム倍率変更
-            MouseWheelZoomDelta
-                .CombineLatest(ImageSource, (delta, image) => (delta, image))
-                .Where(x => x.delta != 0)
-                .Subscribe(x =>
-                {
-                    var oldImageZoomMag = ImageZoomMag.Value;
-                    var isZoomIn = x.delta > 0;
+            //MouseWheelZoomDelta
+            //    .CombineLatest(ImageSource, (delta, image) => (delta, image))
+            //    .Where(x => x.delta != 0)
+            //    .Subscribe(x =>
+            //    {
+            //        var oldImageZoomMag = ImageZoomMag.Value;
+            //        var isZoomIn = x.delta > 0;
 
-                    // ズーム前の倍率
-                    double oldZoomMagRatio = GetCurrentZoomMagRatio();
+            //        // ズーム前の倍率
+            //        double oldZoomMagRatio = GetCurrentZoomMagRatio();
 
-                    // ズーム後のズーム管理クラス
-                    var newImageZoomMag = oldImageZoomMag.ZoomMagnification(oldZoomMagRatio, isZoomIn);
+            //        // ズーム後のズーム管理クラス
+            //        var newImageZoomMag = oldImageZoomMag.ZoomMagnification(oldZoomMagRatio, isZoomIn);
 
-                    // 全画面表示時を跨ぐ場合は全画面表示にする
-                    var enrireZoomMag = GetEntireZoomMagRatio();
-                    if ((oldImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < newImageZoomMag.MagnificationRatio)
-                        || (newImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < oldImageZoomMag.MagnificationRatio))
-                    {
-                        ImageZoomMag.Value = new ImageZoomMagnification(true, enrireZoomMag);
-                    }
-                    else
-                    {
-                        ImageZoomMag.Value = newImageZoomMag;
-                    }
+            //        // 全画面表示時を跨ぐ場合は全画面表示にする
+            //        var enrireZoomMag = GetEntireZoomMagRatio();
+            //        if ((oldImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < newImageZoomMag.MagnificationRatio)
+            //            || (newImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < oldImageZoomMag.MagnificationRatio))
+            //        {
+            //            ImageZoomMag.Value = new ImageZoomMagnification(true, enrireZoomMag);
+            //        }
+            //        else
+            //        {
+            //            ImageZoomMag.Value = newImageZoomMag;
+            //        }
 
-                });
+            //    });
 
             // スクロールバーの移動
             //ImageScrollOffsetRatio
-            //    .CombineLatest(ScrollViewerSize, ImageZoomMag, (offset, sview, _) => (offset, sview, _))
+            //    .CombineLatest(ScrollViewerActualSize, ImageZoomMag, (offset, sview, _) => (offset, sview, _))
             //    .Subscribe(x =>
             //    {
-            //        var scrollViewer = MyScrollViewer;
-            //        var image = MainImage;
+            //        var width = Math.Max(0.0, x.offset.Width * ImageViewActualSize.Value.Width - (x.sview.Width / 2.0));
+            //        var height = Math.Max(0.0, x.offset.Height * ImageViewActualSize.Value.Height - (x.sview.Height / 2.0));
 
-            //        var width = Math.Max(0.0, x.offset.Width * image.Width - (x.sview.Width / 2.0));
-            //        var height = Math.Max(0.0, x.offset.Height * image.Height - (x.sview.Height / 2.0));
-
-            //        scrollViewer.ScrollToHorizontalOffset(width);
-            //        scrollViewer.ScrollToVerticalOffset(height);
+            //        MyScrollViewer.ScrollToHorizontalOffset(width);
+            //        MyScrollViewer.ScrollToVerticalOffset(height);
 
             //        // View→ViewModelへの通知
-            //        SetScrollOffset(scrollViewer, x.offset);
+            //        SetScrollOffset(MyScrollViewer, x.offset);
             //    });
 
             // ドラッグによる画像表示領域の移動
             //ScrollContentMouseMove
             //    .Pairwise()                                         // 最新値と前回値を取得
             //    .Select(x => -(x.NewItem - x.OldItem))              // 引っ張りと逆方向なので反転
-            //    .SkipUntil(ScrollViewerMouseLeftDown)
+            //    .SkipUntil(ScrollContentMouseLeftDown)
             //    .TakeUntil(ScrollContentMouseLeftUp)
             //    .Repeat()
             //    .Where(_ => !ImageZoomMag.Value.IsEntire)           // ズーム中のみ流す(全画面表示中は画像移動不要)
@@ -255,10 +252,9 @@ namespace ZoomThumb.Views
             //    {
             //        double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
 
-            //        var image = MainImage;
-
             //        // マウスドラッグ中の表示位置のシフト
-            //        var shiftRate = new Vector(shift.X / image.Width, shift.Y / image.Height);
+            //        var shiftRate = new Vector(shift.X / ImageViewActualSize.Value.Width,
+            //            shift.Y / ImageViewActualSize.Value.Height);
 
             //        ImageScrollOffsetRatio.Value = new Size(
             //            clip(ImageScrollOffsetRatio.Value.Width + shiftRate.X, 0.0, 1.0),
