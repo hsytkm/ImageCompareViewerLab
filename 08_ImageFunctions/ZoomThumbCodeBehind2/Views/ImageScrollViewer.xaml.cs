@@ -51,7 +51,15 @@ namespace ZoomThumb.Views
                 nameof(ZoomPayload),
                 typeof(ImageZoomPayload),
                 typeof(ImageScrollViewer),
-                new FrameworkPropertyMetadata(default(ImageZoomPayload)));
+                new FrameworkPropertyMetadata(
+                    default(ImageZoomPayload),
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    (d, e) =>
+                    {
+                        // ViewModel→View
+                        if (e.NewValue is ImageZoomPayload payload)
+                            ImageZoomMag.Value = new ImageZoomMagnification(payload);
+                    }));
 
         public static ImageZoomPayload GetZoomPayload(DependencyObject depObj) =>
             (ImageZoomPayload)depObj.GetValue(ZoomPayloadProperty);
@@ -87,7 +95,6 @@ namespace ZoomThumb.Views
             depObj.SetValue(ScrollOffsetCenterProperty, value);
 
         #endregion
-
 
         public ImageScrollViewer()
         {

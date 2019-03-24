@@ -1,4 +1,5 @@
 ﻿using System;
+using ZoomThumb.ViewModels;
 
 namespace ZoomThumb.Views
 {
@@ -13,6 +14,20 @@ namespace ZoomThumb.Views
 
         public readonly bool IsEntire;
         public readonly double MagnificationRatio;
+
+        public ImageZoomMagnification(ImageZoomPayload payload)
+        {
+            if (payload.IsEntire)
+            {
+                IsEntire = true;
+                MagnificationRatio = double.NaN;
+            }
+            else
+            {
+                IsEntire = false;
+                MagnificationRatio = payload.MagRatio;
+            }
+        }
 
         public ImageZoomMagnification(bool flag, double mag = double.NaN)
         {

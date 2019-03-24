@@ -43,10 +43,10 @@ namespace ZoomThumb.ViewModels
 
 
             ZoomAllCommand
-                .Subscribe(x => Console.WriteLine($"ZoomAllCommand"));
+                .Subscribe(x => ImageZoomPayload.Value = new ImageZoomPayload(true, double.NaN));
 
             ZoomX1Command
-                .Subscribe(x => Console.WriteLine($"ZoomX1Command"));
+                .Subscribe(x => ImageZoomPayload.Value = new ImageZoomPayload(false, 1.0));
 
             OffsetCenterCommand
                 .Subscribe(x => ImageScrollOffsetCenter.Value = new Size(0.5, 0.5));
