@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace ZoomThumb.ViewModels
+namespace ZoomThumb.Views
 {
     /// <summary>
     /// 画像の倍率管理
     /// </summary>
-    public struct ImageZoomMagnification
+    struct ImageZoomMagnification
     {
         private static readonly double MagRatioMin = Math.Pow(2, -5);   // 3.1%
         private static readonly double MagRatioMax = Math.Pow(2, 5);    // 3200%

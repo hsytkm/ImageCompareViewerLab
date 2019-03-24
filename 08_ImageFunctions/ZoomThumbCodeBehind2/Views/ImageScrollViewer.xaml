@@ -22,6 +22,17 @@
     </UserControl.Resources>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button Height="30" Width="100" Content="ZoomAll" Command="{Binding ZoomAllCommand, Mode=OneTime}" />
+            <Button Height="30" Width="100" Content="ZoomX1" Command="{Binding ZoomX1Command, Mode=OneTime}" />
+            <Button Height="30" Width="100" Content="OffsetCenter" Command="{Binding OffsetCenterCommand, Mode=OneTime}" />
+        </StackPanel>
+        
         <ScrollViewer x:Name="MyScrollViewer"
                       Style="{StaticResource ScrollViewerImageStyleKey}"
                       v:ImageScrollViewer.ZoomPayload="{Binding ImageZoomPayload.Value, Mode=OneWayToSource}"

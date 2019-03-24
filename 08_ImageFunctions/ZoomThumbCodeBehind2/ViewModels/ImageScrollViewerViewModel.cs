@@ -21,10 +21,13 @@ namespace ZoomThumb.ViewModels
         public ReactiveProperty<ImageZoomPayload> ImageZoomPayload { get; } =
             new ReactiveProperty<ImageZoomPayload>(mode: ReactivePropertyMode.DistinctUntilChanged);
         
-
         // スクロールオフセット位置(OneWayToSource)
         public ReactiveProperty<Size> ImageScrollOffsetCenter { get; } =
             new ReactiveProperty<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
+
+        public ReactiveCommand ZoomAllCommand { get; } = new ReactiveCommand();
+        public ReactiveCommand ZoomX1Command { get; } = new ReactiveCommand();
+        public ReactiveCommand OffsetCenterCommand { get; } = new ReactiveCommand();
 
         public ImageScrollViewerViewModel(IContainerExtension container, IRegionManager regionManager, MyImage myImage)
         {
@@ -37,9 +40,19 @@ namespace ZoomThumb.ViewModels
             // スクロール位置のデバッグ表示
             ImageScrollOffsetCenter
                 .Subscribe(x => Console.WriteLine($"VM-ScrollOffset: {x.Width:f2} x {x.Height:f2}"));
-            
+
+
+            ZoomAllCommand
+                .Subscribe(x => Console.WriteLine($"ZoomAllCommand"));
+
+            ZoomX1Command
+                .Subscribe(x => Console.WriteLine($"ZoomX1Command"));
+
+            OffsetCenterCommand
+                .Subscribe(x => Console.WriteLine($"OffsetCenterCommand"));
+
         }
-        
+
     }
 
 }
