@@ -134,7 +134,7 @@ namespace ZoomThumb.Views
             // ThumbCanvasのPreviewMouseWheelはMyScrollViewerに委託  ◆よりスマートな記述ありそう
             ThumbCanvas.PreviewMouseWheel += new MouseWheelEventHandler(MyScrollViewer_PreviewMouseWheel);
 
-            //ThumbViewport.DragDelta += new DragDeltaEventHandler(OnDragDelta);
+            ThumbViewport.DragDelta += new DragDeltaEventHandler(OnDragDelta);
 
             #endregion
 
@@ -405,29 +405,22 @@ namespace ZoomThumb.Views
         {
             double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
 
-            var scrollViewer = MyScrollViewer;
-            var image = MainImage;
-            var thumbnail = Thumbnail;
+            var width = MyScrollViewer.HorizontalOffset + (e.HorizontalChange * MyScrollViewer.ExtentWidth / Thumbnail.ActualWidth);
+            width += MyScrollViewer.ActualWidth / 2.0;
+            width /= ImageViewActualSize.Value.Width;
+            width = clip(width, ScrollOffsetRateRange.WidthMin, ScrollOffsetRateRange.WidthMax);
 
-            var width = scrollViewer.HorizontalOffset + (e.HorizontalChange * scrollViewer.ExtentWidth / thumbnail.ActualWidth);
-            width += scrollViewer.ActualWidth / 2.0;
-            width = clip(Math.Round(width), 0.0, image.ActualWidth);
-
-            var height = scrollViewer.VerticalOffset + (e.VerticalChange * scrollViewer.ExtentHeight / thumbnail.ActualHeight);
-            height += scrollViewer.ActualHeight / 2.0;
-            height = clip(Math.Round(height), 0.0, image.ActualHeight);
-
-            //Console.WriteLine($"Delta: {width} x {height}");
+            var height = MyScrollViewer.VerticalOffset + (e.VerticalChange * MyScrollViewer.ExtentHeight / Thumbnail.ActualHeight);
+            height += MyScrollViewer.ActualHeight / 2.0;
+            height /= ImageViewActualSize.Value.Height;
+            height = clip(height, ScrollOffsetRateRange.HeightMin, ScrollOffsetRateRange.HeightMax);
 
             // スクロール位置を更新
-            ImageScrollOffsetRatio.Value = new Size(width / image.ActualWidth, height / image.ActualHeight);
+            ImageScrollOffsetRatio.Value = new Size(width, height);
         }
 
         private void MyScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            // ◆ここでスクロールバーの操作をプロパティに通知せなアカン
-            //   ImageScrollOffsetRatioを更新せなアカン
-
             UpdateThumbnailViewport(sender, e);
 
             // スクロールの範囲(割合)を更新
