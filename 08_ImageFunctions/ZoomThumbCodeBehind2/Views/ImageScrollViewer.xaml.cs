@@ -36,8 +36,8 @@ namespace ZoomThumb.Views
         private static readonly ReactivePropertySlim<Size> ImageScrollOffsetRatio = new ReactivePropertySlim<Size>(DefaultScrollOffsetRatio, mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
         private static readonly ReactivePropertySlim<Unit> ScrollContentMouseLeftDown = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
-        private static readonly ReactivePropertySlim<Unit> ScrollViewerMouseLeftUp = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
-        private static readonly ReactivePropertySlim<Point> ScrollViewerMouseMove = new ReactivePropertySlim<Point>(mode: ReactivePropertyMode.DistinctUntilChanged);
+        private static readonly ReactivePropertySlim<Unit> ScrollContentMouseLeftUp = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
+        private static readonly ReactivePropertySlim<Point> ScrollContentMouseMove = new ReactivePropertySlim<Point>(mode: ReactivePropertyMode.None);
         private static readonly ReactivePropertySlim<Unit> ScrollContentDoubleClick = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
 
         #region ZoomPayloadProperty
@@ -97,8 +97,8 @@ namespace ZoomThumb.Views
                 // ScrollContentPresenterが生成されてから設定
                 var scrollContentPresenter = GetChildControl<ScrollContentPresenter>(MyScrollViewer);
                 scrollContentPresenter.PreviewMouseLeftButtonDown += (sender, e) => ScrollContentMouseLeftDown.Value = Unit.Default;
-                //scrollContentPresenter.PreviewMouseLeftButtonUp += (sender, e) => ScrollViewerMouseLeftUp.Value = Unit.Default;
-                //scrollContentPresenter.MouseMove += (sender, e) => ScrollViewerMouseMove.Value = e.GetPosition((IInputElement)sender);
+                scrollContentPresenter.PreviewMouseLeftButtonUp += (sender, e) => ScrollContentMouseLeftUp.Value = Unit.Default;
+                scrollContentPresenter.MouseMove += (sender, e) => ScrollContentMouseMove.Value = e.GetPosition((IInputElement)sender);
             };
 
             MyScrollViewer.PreviewMouseWheel += new MouseWheelEventHandler(MyScrollViewer_PreviewMouseWheel);
@@ -131,12 +131,25 @@ namespace ZoomThumb.Views
             // ダブルクリックイベントの自作 http://y-maeyama.hatenablog.com/entry/20110313/1300002095
             // ScrollViewerのMouseDoubleClickだとScrollBarのDoubleClickも拾ってしまうので
             // またScrollContentPresenterにMouseDoubleClickイベントは存在しない
-            ScrollContentMouseLeftDown
+            var preDoubleClick = ScrollContentMouseLeftDown
+                .Select(_ => (Time: DateTime.Now, Point: ScrollContentMouseMove.Value))
+                //.Do(x => Console.WriteLine($"SingleClick: {x.Time} {x.Point.X} x {x.Point.Y}"))
+                .Pairwise()
+                .Where(x => x.NewItem.Time.Subtract(x.OldItem.Time) <= TimeSpan.FromMilliseconds(500))
+                // 高速に画像シフトするとダブルクリック判定されるのでマウス位置が動いていないことを見る
+                .Where(x => Math.Abs(x.NewItem.Point.X - x.OldItem.Point.X) <= 3)
+                .Where(x => Math.Abs(x.NewItem.Point.Y - x.OldItem.Point.Y) <= 3)
                 .Select(_ => DateTime.Now)
-                .Scan((prev, current) => current.Subtract(prev) > TimeSpan.FromMilliseconds(500) ? current : DateTime.MinValue)
-                .Where(t => t == DateTime.MinValue)
-                .Subscribe(_ => ScrollContentDoubleClick.Value = Unit.Default);
+                .ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
+            // ダブルクリックの2回が、3クリック目で2度目のダブルクリックになる対策
+            // (ダブルクリック後に一定時間が経過するまでダブルクリックを採用しない)
+            var doubleClick = preDoubleClick
+                .Pairwise()
+                //.Do(x => Console.WriteLine($"PreDoubleClick2 {x.OldItem.ToString("HH:mm:ss.fff")}  {x.NewItem.ToString("HH:mm:ss.fff")}"))
+                .Where(x => x.NewItem.Subtract(x.OldItem) >= TimeSpan.FromMilliseconds(200))
+                .Subscribe(_ => ScrollContentDoubleClick.Value = Unit.Default);
+            
             ScrollContentDoubleClick.Subscribe(_ => SwitchClickZoomMag());
 
             // ズーム表示に切り替え
@@ -230,11 +243,11 @@ namespace ZoomThumb.Views
             //    });
 
             // ドラッグによる画像表示領域の移動
-            //ScrollViewerMouseMove
+            //ScrollContentMouseMove
             //    .Pairwise()                                         // 最新値と前回値を取得
             //    .Select(x => -(x.NewItem - x.OldItem))              // 引っ張りと逆方向なので反転
             //    .SkipUntil(ScrollViewerMouseLeftDown)
-            //    .TakeUntil(ScrollViewerMouseLeftUp)
+            //    .TakeUntil(ScrollContentMouseLeftUp)
             //    .Repeat()
             //    .Where(_ => !ImageZoomMag.Value.IsEntire)           // ズーム中のみ流す(全画面表示中は画像移動不要)
             //                                                        //.Where(_ => !temporaryZoom.Value)                   // ◆一時ズームは移動させない仕様
@@ -467,7 +480,7 @@ namespace ZoomThumb.Views
             //    var imageViewSize = new Size(MainImage.ActualWidth, MainImage.ActualHeight);
             //    var scrollViewerSize = ScrollViewerSize.Value;
             //    var imageSourceSize = new Size(ImageSource.Value.PixelWidth, ImageSource.Value.PixelHeight);
-            //    var scrollVieweMousePoint = ScrollViewerMouseMove.Value;
+            //    var scrollVieweMousePoint = ScrollContentMouseMove.Value;
 
             //    // 親ScrollViewerから子Imageまでのサイズ
             //    var imageControlSizeOffset = new Size(
