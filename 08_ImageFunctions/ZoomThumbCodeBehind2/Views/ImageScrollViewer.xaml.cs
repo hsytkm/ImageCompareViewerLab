@@ -40,7 +40,7 @@ namespace ZoomThumb.Views
         private static readonly ReactivePropertySlim<Point> ScrollContentMouseMove = new ReactivePropertySlim<Point>(mode: ReactivePropertyMode.None);
         //private static readonly ReactivePropertySlim<Unit> ScrollContentDoubleClick = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
 
-        private ScrollChangedEventArgs ScrollChangedEventInfo;
+        private (double WidthMin, double WidthMax, double HeightMin, double HeightMax) ScrollOffsetRateRange;
 
         #region ZoomPayloadProperty
 
@@ -250,36 +250,28 @@ namespace ZoomThumb.Views
                 });
 
             // ドラッグによる画像表示領域の移動
-            //ScrollContentMouseMove
-            //    .Pairwise()                                 // 最新値と前回値を取得
-            //    .Select(x => -(x.NewItem - x.OldItem))      // 引っ張りと逆方向なので反転
-            //    .SkipUntil(ScrollContentMouseLeftDown)
-            //    .TakeUntil(ScrollContentMouseLeftUp)
-            //    .Repeat()
-            //    .Where(_ => !ImageZoomMag.Value.IsEntire)   // ズーム中のみ流す(全画面表示中は画像移動不要)
-            //    //.Where(_ => !temporaryZoom.Value)           // ◆一時ズームは移動させない仕様
-            //    .Subscribe(shift =>
-            //    {
-            //        double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
+            ScrollContentMouseMove
+                .Pairwise()                                 // 最新値と前回値を取得
+                .Select(x => -(x.NewItem - x.OldItem))      // 引っ張りと逆方向なので反転
+                .SkipUntil(ScrollContentMouseLeftDown)
+                .TakeUntil(ScrollContentMouseLeftUp)
+                .Repeat()
+                .Where(_ => !ImageZoomMag.Value.IsEntire)   // ズーム中のみ流す(全画面表示中は画像移動不要)
+                                                            //.Where(_ => !temporaryZoom.Value)           // ◆一時ズームは移動させない仕様
+                .Subscribe(shift =>
+                {
+                    double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
 
-            //        // マウスドラッグ中の表示位置のシフト
-            //        double shiftRatioX = shift.X / ImageViewActualSize.Value.Width;
-            //        double shiftRatioY = shift.Y / ImageViewActualSize.Value.Height;
+                    // マウスドラッグ中の表示位置のシフト
+                    double shiftRatioX = shift.X / ImageViewActualSize.Value.Width;
+                    double shiftRatioY = shift.Y / ImageViewActualSize.Value.Height;
 
-            //        var extentWidth = ScrollChangedEventInfo.ExtentWidth;
-            //        var extentHeight = ScrollChangedEventInfo.ExtentHeight;
-            //        var viewportWidth = ScrollChangedEventInfo.ViewportWidth;
-            //        var viewportHeight = ScrollChangedEventInfo.ViewportHeight;
+                    var (WidthMin, WidthMax, HeightMin, HeightMax) = ScrollOffsetRateRange;
 
-            //        var widthRateMin = (viewportWidth / 2.0) / extentWidth;
-            //        var heightRateMin = (viewportHeight / 2.0) / extentHeight;
-            //        var widthRateMax = (extentWidth - viewportWidth / 2.0) / extentWidth;
-            //        var heightRateMax = (extentHeight - viewportHeight / 2.0) / extentHeight;
-
-            //        ImageScrollOffsetRatio.Value = new Size(
-            //            clip(ImageScrollOffsetRatio.Value.Width + shiftRatioX, widthRateMin, widthRateMax),
-            //            clip(ImageScrollOffsetRatio.Value.Height + shiftRatioY, heightRateMin, heightRateMax));
-            //    });
+                    ImageScrollOffsetRatio.Value = new Size(
+                        clip(ImageScrollOffsetRatio.Value.Width + shiftRatioX, WidthMin, WidthMax),
+                        clip(ImageScrollOffsetRatio.Value.Height + shiftRatioY, HeightMin, HeightMax));
+                });
 
         }
 
@@ -438,7 +430,12 @@ namespace ZoomThumb.Views
 
             UpdateThumbnailViewport(sender, e);
 
-            ScrollChangedEventInfo = e;
+            // スクロールの範囲(割合)を更新
+            var widthRateMin = (e.ViewportWidth / 2.0) / e.ExtentWidth;
+            var heightRateMin = (e.ViewportHeight / 2.0) / e.ExtentHeight;
+            var widthRateMax = (e.ExtentWidth - e.ViewportWidth / 2.0) / e.ExtentWidth;
+            var heightRateMax = (e.ExtentHeight - e.ViewportHeight / 2.0) / e.ExtentHeight;
+            ScrollOffsetRateRange = (widthRateMin, widthRateMax, heightRateMin, heightRateMax);
 
             if (ImageViewActualSize.Value.Width != 0.0 && ImageViewActualSize.Value.Height != 0.0)
             {
