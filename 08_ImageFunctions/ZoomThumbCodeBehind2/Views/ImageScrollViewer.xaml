@@ -15,9 +15,6 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <!--  Viewで完結するのでCodeBehindに引っ越した
-            <v:BooleanToRenderOptionConverter x:Key="BooleanToRenderOptionConverterKey"/>
-            -->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ImageScrollViewerStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
@@ -30,58 +27,11 @@
                       v:ImageScrollViewer.ZoomMag="{Binding ImageZoomMag.Value, Mode=OneWayToSource}"
                       v:ImageScrollViewer.ScrollOffset="{Binding ImageScrollOffset.Value, Mode=OneWayToSource}" >
 
-            <i:Interaction.Triggers>
-                <!-- 全表示中の拡大表示 Content側のイベントで処理するように変えた
-                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseLeftDownImage, Mode=OneTime}"
-                                               IgnoreEventArgs="True" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseLeftUpImage, Mode=OneTime}"
-                                               IgnoreEventArgs="True" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="MouseMove">
-                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseMove, Mode=OneTime}" >
-                        <vmec:MouseMoveEventToPointConverter/>
-                    </r:EventToReactiveProperty>
-                </i:EventTrigger>
-                -->
-
-                <!-- 拡大/全表示切り替え(Style無いに押し込みたいがPanel/ContentPresenterにMouseDoubleClickイベントがない(Controlのみ))
-                     ◆LeftButtonから自作すればよいけど未対応
-                <i:EventTrigger EventName="MouseDoubleClick">
-                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseDoubleClick, Mode=OneTime}"
-                                               IgnoreEventArgs="true" />
-                </i:EventTrigger>
-                -->
-
-                <!-- マウスホイールによるズーム  コードビハインドで対応した
-                <i:EventTrigger EventName="PreviewMouseWheel">
-                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerMouseWheel, Mode=OneTime}" >
-                        <vmec:MouseWheelCtrlEventToDeltaConverter/>
-                    </r:EventToReactiveProperty>
-                </i:EventTrigger>
-                -->
-            </i:Interaction.Triggers>
-
-            <!-- Shiftで横スクロール  コードビハインドで対応した
-            <i:Interaction.Behaviors>
-                <v:ImageScrollViewerBehavior />
-            </i:Interaction.Behaviors>
-            -->
-            
             <Image x:Name="MainImage"
                    Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}"
                    Width="{Binding ImageViewWidth.Value, Mode=OneWayToSource}"
                    Height="{Binding ImageViewHeight.Value, Mode=OneWayToSource}" />
 
-            <!--
-                Width="{Binding ImageViewSize.Value.Width, Mode=OneWay}"
-                Height="{Binding ImageViewSize.Value.Height, Mode=OneWay}"
-                RenderOptions.BitmapScalingMode="{Binding BitmapScalingModeResolution.Value, Mode=OneWay, Converter={StaticResource BooleanToRenderOptionConverterKey}}" />
-                Width="{Binding ImageControlSize.Value.Width, Mode=OneWay, NotifyOnTargetUpdated=True}"
-                Height="{Binding ImageControlSize.Value.Height, Mode=OneWay, NotifyOnTargetUpdated=True}" 
-            -->
         </ScrollViewer>
 
         <Canvas x:Name="ThumbCanvas"

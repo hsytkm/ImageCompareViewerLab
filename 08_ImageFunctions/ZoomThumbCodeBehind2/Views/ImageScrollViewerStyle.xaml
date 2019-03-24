@@ -53,21 +53,6 @@
                             </i:Interaction.Behaviors>
 
                             <i:Interaction.Triggers>
-                                <!-- 起動時のScrollViewerのサイズを取得
-                                <i:EventTrigger EventName="Loaded">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerContentSize, Mode=OneTime}" >
-                                        <vmec:LoadedToSizeConverter/>
-                                    </r:EventToReactiveProperty>
-                                </i:EventTrigger>
-                                -->
-                                <!-- ScrollViewerのサイズを取得(ここで取得しないとスクロールバー領域のサイズまで取得してしまい画像端が隠れる)
-                                <i:EventTrigger EventName="SizeChanged">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerContentSize, Mode=OneTime}" >
-                                        <vmec:SizeChangedToSizeConverter/>
-                                    </r:EventToReactiveProperty>
-                                </i:EventTrigger>
-                                -->
-                                
                                 <!-- マウスドラッグ判定(画像エリアの操作検出用) -->
                                 <i:EventTrigger EventName="MouseLeftButtonDown">
                                     <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollViewerContentMouseLeftDownImage, Mode=OneTime}" IgnoreEventArgs="True" />
@@ -82,16 +67,6 @@
                                         <vmec:MouseMoveEventToPointConverter/>
                                     </r:EventToReactiveProperty>
                                 </i:EventTrigger>
-
-                                <!-- マウス押下時に座標を更新する
-                                            マウス座標は画像コントロールからの相対座標で管理しているので、F4切り替え後に操作すると、
-                                            座標がワープしたような入力になり表示位置がガクっと動く への対策
-                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding MouseMoveImage, Mode=OneWay}" >
-                                        <vmec:MouseMoveEventToPointConverter/>
-                                    </r:EventToReactiveProperty>
-                                </i:EventTrigger>
-                                    -->
                             </i:Interaction.Triggers>
                         </ScrollContentPresenter>
 
@@ -101,76 +76,14 @@
                                    Maximum="{TemplateBinding ScrollableWidth}"
                                    ViewportSize="{TemplateBinding ViewportWidth}"
                                    Value="{TemplateBinding HorizontalOffset}"
-                                   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" >
-
-                            <!-- CodeBehindに引っ越し済み
-                            <i:Interaction.Behaviors>
-                                <v:ScrollBarBehavior ForceVisibilityCollapsed="{Binding ScrollBarForceVisibilityCollapsed, Mode=OneWay}" />
-                            </i:Interaction.Behaviors>
-                            -->
-
-                            <i:Interaction.Triggers>
-                                <!-- スクロールバーのサイズ(スクロールバーを除いたエリアを取得する用)
-                                <i:EventTrigger EventName="SizeChanged">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding HorizontalScrollBarSize, Mode=OneTime}">
-                                        <vmec:SizeChangedToSizeConverter/>
-                                    </r:EventToReactiveProperty>
-                                </i:EventTrigger>
-                                <ei:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=PART_HorizontalScrollBar}">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding HorizontalScrollBarVisible, Mode=OneTime}">
-                                        <vmec:VisibilityChangedToBoolConverter/>
-                                    </r:EventToReactiveProperty>
-                                </ei:PropertyChangedTrigger>
-                                -->                                
-                                
-                                <!-- マウスドラッグ判定(スクロールバーの操作検出用)
-                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding MouseLeftDownScrollBar, Mode=OneWay}" IgnoreEventArgs="True" />
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding MouseLeftUpScrollBar, Mode=OneWay}" IgnoreEventArgs="True" />
-                                </i:EventTrigger>
-                                 -->
-                            </i:Interaction.Triggers>
-                        </ScrollBar>
+                                   Visibility="{TemplateBinding ComputedHorizontalScrollBarVisibility}" />
 
                         <ScrollBar Name="PART_VerticalScrollBar"
                                    Grid.Column="1"
                                    Maximum="{TemplateBinding ScrollableHeight}"
                                    ViewportSize="{TemplateBinding ViewportHeight}"
                                    Value="{TemplateBinding VerticalOffset}"
-                                   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" >
-
-                            <!-- CodeBehindに引っ越し済み
-                            <i:Interaction.Behaviors>
-                                <v:ScrollBarBehavior ForceVisibilityCollapsed="{Binding ScrollBarForceVisibilityCollapsed, Mode=OneWay}" />
-                            </i:Interaction.Behaviors>
-                            -->
-
-                            <i:Interaction.Triggers>
-                                <!-- スクロールバーのサイズ(スクロールバーを除いたエリアを取得する用)
-                                <i:EventTrigger EventName="SizeChanged">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding VerticalScrollBarSize, Mode=OneTime}">
-                                        <vmec:SizeChangedToSizeConverter/>
-                                    </r:EventToReactiveProperty>
-                                </i:EventTrigger>
-                                <ei:PropertyChangedTrigger Binding="{Binding Visibility, ElementName=PART_VerticalScrollBar}">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding VerticalScrollBarVisible, Mode=OneTime}">
-                                        <vmec:VisibilityChangedToBoolConverter/>
-                                    </r:EventToReactiveProperty>
-                                </ei:PropertyChangedTrigger>
-                                -->
-
-                                <!-- マウスドラッグ判定(スクロールバーの操作検出用)
-                                <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding MouseLeftDownScrollBar, Mode=OneWay}" IgnoreEventArgs="True" />
-                                </i:EventTrigger>
-                                <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
-                                    <r:EventToReactiveProperty ReactiveProperty="{Binding MouseLeftUpScrollBar, Mode=OneWay}" IgnoreEventArgs="True" />
-                                </i:EventTrigger>
-                                 -->
-                            </i:Interaction.Triggers>
-                        </ScrollBar>
+                                   Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

@@ -54,17 +54,17 @@ namespace ZoomThumb.ViewModels
             var temporaryZoom = new ReactivePropertySlim<bool>(false, mode: ReactivePropertyMode.DistinctUntilChanged);
 
             // 長押しによる一時ズーム
-            ScrollViewerContentMouseLeftDownImage               //ScrollViewerMouseLeftDownImage
-                .Throttle(TimeSpan.FromMilliseconds(300))       // 長押し判定
-                .TakeUntil(ScrollViewerContentMouseLeftUpImage) // 押下中のみ対象(ちょん離し後なら弾く)　ScrollViewerMouseLeftUpImage
-                .Repeat()
-                .Where(_ => ImageZoomMag.Value.IsEntire)        // 全体表示なら流す(継続ズームを弾くため既にズームしてたら流さない)
-                .Subscribe(_ => temporaryZoom.Value = true);
+            //ScrollViewerContentMouseLeftDownImage               //ScrollViewerMouseLeftDownImage
+            //    .Throttle(TimeSpan.FromMilliseconds(300))       // 長押し判定
+            //    .TakeUntil(ScrollViewerContentMouseLeftUpImage) // 押下中のみ対象(ちょん離し後なら弾く)　ScrollViewerMouseLeftUpImage
+            //    .Repeat()
+            //    .Where(_ => ImageZoomMag.Value.IsEntire)        // 全体表示なら流す(継続ズームを弾くため既にズームしてたら流さない)
+            //    .Subscribe(_ => temporaryZoom.Value = true);
 
             // 一時ズーム解除
-            ScrollViewerContentMouseLeftUpImage                 //ScrollViewerMouseLeftUpImage
-                .Where(_ => temporaryZoom.Value)                // 一時ズームなら解除する(継続ズームは解除しない)
-                .Subscribe(_ => temporaryZoom.Value = false);
+            //ScrollViewerContentMouseLeftUpImage                 //ScrollViewerMouseLeftUpImage
+            //    .Where(_ => temporaryZoom.Value)                // 一時ズームなら解除する(継続ズームは解除しない)
+            //    .Subscribe(_ => temporaryZoom.Value = false);
 
             temporaryZoom.Subscribe(_ => SwitchClickZoomMag());
 
