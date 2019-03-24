@@ -122,7 +122,7 @@ namespace ZoomThumb.Views
             };
 
             // ThumbCanvasのPreviewMouseWheelはMyScrollViewerに委託  ◆よりスマートな記述ありそう
-            //ThumbCanvas.PreviewMouseWheel += new MouseWheelEventHandler(MyScrollViewer_PreviewMouseWheel);
+            ThumbCanvas.PreviewMouseWheel += new MouseWheelEventHandler(MyScrollViewer_PreviewMouseWheel);
 
             //ThumbViewport.DragDelta += new DragDeltaEventHandler(OnDragDelta);
 
@@ -196,33 +196,32 @@ namespace ZoomThumb.Views
             //    });
 
             // マウスホイールによるズーム倍率変更
-            //MouseWheelZoomDelta
-            //    .CombineLatest(ImageSource, (delta, image) => (delta, image))
-            //    .Where(x => x.delta != 0)
-            //    .Subscribe(x =>
-            //    {
-            //        var oldImageZoomMag = ImageZoomMag.Value;
-            //        var isZoomIn = x.delta > 0;
+            MouseWheelZoomDelta
+                .CombineLatest(ImageSource, (delta, image) => (delta, image))
+                .Where(x => x.delta != 0)
+                .Subscribe(x =>
+                {
+                    var oldImageZoomMag = ImageZoomMag.Value;
+                    var isZoomIn = x.delta > 0;
 
-            //        // ズーム前の倍率
-            //        double oldZoomMagRatio = GetCurrentZoomMagRatio();
+                    // ズーム前の倍率
+                    double oldZoomMagRatio = GetCurrentZoomMagRatio();
 
-            //        // ズーム後のズーム管理クラス
-            //        var newImageZoomMag = oldImageZoomMag.ZoomMagnification(oldZoomMagRatio, isZoomIn);
+                    // ズーム後のズーム管理クラス
+                    var newImageZoomMag = oldImageZoomMag.ZoomMagnification(oldZoomMagRatio, isZoomIn);
 
-            //        // 全画面表示時を跨ぐ場合は全画面表示にする
-            //        var enrireZoomMag = GetEntireZoomMagRatio();
-            //        if ((oldImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < newImageZoomMag.MagnificationRatio)
-            //            || (newImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < oldImageZoomMag.MagnificationRatio))
-            //        {
-            //            ImageZoomMag.Value = new ImageZoomMagnification(true, enrireZoomMag);
-            //        }
-            //        else
-            //        {
-            //            ImageZoomMag.Value = newImageZoomMag;
-            //        }
-
-            //    });
+                    // 全画面表示時を跨ぐ場合は全画面表示にする
+                    var enrireZoomMag = GetEntireZoomMagRatio();
+                    if ((oldImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < newImageZoomMag.MagnificationRatio)
+                        || (newImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < oldImageZoomMag.MagnificationRatio))
+                    {
+                        ImageZoomMag.Value = new ImageZoomMagnification(true, enrireZoomMag);
+                    }
+                    else
+                    {
+                        ImageZoomMag.Value = newImageZoomMag;
+                    }
+                });
 
             // スクロールバーの移動
             //ImageScrollOffsetRatio
