@@ -138,6 +138,8 @@ namespace ZoomThumb.Views
 
             #endregion
 
+            #region DoubleClick
+
             // ダブルクリックイベントの自作 http://y-maeyama.hatenablog.com/entry/20110313/1300002095
             // ScrollViewerのMouseDoubleClickだとScrollBarのDoubleClickも拾ってしまうので
             // またScrollContentPresenterにMouseDoubleClickイベントは存在しない
@@ -161,6 +163,10 @@ namespace ZoomThumb.Views
                 .ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
             
             ScrollContentDoubleClick.Subscribe(_ => SwitchClickZoomMag());
+
+            #endregion
+
+            #region ImageZoomMag
 
             // ズーム表示に切り替え
             ImageZoomMag
@@ -195,23 +201,17 @@ namespace ZoomThumb.Views
                     MainImage.Height = size.Height;
                 });
 
+            #endregion
 
-            // 画像の現倍率計算
-            //ImageViewActualSize
-            //    .CombineLatest(ImageSourcePixelSize, (viewSize, sourceSize) => (viewSize, sourceSize))
-            //    .Subscribe(x =>
-            //    {
-            //        var zoomRatio = Math.Min(x.viewSize.Width / x.sourceSize.Width, x.viewSize.Height / x.sourceSize.Height);
-            //        Debug.WriteLine($"View_ImageZoomRatio: {zoomRatio * 100.0:f2} %");
-            //    });
+            #region MouseWheel
 
             // マウスホイールによるズーム倍率変更
             MouseWheelZoomDelta
                 .Where(x => x != 0)
-                .Subscribe(x =>
+                .Select(x => x > 0)
+                .Subscribe(isZoomIn =>
                 {
                     var oldImageZoomMag = ImageZoomMag.Value;
-                    var isZoomIn = x > 0;
 
                     // ズーム前の倍率
                     double oldZoomMagRatio = GetCurrentZoomMagRatio();
@@ -231,6 +231,10 @@ namespace ZoomThumb.Views
                         ImageZoomMag.Value = newImageZoomMag;
                     }
                 });
+
+            #endregion
+
+            #region ScrollOffset
 
             // スクロールバーの移動
             ImageScrollOffsetRatio
@@ -256,7 +260,7 @@ namespace ZoomThumb.Views
                 .TakeUntil(ScrollContentMouseLeftUp)
                 .Repeat()
                 .Where(_ => !ImageZoomMag.Value.IsEntire)   // ズーム中のみ流す(全画面表示中は画像移動不要)
-                                                            //.Where(_ => !temporaryZoom.Value)           // ◆一時ズームは移動させない仕様
+                //.Where(_ => !temporaryZoom.Value)           // ◆一時ズームは移動させない仕様
                 .Subscribe(shift =>
                 {
                     double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
@@ -271,6 +275,8 @@ namespace ZoomThumb.Views
                         clip(ImageScrollOffsetRatio.Value.Width + shiftRatioX, WidthMin, WidthMax),
                         clip(ImageScrollOffsetRatio.Value.Height + shiftRatioY, HeightMin, HeightMax));
                 });
+
+            #endregion
 
         }
 
@@ -327,9 +333,6 @@ namespace ZoomThumb.Views
             bool isZoomOverEntire = (Math.Floor(e.NewSize.Width) > Math.Floor(ScrollContentActualSize.Value.Width)
                 || Math.Floor(e.NewSize.Height) > Math.Floor(ScrollContentActualSize.Value.Height));
 
-            // ズーム倍率クラスの更新(TwoWay)
-            //UpdateImageZoomMag(scrollViewer, image);
-
             // 全画面よりズームインしてたらサムネイル
             ThumbCanvas.Visibility = isZoomOverEntire ? Visibility.Visible : Visibility.Collapsed;
 
@@ -338,19 +341,7 @@ namespace ZoomThumb.Views
 
             UpdateBitmapScalingMode(image);
         }
-
-        // ズーム倍率を設定(ViewModelに全画面表示の倍率を通知するため)
-        //private static void UpdateImageZoomMag(ScrollViewer scrollViewer, Image image)
-        //{
-        //    if (!(image.Source is BitmapSource imageSource)) return;
-
-        //    if (ImageZoomMag.Value.IsEntire)
-        //    {
-        //        var entireRatio = GetCurrentZoomMagnificationRatio(ImageZoomMag.Value, image, imageSource);
-        //        ImageZoomMag.Value.SetsEntireMagnificationRatio(entireRatio);
-        //    }
-        //}
-
+        
         // レンダリングオプションの指定(100%以上の拡大ズームならPixelが見える設定にする)
         private static void UpdateBitmapScalingMode(Image image)
         {
@@ -386,16 +377,7 @@ namespace ZoomThumb.Views
                 e.Handled = true;
             }
         }
-
-        // 現在の画像のズーム倍率を返す
-        //private static double GetCurrentZoomMagnificationRatio(ImageZoomMagnification imageZoomMag, Image image, BitmapSource imageSource)
-        //{
-        //    // 全画面表示でなければ倍率が入っているのでそのまま返す
-        //    if (!imageZoomMag.IsEntire) return imageZoomMag.MagnificationRatio;
-
-        //    return Math.Min(image.ActualWidth / imageSource.PixelWidth, image.ActualHeight / imageSource.PixelHeight);
-        //}
-
+        
         #endregion
 
         #region ThumbnailViewport
@@ -430,11 +412,9 @@ namespace ZoomThumb.Views
                 var size = new Size((e.HorizontalOffset + e.ViewportWidth / 2.0) / ImageViewActualSize.Value.Width,
                     (e.VerticalOffset + e.ViewportHeight / 2.0) / ImageViewActualSize.Value.Height);
 
-                // 全体表示なら中央に戻す
+                // 全体表示なら中央位置を上書き
                 if (e.ViewportWidth == e.ExtentWidth || e.ViewportHeight == e.ExtentHeight)
-                {
                     size = DefaultScrollOffsetRatio;
-                }
 
                 //Debug.WriteLine($"ScrollChanged: {size.Width} x {size.Height}");
                 ImageScrollOffsetRatio.Value = size;
@@ -467,7 +447,6 @@ namespace ZoomThumb.Views
 
             var thumbnail = Thumbnail;
             var thumbViewport = ThumbViewport;
-            var combinedGeometry = CombinedGeometry;
 
             // ExtentWidth/Height が ScrollViewer 内の広さ
             // ViewportWidth/Height が ScrollViewer で実際に表示されているサイズ
@@ -492,7 +471,7 @@ namespace ZoomThumb.Views
             thumbViewport.Width = width;
             thumbViewport.Height = height;
 
-            combinedGeometry.Geometry2 = new RectangleGeometry(new Rect(left, top, width, height));
+            CombinedGeometry.Geometry2 = new RectangleGeometry(new Rect(left, top, width, height));
         }
 
         #endregion
@@ -515,13 +494,13 @@ namespace ZoomThumb.Views
 
                     // 親ScrollViewerから子Imageまでのサイズ
                     var imageControlSizeOffset = new Size(
-                        Math.Max(0, ScrollContentActualSize.Value.Width - ImageViewActualSize.Value.Width) / 2.0,
-                        Math.Max(0, ScrollContentActualSize.Value.Height - ImageViewActualSize.Value.Height) / 2.0);
+                        Math.Max(0.0, ScrollContentActualSize.Value.Width - ImageViewActualSize.Value.Width) / 2.0,
+                        Math.Max(0.0, ScrollContentActualSize.Value.Height - ImageViewActualSize.Value.Height) / 2.0);
 
                     // 子Image基準のマウス位置
                     var mousePos = new Point(
-                        Math.Max(0, ScrollContentMouseMove.Value.X - imageControlSizeOffset.Width),
-                        Math.Max(0, ScrollContentMouseMove.Value.Y - imageControlSizeOffset.Height));
+                        Math.Max(0.0, ScrollContentMouseMove.Value.X - imageControlSizeOffset.Width),
+                        Math.Max(0.0, ScrollContentMouseMove.Value.Y - imageControlSizeOffset.Height));
 
                     // ズーム後の中心座標の割合
                     var zoomCenterRate = new Size(
