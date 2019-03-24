@@ -207,12 +207,11 @@ namespace ZoomThumb.Views
 
             // マウスホイールによるズーム倍率変更
             MouseWheelZoomDelta
-                .CombineLatest(ImageSource, (delta, image) => (delta, image))
-                .Where(x => x.delta != 0)
+                .Where(x => x != 0)
                 .Subscribe(x =>
                 {
                     var oldImageZoomMag = ImageZoomMag.Value;
-                    var isZoomIn = x.delta > 0;
+                    var isZoomIn = x > 0;
 
                     // ズーム前の倍率
                     double oldZoomMagRatio = GetCurrentZoomMagRatio();
