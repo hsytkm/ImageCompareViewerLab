@@ -52,5 +52,7 @@ namespace ZoomThumb.ViewModels
             MagnificationRatio = mag;
         }
 
+        public override string ToString() => $"{IsEntire}, {MagnificationRatio:f2}";
+
     }
 }
