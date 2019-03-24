@@ -49,7 +49,7 @@ namespace ZoomThumb.ViewModels
                 .Subscribe(x => Console.WriteLine($"ZoomX1Command"));
 
             OffsetCenterCommand
-                .Subscribe(x => Console.WriteLine($"OffsetCenterCommand"));
+                .Subscribe(x => ImageScrollOffsetCenter.Value = new Size(0.5, 0.5));
 
         }
 

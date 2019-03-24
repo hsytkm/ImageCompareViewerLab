@@ -72,11 +72,12 @@ namespace ZoomThumb.Views
                 typeof(ImageScrollViewer),
                 new FrameworkPropertyMetadata(
                     default(Size),
-                    //FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                     (d, e) =>
                     {
                         // ViewModel→View
-                        //if (e.NewValue is Size size) ImageScrollOffsetRatio.Value = size;
+                        if (e.NewValue is Size size)
+                            ImageScrollOffsetRatio.Value = size;
                     }));
 
         public static Size GetScrollOffsetCenter(DependencyObject depObj) =>
