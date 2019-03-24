@@ -431,11 +431,7 @@ namespace ZoomThumb.Views
             UpdateThumbnailViewport(sender, e);
 
             // スクロールの範囲(割合)を更新
-            var widthRateMin = (e.ViewportWidth / 2.0) / e.ExtentWidth;
-            var heightRateMin = (e.ViewportHeight / 2.0) / e.ExtentHeight;
-            var widthRateMax = (e.ExtentWidth - e.ViewportWidth / 2.0) / e.ExtentWidth;
-            var heightRateMax = (e.ExtentHeight - e.ViewportHeight / 2.0) / e.ExtentHeight;
-            ScrollOffsetRateRange = (widthRateMin, widthRateMax, heightRateMin, heightRateMax);
+            UpdateScrollOffsetRateRange(e);
 
             if (ImageViewActualSize.Value.Width != 0.0 && ImageViewActualSize.Value.Height != 0.0)
             {
@@ -453,6 +449,23 @@ namespace ZoomThumb.Views
 
                 // View→ViewModel通知
                 SetScrollOffsetCenter(MyScrollViewer, size);
+            }
+        }
+
+        private void UpdateScrollOffsetRateRange(ScrollChangedEventArgs e)
+        {
+            // 全体表示ならオフセットに制限なし
+            if (e.ExtentWidth < e.ViewportWidth || e.ExtentHeight < e.ViewportHeight)
+            {
+                ScrollOffsetRateRange = (0.0, 1.0, 0.0, 1.0);
+            }
+            else if (e.ExtentWidth != 0.0 && e.ExtentHeight != 0.0)
+            {
+                var widthRateMin = (e.ViewportWidth / 2.0) / e.ExtentWidth;
+                var widthRateMax = (e.ExtentWidth - e.ViewportWidth / 2.0) / e.ExtentWidth;
+                var heightRateMin = (e.ViewportHeight / 2.0) / e.ExtentHeight;
+                var heightRateMax = (e.ExtentHeight - e.ViewportHeight / 2.0) / e.ExtentHeight;
+                ScrollOffsetRateRange = (widthRateMin, widthRateMax, heightRateMin, heightRateMax);
             }
         }
 
