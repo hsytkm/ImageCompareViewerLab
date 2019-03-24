@@ -18,11 +18,13 @@ namespace ZoomThumb.ViewModels
         public ReadOnlyReactiveProperty<BitmapSource> ImageSource { get; }
 
         // ズーム倍率の管理(今はOneWayToSource)
-        public ReactiveProperty<ImageZoomPayload> ImageZoomPayload { get; } = new ReactiveProperty<ImageZoomPayload>(mode: ReactivePropertyMode.DistinctUntilChanged);
+        public ReactiveProperty<ImageZoomPayload> ImageZoomPayload { get; } =
+            new ReactiveProperty<ImageZoomPayload>(mode: ReactivePropertyMode.DistinctUntilChanged);
         
 
         // スクロールオフセット位置(OneWayToSource)
-        public ReactiveProperty<Size> ImageScrollOffset { get; } = new ReactiveProperty<Size>(new Size(0.5, 0.5));
+        public ReactiveProperty<Size> ImageScrollOffsetCenter { get; } =
+            new ReactiveProperty<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
         public ImageScrollViewerViewModel(IContainerExtension container, IRegionManager regionManager, MyImage myImage)
         {
@@ -33,7 +35,8 @@ namespace ZoomThumb.ViewModels
                 .Subscribe(x => Console.WriteLine($"VM-ZoomMag: {x.IsEntire} => {(x.MagRatio * 100.0):f2}"));
 
             // スクロール位置のデバッグ表示
-            ImageScrollOffset.Subscribe(x => Console.WriteLine($"VM-ScrollOffset: {x.Width:f2} x {x.Height:f2}"));
+            ImageScrollOffsetCenter
+                .Subscribe(x => Console.WriteLine($"VM-ScrollOffset: {x.Width:f2} x {x.Height:f2}"));
             
         }
         

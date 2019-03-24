@@ -59,13 +59,13 @@ namespace ZoomThumb.Views
 
         #endregion
 
-        #region ScrollOffsetProperty
+        #region ScrollOffsetCenterProperty
 
-        private static readonly string ScrollOffset = nameof(ScrollOffset);
+        private static readonly string ScrollOffsetCenter = nameof(ScrollOffsetCenter);
 
-        private static readonly DependencyProperty ScrollOffsetProperty =
+        private static readonly DependencyProperty ScrollOffsetCenterProperty =
             DependencyProperty.RegisterAttached(
-                ScrollOffset,
+                ScrollOffsetCenter,
                 typeof(Size),
                 typeof(ImageScrollViewer),
                 new FrameworkPropertyMetadata(
@@ -77,11 +77,11 @@ namespace ZoomThumb.Views
                         //if (e.NewValue is Size size) ImageScrollOffsetRatio.Value = size;
                     }));
 
-        public static Size GetScrollOffset(DependencyObject depObj) =>
-            (Size)depObj.GetValue(ScrollOffsetProperty);
+        public static Size GetScrollOffsetCenter(DependencyObject depObj) =>
+            (Size)depObj.GetValue(ScrollOffsetCenterProperty);
 
-        public static void SetScrollOffset(DependencyObject depObj, Size value) =>
-            depObj.SetValue(ScrollOffsetProperty, value);
+        public static void SetScrollOffsetCenter(DependencyObject depObj, Size value) =>
+            depObj.SetValue(ScrollOffsetCenterProperty, value);
 
         #endregion
 
@@ -107,7 +107,7 @@ namespace ZoomThumb.Views
                 Debug.WriteLine($"***EventHandler_ScrollViewer_SizeChanged: New={e.NewSize.Width} x {e.NewSize.Height}");
                 ScrollViewerActualSize.Value = e.NewSize; //=ActualSize
             };
-            //MyScrollViewer.ScrollChanged += new ScrollChangedEventHandler(MyScrollViewer_ScrollChanged);
+            MyScrollViewer.ScrollChanged += new ScrollChangedEventHandler(MyScrollViewer_ScrollChanged);
 
             MainImage.TargetUpdated += new EventHandler<DataTransferEventArgs>(MainImage_TargetUpdated);
 
@@ -417,6 +417,13 @@ namespace ZoomThumb.Views
             //   ImageScrollOffsetRatioを更新せなアカン
 
             UpdateThumbnailViewport(sender, e);
+
+            if (ImageViewActualSize.Value.Width != 0.0 && ImageViewActualSize.Value.Height != 0.0)
+            {
+                var horiRatio = (e.HorizontalOffset + e.ViewportWidth / 2.0) / ImageViewActualSize.Value.Width;
+                var vertRatio = (e.VerticalOffset + e.ViewportHeight / 2.0) / ImageViewActualSize.Value.Height;
+                SetScrollOffsetCenter(MyScrollViewer, new Size(horiRatio, vertRatio));
+            }
         }
 
         private void UpdateThumbnailViewport(object sender, ScrollChangedEventArgs e)

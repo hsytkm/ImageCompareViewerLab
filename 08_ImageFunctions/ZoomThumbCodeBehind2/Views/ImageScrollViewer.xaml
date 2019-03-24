@@ -25,7 +25,7 @@
         <ScrollViewer x:Name="MyScrollViewer"
                       Style="{StaticResource ScrollViewerImageStyleKey}"
                       v:ImageScrollViewer.ZoomPayload="{Binding ImageZoomPayload.Value, Mode=OneWayToSource}"
-                      v:ImageScrollViewer.ScrollOffset="{Binding ImageScrollOffset.Value, Mode=OneWayToSource}" >
+                      v:ImageScrollViewer.ScrollOffsetCenter="{Binding ImageScrollOffsetCenter.Value, Mode=OneWayToSource}" >
 
             <Image x:Name="MainImage"
                    Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}" />
