@@ -32,7 +32,7 @@ namespace ZoomThumb.Views
         private static readonly ReactivePropertySlim<Size> ImageViewActualSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private static readonly ReactivePropertySlim<Size> ImageSourcePixelSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private static readonly ReactivePropertySlim<BitmapSource> ImageSource = new ReactivePropertySlim<BitmapSource>(mode: ReactivePropertyMode.DistinctUntilChanged);
-        private static readonly ReactivePropertySlim<int> MouseWheelZoomDelta = new ReactivePropertySlim<int>(mode: ReactivePropertyMode.DistinctUntilChanged);
+        private static readonly ReactivePropertySlim<int> MouseWheelZoomDelta = new ReactivePropertySlim<int>(mode: ReactivePropertyMode.None);
         private static readonly ReactivePropertySlim<Size> ImageScrollOffsetRatio = new ReactivePropertySlim<Size>(DefaultScrollOffsetRatio, mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
 
         private static readonly ReactivePropertySlim<Unit> ScrollContentMouseLeftDown = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
@@ -101,7 +101,7 @@ namespace ZoomThumb.Views
                 //scrollContentPresenter.MouseMove += (sender, e) => ScrollViewerMouseMove.Value = e.GetPosition((IInputElement)sender);
             };
 
-            //MyScrollViewer.PreviewMouseWheel += new MouseWheelEventHandler(MyScrollViewer_PreviewMouseWheel);
+            MyScrollViewer.PreviewMouseWheel += new MouseWheelEventHandler(MyScrollViewer_PreviewMouseWheel);
             MyScrollViewer.SizeChanged += (sender, e) =>
             {
                 Debug.WriteLine($"***EventHandler_ScrollViewer_SizeChanged: New={e.NewSize.Width} x {e.NewSize.Height}");
@@ -167,21 +167,9 @@ namespace ZoomThumb.Views
                     MyScrollViewer.HorizontalScrollBarVisibility =
                     MyScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
 
-                    double width, height;
-                    var imageRatio = x.imageSourceSize.Width / x.imageSourceSize.Height;
-                    if (imageRatio > x.sview.Width / x.sview.Height)
-                    {
-                        width = x.sview.Width;      // 横パンパン
-                        height = x.sview.Width / imageRatio;
-                    }
-                    else
-                    {
-                        width = x.sview.Height * imageRatio;
-                        height = x.sview.Height;    // 縦パンパン
-                    }
-
-                    MainImage.Width = width;
-                    MainImage.Height = height;
+                    var size = GetEntireZoomSize();
+                    MainImage.Width = size.Width;
+                    MainImage.Height = size.Height;
                 });
 
 
@@ -195,24 +183,33 @@ namespace ZoomThumb.Views
             //    });
 
             // マウスホイールによるズーム倍率変更
-            //MouseWheelZoomDelta
-            //    .CombineLatest(ImageSource, (delta, image) => (delta, image))
-            //    .Where(x => x.delta != 0)
-            //    .Subscribe(x =>
-            //    {
-            //        var oldImageZoomMag = ImageZoomMag.Value;
-            //        var image = MainImage;
-            //        var isZoomIn = x.delta > 0;
+            MouseWheelZoomDelta
+                .CombineLatest(ImageSource, (delta, image) => (delta, image))
+                .Where(x => x.delta != 0)
+                .Subscribe(x =>
+                {
+                    var oldImageZoomMag = ImageZoomMag.Value;
+                    var isZoomIn = x.delta > 0;
 
-            //        // ズーム前の倍率
-            //        double oldZoomMagRatio = GetCurrentZoomMagnificationRatio(oldImageZoomMag, image, x.image);
+                    // ズーム前の倍率
+                    double oldZoomMagRatio = GetCurrentZoomMagRatio();
 
-            //        // ズーム後のズーム管理クラス
-            //        var newImageZoomMag = oldImageZoomMag.ZoomMagnification(oldZoomMagRatio, isZoomIn);
+                    // ズーム後のズーム管理クラス
+                    var newImageZoomMag = oldImageZoomMag.ZoomMagnification(oldZoomMagRatio, isZoomIn);
 
-            //        // ズーム倍率の更新(オフセット更新前に実施)
-            //        ImageZoomMag.Value = newImageZoomMag;
-            //    });
+                    // 全画面表示時を跨ぐ場合は全画面表示にする
+                    var enrireZoomMag = GetEntireZoomMagRatio();
+                    if ((oldImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < newImageZoomMag.MagnificationRatio)
+                        || (newImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < oldImageZoomMag.MagnificationRatio))
+                    {
+                        ImageZoomMag.Value = new ImageZoomMagnification(true, enrireZoomMag);
+                    }
+                    else
+                    {
+                        ImageZoomMag.Value = newImageZoomMag;
+                    }
+
+                });
 
             // スクロールバーの移動
             //ImageScrollOffsetRatio
@@ -257,9 +254,35 @@ namespace ZoomThumb.Views
 
         }
 
-        private double GetCurrentZoomMagRatio() =>
-            Math.Min(ImageViewActualSize.Value.Width / ImageSourcePixelSize.Value.Width,
-                ImageViewActualSize.Value.Height / ImageSourcePixelSize.Value.Height);
+        // 全画面表示のサイズを取得
+        private Size GetEntireZoomSize()
+        {
+            var imageRatio = ImageSourcePixelSize.Value.Width / ImageSourcePixelSize.Value.Height;
+            var sview = ScrollViewerActualSize.Value;
+
+            double width, height;
+            if (imageRatio > sview.Width / sview.Height)
+            {
+                width = sview.Width;      // 横パンパン
+                height = sview.Width / imageRatio;
+            }
+            else
+            {
+                width = sview.Height * imageRatio;
+                height = sview.Height;    // 縦パンパン
+            }
+            return new Size(width, height);
+        }
+
+        // 全画面表示のズーム倍率を取得
+        private double GetEntireZoomMagRatio() => GetZoomMagRatio(GetEntireZoomSize());
+
+        // 現在のズーム倍率を取得
+        private double GetCurrentZoomMagRatio() => GetZoomMagRatio(ImageViewActualSize.Value);
+
+        private double GetZoomMagRatio(Size size) =>
+            Math.Min(size.Width / ImageSourcePixelSize.Value.Width,
+                size.Height / ImageSourcePixelSize.Value.Height);
 
         private static T GetChildControl<T>(DependencyObject d) where T : DependencyObject
         {
