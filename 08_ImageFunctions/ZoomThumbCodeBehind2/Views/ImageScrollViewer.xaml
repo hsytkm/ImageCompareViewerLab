@@ -33,7 +33,7 @@
             <Button Height="30" Width="100" Content="OffsetCenter" Command="{Binding OffsetCenterCommand, Mode=OneTime}" />
         </StackPanel>
         
-        <ScrollViewer x:Name="MyScrollViewer"
+        <ScrollViewer x:Name="MainScrollViewer"
                       Style="{StaticResource ScrollViewerImageStyleKey}"
                       v:ImageScrollViewer.ZoomPayload="{Binding ImageZoomPayload.Value, Mode=TwoWay}"
                       v:ImageScrollViewer.ScrollOffsetCenter="{Binding ImageScrollOffsetCenter.Value, Mode=TwoWay}" >
@@ -46,7 +46,7 @@
         <Canvas x:Name="ThumbCanvas"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
-                Margin="10,10,0,0"
+                Margin="5,5,0,0"
                 Visibility="Collapsed"
                 Width="{Binding ElementName=Thumbnail, Path=ActualWidth}"
                 Height="{Binding ElementName=Thumbnail, Path=ActualHeight}" >

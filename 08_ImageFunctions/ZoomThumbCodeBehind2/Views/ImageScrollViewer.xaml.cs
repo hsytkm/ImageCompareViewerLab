@@ -3,13 +3,10 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Diagnostics;
 using System.Reactive;
-using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -29,10 +26,10 @@ namespace ZoomThumb.Views
         // スクロールバー位置の初期値
         private static readonly Size DefaultScrollOffsetRatio = new Size(0.5, 0.5);
 
-        private static readonly ReactivePropertySlim<ImageZoomMagnification> ImageZoomMag = new ReactivePropertySlim<ImageZoomMagnification>(mode: ReactivePropertyMode.DistinctUntilChanged);
-        private static readonly ReactivePropertySlim<Size> ImageScrollOffsetRatio = new ReactivePropertySlim<Size>(DefaultScrollOffsetRatio, mode: ReactivePropertyMode.RaiseLatestValueOnSubscribe);
+        private static readonly ReactivePropertySlim<ImageZoomMagnification> ImageZoomMag = new ReactivePropertySlim<ImageZoomMagnification>(ImageZoomMagnification.Entire);
+        private static readonly ReactivePropertySlim<Size> ImageScrollOffsetRatio = new ReactivePropertySlim<Size>(DefaultScrollOffsetRatio);
 
-        private static readonly ReactivePropertySlim<BitmapSource> ImageSource = new ReactivePropertySlim<BitmapSource>(mode: ReactivePropertyMode.DistinctUntilChanged);
+        //private static readonly ReactivePropertySlim<BitmapSource> ImageSource = new ReactivePropertySlim<BitmapSource>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private static readonly ReactivePropertySlim<Size> ImageSourcePixelSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private static readonly ReactivePropertySlim<Size> ImageViewActualSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private static readonly ReactivePropertySlim<int> MouseWheelZoomDelta = new ReactivePropertySlim<int>(mode: ReactivePropertyMode.None);
@@ -43,7 +40,7 @@ namespace ZoomThumb.Views
         private static readonly ReactivePropertySlim<Point> ScrollContentMouseMove = new ReactivePropertySlim<Point>(mode: ReactivePropertyMode.None);
         //private static readonly ReactivePropertySlim<Unit> ScrollContentDoubleClick = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
 
-        private (double WidthMin, double WidthMax, double HeightMin, double HeightMax) ScrollOffsetRateRange;
+        private (double widthMin, double widthMax, double heightMin, double heightMax) ScrollOffsetRateRange;
 
         #region ZoomPayloadProperty
 
@@ -105,10 +102,10 @@ namespace ZoomThumb.Views
 
             #region EventHandlers
 
-            MyScrollViewer.Loaded += (_, __) =>
+            MainScrollViewer.Loaded += (_, __) =>
             {
                 // ScrollContentPresenterが生成されてから設定
-                var scrollContentPresenter = GetChildControl<ScrollContentPresenter>(MyScrollViewer);
+                var scrollContentPresenter = GetChildControl<ScrollContentPresenter>(MainScrollViewer);
                 scrollContentPresenter.PreviewMouseLeftButtonDown += (sender, e) => ScrollContentMouseLeftDown.Value = Unit.Default;
                 scrollContentPresenter.PreviewMouseLeftButtonUp += (sender, e) => ScrollContentMouseLeftUp.Value = Unit.Default;
                 scrollContentPresenter.MouseMove += (sender, e) => ScrollContentMouseMove.Value = e.GetPosition((IInputElement)sender);
@@ -123,11 +120,16 @@ namespace ZoomThumb.Views
                 };
             };
 
-            MyScrollViewer.PreviewMouseWheel += new MouseWheelEventHandler(MyScrollViewer_PreviewMouseWheel);
-            //MyScrollViewer.SizeChanged += (sender, e) => Debug.WriteLine($"***EventHandler_ScrollViewer_SizeChanged: New={e.NewSize.Width} x {e.NewSize.Height}");
-            MyScrollViewer.ScrollChanged += new ScrollChangedEventHandler(MyScrollViewer_ScrollChanged);
+            MainScrollViewer.PreviewMouseWheel += new MouseWheelEventHandler(MainScrollViewer_PreviewMouseWheel);
+            //MainScrollViewer.SizeChanged += (sender, e) => Debug.WriteLine($"***EventHandler_ScrollViewer_SizeChanged: New={e.NewSize.Width} x {e.NewSize.Height}");
+            MainScrollViewer.ScrollChanged += new ScrollChangedEventHandler(MainScrollViewer_ScrollChanged);
 
-            MainImage.TargetUpdated += new EventHandler<DataTransferEventArgs>(MainImage_TargetUpdated);
+            MainImage.TargetUpdated += (sender, e) =>
+            {
+                if (!(e.OriginalSource is Image image)) return;
+                if (!(image.Source is BitmapSource source)) return;
+                ImageSourcePixelSize.Value = new Size(source.PixelWidth, source.PixelHeight);
+            };
             MainImage.SizeChanged += (sender, e) =>
             {
                 //Debug.WriteLine($"***EventHandler_Image_SizeChanged: New={e.NewSize.Width} x {e.NewSize.Height}");
@@ -135,8 +137,8 @@ namespace ZoomThumb.Views
                 MainImage_SizeChanged(sender, e);
             };
 
-            // ThumbCanvasのPreviewMouseWheelはMyScrollViewerに委託  ◆よりスマートな記述ありそう
-            ThumbCanvas.PreviewMouseWheel += new MouseWheelEventHandler(MyScrollViewer_PreviewMouseWheel);
+            // ThumbCanvasのPreviewMouseWheelはMainScrollViewerに委託  ◆よりスマートな記述ありそう
+            ThumbCanvas.PreviewMouseWheel += new MouseWheelEventHandler(MainScrollViewer_PreviewMouseWheel);
 
             ThumbViewport.DragDelta += new DragDeltaEventHandler(OnDragDelta);
 
@@ -164,6 +166,7 @@ namespace ZoomThumb.Views
                 .Pairwise()
                 //.Do(x => Console.WriteLine($"PreDoubleClick2 {x.OldItem.ToString("HH:mm:ss.fff")}  {x.NewItem.ToString("HH:mm:ss.fff")}"))
                 .Where(x => x.NewItem.Subtract(x.OldItem) >= TimeSpan.FromMilliseconds(200))
+                .ToUnit()
                 .ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.None);
             
             ScrollContentDoubleClick.Subscribe(_ => SwitchClickZoomMag());
@@ -180,9 +183,9 @@ namespace ZoomThumb.Views
             ScrollContentMouseLeftDown
                 .Throttle(TimeSpan.FromMilliseconds(300))       // 長押し判定
                 .TakeUntil(ScrollContentMouseLeftUp)            // 押下中のみ対象(ちょん離し後なら弾く)
-                                                                //.Do(x => Console.Write($"ThreadId: {Thread.CurrentThread.ManagedThreadId}"))
+                //.Do(x => Console.Write($"ThreadId: {Thread.CurrentThread.ManagedThreadId}"))
                 .ObserveOnUIDispatcher()                        // 以降はUIスレッドに同期
-                                                                //.Do(x => Console.WriteLine($" -> {Thread.CurrentThread.ManagedThreadId}"))
+                //.Do(x => Console.WriteLine($" -> {Thread.CurrentThread.ManagedThreadId}"))
                 .Repeat()
                 .Where(_ => ImageZoomMag.Value.IsEntire)        // 全体表示なら流す(継続ズームを弾くため既にズームしてたら流さない)
                 .Subscribe(_ => temporaryZoom.Value = true);
@@ -204,10 +207,8 @@ namespace ZoomThumb.Views
                 .Where(x => !x.mag.IsEntire)
                 .Subscribe(x =>
                 {
-                    // ズーム表示からの全画面表示でスクロールバーが消えない対策
-                    //   全画面表示中はスクロールバーを非表示にしているので、ズーム表示中は表示に戻す
-                    MyScrollViewer.HorizontalScrollBarVisibility =
-                    MyScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
+                    // 画像サイズの更新前にスクロールバーの表示を更新(ContentSizeに影響出るので)
+                    UpdateScrollBarVisibility(x.mag, ScrollContentActualSize.Value, x.imageSourceSize);
 
                     MainImage.Width = x.imageSourceSize.Width * x.mag.MagnificationRatio;
                     MainImage.Height = x.imageSourceSize.Height * x.mag.MagnificationRatio;
@@ -215,18 +216,15 @@ namespace ZoomThumb.Views
 
             // 全画面表示に切り替え
             ImageZoomMag
-                .CombineLatest(ScrollContentActualSize, ImageSourcePixelSize, (mag, sview, imageSourceSize)
-                    => (mag, sview, imageSourceSize))
+                .CombineLatest(ScrollContentActualSize, ImageSourcePixelSize, (mag, sviewSize, sourceSize)
+                    => (mag, sviewSize, sourceSize))
                 .Where(x => x.mag.IsEntire)
                 .Subscribe(x =>
                 {
-                    // ズーム表示からの全画面表示でスクロールバーが消えない対策
-                    //   スクロールバーが表示された状態で、親コントロール(ScrollViewer)とジャストのサイズに設定すると、
-                    //   自動でスクロールバーが消えないので明示的に消す
-                    MyScrollViewer.HorizontalScrollBarVisibility =
-                    MyScrollViewer.VerticalScrollBarVisibility = ScrollBarVisibility.Hidden;
+                    // 画像サイズの更新前にスクロールバーの表示を更新(ContentSizeに影響出るので)
+                    UpdateScrollBarVisibility(x.mag, x.sviewSize, x.sourceSize);
 
-                    var size = GetEntireZoomSize();
+                    var size = GetEntireZoomSize(x.sviewSize, x.sourceSize);
                     MainImage.Width = size.Width;
                     MainImage.Height = size.Height;
                 });
@@ -244,13 +242,13 @@ namespace ZoomThumb.Views
                     var oldImageZoomMag = ImageZoomMag.Value;
 
                     // ズーム前の倍率
-                    double oldZoomMagRatio = GetCurrentZoomMagRatio();
+                    double oldZoomMagRatio = GetCurrentZoomMagRatio(ImageViewActualSize.Value, ImageSourcePixelSize.Value);
 
                     // ズーム後のズーム管理クラス
                     var newImageZoomMag = oldImageZoomMag.ZoomMagnification(oldZoomMagRatio, isZoomIn);
 
                     // 全画面表示時を跨ぐ場合は全画面表示にする
-                    var enrireZoomMag = GetEntireZoomMagRatio();
+                    var enrireZoomMag = GetEntireZoomMagRatio(ScrollContentActualSize.Value, ImageSourcePixelSize.Value);
                     if ((oldImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < newImageZoomMag.MagnificationRatio)
                         || (newImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < oldImageZoomMag.MagnificationRatio))
                     {
@@ -275,11 +273,11 @@ namespace ZoomThumb.Views
                     var width = Math.Max(0.0, x.offset.Width * x.iview.Width - (x.sview.Width / 2.0));
                     var height = Math.Max(0.0, x.offset.Height * x.iview.Height - (x.sview.Height / 2.0));
 
-                    MyScrollViewer.ScrollToHorizontalOffset(width);
-                    MyScrollViewer.ScrollToVerticalOffset(height);
+                    MainScrollViewer.ScrollToHorizontalOffset(width);
+                    MainScrollViewer.ScrollToVerticalOffset(height);
 
                     // View→ViewModelへの通知
-                    SetScrollOffsetCenter(MyScrollViewer, x.offset);
+                    SetScrollOffsetCenter(MainScrollViewer, x.offset);
                 });
 
             // ドラッグによる画像表示領域の移動
@@ -299,16 +297,18 @@ namespace ZoomThumb.Views
                     double shiftRatioX = shift.X / ImageViewActualSize.Value.Width;
                     double shiftRatioY = shift.Y / ImageViewActualSize.Value.Height;
 
-                    var (WidthMin, WidthMax, HeightMin, HeightMax) = ScrollOffsetRateRange;
+                    var (widthMin, widthMax, heightMin, heightMax) = ScrollOffsetRateRange;
 
                     ImageScrollOffsetRatio.Value = new Size(
-                        clip(ImageScrollOffsetRatio.Value.Width + shiftRatioX, WidthMin, WidthMax),
-                        clip(ImageScrollOffsetRatio.Value.Height + shiftRatioY, HeightMin, HeightMax));
+                        clip(ImageScrollOffsetRatio.Value.Width + shiftRatioX, widthMin, widthMax),
+                        clip(ImageScrollOffsetRatio.Value.Height + shiftRatioY, heightMin, heightMax));
                 });
 
             #endregion
 
         }
+
+        #region EventConverters
 
         private static T GetChildControl<T>(DependencyObject d) where T : DependencyObject
         {
@@ -321,37 +321,56 @@ namespace ZoomThumb.Views
             return default;
         }
 
+        #endregion
+
+        #region ImageZoomMag
+
+        private void UpdateScrollBarVisibility(ImageZoomMagnification zoomMag, Size sviewSize, Size sourceSize)
+        {
+            var visible = ScrollBarVisibility.Hidden;
+
+            // ズームインならスクロールバーを表示
+            if (!zoomMag.IsEntire && (GetEntireZoomMagRatio(sviewSize, sourceSize) < zoomMag.MagnificationRatio))
+                visible = ScrollBarVisibility.Visible;
+
+            MainScrollViewer.HorizontalScrollBarVisibility =
+            MainScrollViewer.VerticalScrollBarVisibility = visible;
+        }
+
+        #endregion
+
         #region ZoomSize
 
         // 全画面表示のサイズを取得
-        private Size GetEntireZoomSize()
+        private static Size GetEntireZoomSize(Size sviewSize, Size sourceSize)
         {
-            var imageRatio = ImageSourcePixelSize.Value.Width / ImageSourcePixelSize.Value.Height;
-            var sview = ScrollContentActualSize.Value;
+            var imageRatio = sourceSize.Width / sourceSize.Height;
 
             double width, height;
-            if (imageRatio > sview.Width / sview.Height)
+            if (imageRatio > sviewSize.Width / sviewSize.Height)
             {
-                width = sview.Width;      // 横パンパン
-                height = sview.Width / imageRatio;
+                width = sviewSize.Width;      // 横パンパン
+                height = sviewSize.Width / imageRatio;
             }
             else
             {
-                width = sview.Height * imageRatio;
-                height = sview.Height;    // 縦パンパン
+                width = sviewSize.Height * imageRatio;
+                height = sviewSize.Height;    // 縦パンパン
             }
             return new Size(width, height);
         }
 
         // 全画面表示のズーム倍率を取得
-        private double GetEntireZoomMagRatio() => GetZoomMagRatio(GetEntireZoomSize());
-
+        private static double GetEntireZoomMagRatio(Size sviewSize, Size sourceSize) =>
+            GetZoomMagRatio(GetEntireZoomSize(sviewSize, sourceSize), sourceSize);
+            
         // 現在のズーム倍率を取得
-        private double GetCurrentZoomMagRatio() => GetZoomMagRatio(ImageViewActualSize.Value);
+        private static double GetCurrentZoomMagRatio(Size imageViewSize, Size imageSourceSize) =>
+            GetZoomMagRatio(imageViewSize, imageSourceSize);
 
-        private double GetZoomMagRatio(Size size) =>
-            Math.Min(size.Width / ImageSourcePixelSize.Value.Width,
-                size.Height / ImageSourcePixelSize.Value.Height);
+        // 引数サイズのズーム倍率を求める
+        private static double GetZoomMagRatio(Size newSize, Size baseSize) =>
+            Math.Min(newSize.Width / baseSize.Width, newSize.Height / baseSize.Height);
 
         #endregion
 
@@ -402,10 +421,12 @@ namespace ZoomThumb.Views
         {
             if (!(e.OriginalSource is Image image)) return;
 
+            var imageViewActualSize = e.NewSize;
+
             // 全画面表示よりもズームしてるかフラグ(e.NewSize == Size of MainImage)
             // 小数点以下がちょいずれして意図通りの判定にならないことがあるので整数化する
-            bool isZoomOverEntire = (Math.Floor(e.NewSize.Width) > Math.Floor(ScrollContentActualSize.Value.Width)
-                || Math.Floor(e.NewSize.Height) > Math.Floor(ScrollContentActualSize.Value.Height));
+            bool isZoomOverEntire = (Math.Floor(imageViewActualSize.Width) > Math.Floor(ScrollContentActualSize.Value.Width)
+                || Math.Floor(imageViewActualSize.Height) > Math.Floor(ScrollContentActualSize.Value.Height));
 
             // 全画面よりズームインしてたらサムネイル
             ThumbCanvas.Visibility = isZoomOverEntire ? Visibility.Visible : Visibility.Collapsed;
@@ -416,17 +437,19 @@ namespace ZoomThumb.Views
             UpdateBitmapScalingMode(image);
 
             // View→ViewModel
-            var payload = new ImageZoomPayload(ImageZoomMag.Value.IsEntire, GetCurrentZoomMagRatio());
-            SetZoomPayload(MyScrollViewer, payload);
+            var magRatio = GetCurrentZoomMagRatio(imageViewActualSize, ImageSourcePixelSize.Value);
+            var payload = new ImageZoomPayload(ImageZoomMag.Value.IsEntire, magRatio);
+            SetZoomPayload(MainScrollViewer, payload);
         }
 
         // レンダリングオプションの指定(100%以上の拡大ズームならPixelが見える設定にする)
-        private static void UpdateBitmapScalingMode(Image image)
+        private void UpdateBitmapScalingMode(Image image)
         {
             if (!(image.Source is BitmapSource bitmap)) return;
 
             var mode = (image.ActualWidth < bitmap.PixelWidth) || (image.ActualHeight < bitmap.PixelHeight)
                 ? BitmapScalingMode.HighQuality : BitmapScalingMode.NearestNeighbor;
+
             RenderOptions.SetBitmapScalingMode(image, mode);
         }
 
@@ -434,7 +457,7 @@ namespace ZoomThumb.Views
 
         #region MouseWheelZoom
 
-        private void MyScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        private void MainScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
@@ -463,22 +486,23 @@ namespace ZoomThumb.Views
         private void OnDragDelta(object sender, DragDeltaEventArgs e)
         {
             double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
+            var (widthMin, widthMax, heightMin, heightMax) = ScrollOffsetRateRange;
 
-            var width = MyScrollViewer.HorizontalOffset + (e.HorizontalChange * MyScrollViewer.ExtentWidth / Thumbnail.ActualWidth);
-            width += MyScrollViewer.ActualWidth / 2.0;
+            var width = MainScrollViewer.HorizontalOffset + (e.HorizontalChange * MainScrollViewer.ExtentWidth / Thumbnail.ActualWidth);
+            width += MainScrollViewer.ActualWidth / 2.0;
             width /= ImageViewActualSize.Value.Width;
-            width = clip(width, ScrollOffsetRateRange.WidthMin, ScrollOffsetRateRange.WidthMax);
+            width = clip(width, widthMin, widthMax);
 
-            var height = MyScrollViewer.VerticalOffset + (e.VerticalChange * MyScrollViewer.ExtentHeight / Thumbnail.ActualHeight);
-            height += MyScrollViewer.ActualHeight / 2.0;
+            var height = MainScrollViewer.VerticalOffset + (e.VerticalChange * MainScrollViewer.ExtentHeight / Thumbnail.ActualHeight);
+            height += MainScrollViewer.ActualHeight / 2.0;
             height /= ImageViewActualSize.Value.Height;
-            height = clip(height, ScrollOffsetRateRange.HeightMin, ScrollOffsetRateRange.HeightMax);
+            height = clip(height, heightMin, heightMax);
 
             // スクロール位置を更新
             ImageScrollOffsetRatio.Value = new Size(width, height);
         }
 
-        private void MyScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        private void MainScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             UpdateThumbnailViewport(sender, e);
 
@@ -487,7 +511,8 @@ namespace ZoomThumb.Views
 
             if (ImageViewActualSize.Value.Width != 0.0 && ImageViewActualSize.Value.Height != 0.0)
             {
-                var size = new Size((e.HorizontalOffset + e.ViewportWidth / 2.0) / ImageViewActualSize.Value.Width,
+                var size = new Size(
+                    (e.HorizontalOffset + e.ViewportWidth / 2.0) / ImageViewActualSize.Value.Width,
                     (e.VerticalOffset + e.ViewportHeight / 2.0) / ImageViewActualSize.Value.Height);
 
                 // 全体表示なら中央位置を上書き
@@ -498,7 +523,7 @@ namespace ZoomThumb.Views
                 ImageScrollOffsetRatio.Value = size;
 
                 // View→ViewModel通知
-                SetScrollOffsetCenter(MyScrollViewer, size);
+                SetScrollOffsetCenter(MainScrollViewer, size);
             }
         }
 
@@ -550,31 +575,6 @@ namespace ZoomThumb.Views
             thumbViewport.Height = height;
 
             CombinedGeometry.Geometry2 = new RectangleGeometry(new Rect(left, top, width, height));
-        }
-
-        #endregion
-
-        #region MainImage_TargetUpdated
-
-        private void MainImage_TargetUpdated(object sender, DataTransferEventArgs e)
-        {
-            BitmapSource RoutedEventArgsToBiatmapSource(RoutedEventArgs e2)
-            {
-                if (!(e2.OriginalSource is Image image)) return null;
-                if (!(image.Source is BitmapSource source)) return null;
-                return source;
-            }
-
-            var imageSource = RoutedEventArgsToBiatmapSource(e);
-            if (imageSource is null) return;
-
-            // 初回画像は全画面表示
-            bool isFirstTime = ImageSource.Value is null;
-
-            ImageSource.Value = imageSource;
-            ImageSourcePixelSize.Value = new Size(imageSource.PixelWidth, imageSource.PixelHeight);
-
-            if (isFirstTime) ImageZoomMag.Value = ImageZoomMagnification.Entire;
         }
 
         #endregion

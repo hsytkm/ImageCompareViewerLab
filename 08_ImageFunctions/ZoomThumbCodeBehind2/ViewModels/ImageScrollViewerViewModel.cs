@@ -43,7 +43,12 @@ namespace ZoomThumb.ViewModels
 
 
             ZoomAllCommand
-                .Subscribe(x => ImageZoomPayload.Value = new ImageZoomPayload(true, double.NaN));
+                .Subscribe(x =>
+                {
+                    // 全画面の再要求を行うと、Viewで設定した倍率をクリアしてしまうので行わない
+                    if (!ImageZoomPayload.Value.IsEntire)
+                        ImageZoomPayload.Value = new ImageZoomPayload(true, double.NaN);
+                });
 
             ZoomX1Command
                 .Subscribe(x => ImageZoomPayload.Value = new ImageZoomPayload(false, 1.0));
