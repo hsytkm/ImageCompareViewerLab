@@ -1,18 +1,17 @@
-﻿using ImagePixels.Common;
+﻿using ImagePixelReadTournament.Common;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace ImagePixels.Drawing
+namespace ImagePixelReadTournament.Drawing
 {
-    // Fast Image Processing in C# http://csharpexamples.com/fast-image-processing-c/
-    class PixelReader2 : IPixelReader
+    class ReaderDrawing2 : IPixelReader
     {
         public string Name { get; } = "Bitmap2(Lockbits&Unsafe)";
 
         private readonly string ImagePath;
 
-        public PixelReader2(string imagePath)
+        public ReaderDrawing2(string imagePath)
         {
             ImagePath = imagePath;
         }
