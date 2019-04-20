@@ -85,9 +85,9 @@ namespace OxyPlotInspector.ViewModels
             var pm = new PlotModel();
             //pm.Title = "Pixel Level";
 
-            var rLine = new LineSeries { Color = OxyColors.Red };
-            var gLine = new LineSeries { Color = OxyColors.Green };
-            var bLine = new LineSeries { Color = OxyColors.Blue };
+            var rLine = new LineSeries { Color = OxyColors.Red, StrokeThickness = 1.0 };
+            var gLine = new LineSeries { Color = OxyColors.Green, StrokeThickness = 1.0 };
+            var bLine = new LineSeries { Color = OxyColors.Blue, StrokeThickness = 1.0 };
 
             if (rgb != null)
             {
@@ -99,9 +99,10 @@ namespace OxyPlotInspector.ViewModels
                 }
             }
 
+            // B->R->Gの順で描画(Gを全面に)
+            pm.Series.Add(bLine);
             pm.Series.Add(rLine);
             pm.Series.Add(gLine);
-            pm.Series.Add(bLine);
 
             pm.Axes.Add(new LinearAxis
             {
