@@ -14,6 +14,8 @@
         TextOptions.TextFormattingMode="Display"
         SizeToContent="WidthAndHeight"
         AllowsTransparency="True"
+        MinHeight="50" 
+        MinWidth="120"
         WindowStyle="None" >
     <!-- 
         Icon="small.ico"
@@ -67,20 +69,20 @@
         </Grid.RowDefinitions>
 
         <!-- タイトルバー -->
-        <Grid Grid.Row="0" >
+        <Grid Grid.Row="0">
             <Grid.Style>
                 <Style TargetType="{x:Type Grid}" >
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding IsActive, Mode=OneWay,
-                                                        RelativeSource={RelativeSource FindAncestor,
-                                                        AncestorType={x:Type v:MainWindow}}}"
+                                                       RelativeSource={RelativeSource FindAncestor,
+                                                       AncestorType={x:Type v:MainWindow}}}"
                                         Value="True">
                             <Setter Property="Background"
                                     Value="{StaticResource CaptionBarActiveBorderBrushKey}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding IsActive, Mode=OneWay,
-                                                        RelativeSource={RelativeSource FindAncestor,
-                                                        AncestorType={x:Type v:MainWindow}}}"
+                                                       RelativeSource={RelativeSource FindAncestor,
+                                                       AncestorType={x:Type v:MainWindow}}}"
                                         Value="False">
                             <Setter Property="Background"
                                     Value="{StaticResource InactiveBorderBrushKey}" />
@@ -117,8 +119,8 @@
                     <Style TargetType="{x:Type TextBlock}">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsActive, Mode=OneWay,
-                                                            RelativeSource={RelativeSource FindAncestor,
-                                                            AncestorType={x:Type v:MainWindow}}}"
+                                                           RelativeSource={RelativeSource FindAncestor,
+                                                           AncestorType={x:Type v:MainWindow}}}"
                                             Value="False">
                                 <Setter Property="Foreground"
                                         Value="{StaticResource InactiveForegroundBrushKey}" />
@@ -198,7 +200,7 @@
 
         <!-- フッター -->
         <Grid Grid.Row="2"
-                Background="{StaticResource AccentActiveBrushKey}">
+              Background="{StaticResource AccentActiveBrushKey}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
