@@ -81,6 +81,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoomThumbCodeBehind2", "08_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImagePixelReadTournament", "01_Pixels\ImagePixelReadTournament\ImagePixelReadTournament.csproj", "{85E3FF60-A69E-4958-805E-71C2B2E3D537}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "09_WPFGraphs", "09_WPFGraphs", "{24128E26-29A6-455F-8C4D-8417D44BF0E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graph2D", "09_WPFGraphs\Graph2D\Graph2D.csproj", "{E106C34E-0F71-4647-A895-9B6449EE7884}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -145,6 +149,10 @@ Global
 		{85E3FF60-A69E-4958-805E-71C2B2E3D537}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{85E3FF60-A69E-4958-805E-71C2B2E3D537}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85E3FF60-A69E-4958-805E-71C2B2E3D537}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E106C34E-0F71-4647-A895-9B6449EE7884}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E106C34E-0F71-4647-A895-9B6449EE7884}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E106C34E-0F71-4647-A895-9B6449EE7884}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E106C34E-0F71-4647-A895-9B6449EE7884}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -165,6 +173,7 @@ Global
 		{79560E32-9EE9-43C1-B730-43EA1B3AEC03} = {EE2D4033-3CAB-4458-9EB2-E0C62C22E8B3}
 		{A4C71FD7-EFAC-4C91-9B9D-C22BE3B7442E} = {EE2D4033-3CAB-4458-9EB2-E0C62C22E8B3}
 		{85E3FF60-A69E-4958-805E-71C2B2E3D537} = {5BACA4D2-50DD-404A-840F-A674314E3242}
+		{E106C34E-0F71-4647-A895-9B6449EE7884} = {24128E26-29A6-455F-8C4D-8417D44BF0E3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A747267B-7393-4543-A070-7F5EC5AA9AB6}
