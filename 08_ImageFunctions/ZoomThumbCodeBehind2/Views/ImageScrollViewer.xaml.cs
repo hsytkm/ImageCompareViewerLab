@@ -1,7 +1,6 @@
 ﻿using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
-using System.Diagnostics;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows;
@@ -11,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ZoomThumb.ViewModels;
+using ZoomThumb.Views.Common;
 
 namespace ZoomThumb.Views
 {
@@ -105,7 +105,7 @@ namespace ZoomThumb.Views
             MainScrollViewer.Loaded += (_, __) =>
             {
                 // ScrollContentPresenterが生成されてから設定
-                var scrollContentPresenter = GetChildControl<ScrollContentPresenter>(MainScrollViewer);
+                var scrollContentPresenter = ViewHelper.GetChildControl<ScrollContentPresenter>(MainScrollViewer);
                 scrollContentPresenter.PreviewMouseLeftButtonDown += (sender, e) => ScrollContentMouseLeftDown.Value = Unit.Default;
                 scrollContentPresenter.PreviewMouseLeftButtonUp += (sender, e) => ScrollContentMouseLeftUp.Value = Unit.Default;
                 scrollContentPresenter.MouseMove += (sender, e) => ScrollContentMouseMove.Value = e.GetPosition((IInputElement)sender);
@@ -307,21 +307,6 @@ namespace ZoomThumb.Views
             #endregion
 
         }
-
-        #region EventConverters
-
-        private static T GetChildControl<T>(DependencyObject d) where T : DependencyObject
-        {
-            if (d is T control) return control;
-            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(d); i++)
-            {
-                control = GetChildControl<T>(VisualTreeHelper.GetChild(d, i));
-                if (control != default) return control;
-            }
-            return default;
-        }
-
-        #endregion
 
         #region ImageZoomMag
 

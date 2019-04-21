@@ -108,9 +108,9 @@
     </ApplicationDefinition>
     <Compile Include="Models\MyImage.cs" />
     <Compile Include="ViewModels\EventConverters\DropEventToUriConverter.cs" />
-    <Compile Include="ViewModels\EventConverters\MouseMoveEventToPointConverter.cs" />
     <Compile Include="ViewModels\ImageScrollViewerViewModel.cs" />
-    <Compile Include="Views\ImageZoomMagnification.cs" >
+    <Compile Include="Views\Common\ViewHelper.cs" />
+    <Compile Include="Views\ImageZoomMagnification.cs">
       <DependentUpon>ImageScrollViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModels\ImageZoomPayload.cs" />
@@ -131,9 +131,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\BitmapSourceEx.cs" />
-    <Compile Include="ViewModels\EventConverters\LoadedToSizeConverter.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\EventConverters\SizeChangedToSizeConverter.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
