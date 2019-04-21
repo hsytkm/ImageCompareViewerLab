@@ -64,7 +64,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "07_WindowTheme", "07_Window
 		07_WindowTheme\README.md = 07_WindowTheme\README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetroRadianceWindow", "MetroRadianceWindow\MetroRadianceWindow.csproj", "{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetroRadianceWindow", "07_WindowTheme\MetroRadianceWindow\MetroRadianceWindow.csproj", "{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowChrome", "07_WindowTheme\WindowChrome\WindowChrome.csproj", "{5E3D91AE-174E-443F-A79D-D4E351C0E276}"
 EndProject
@@ -129,6 +129,7 @@ Global
 		{E16F1F67-A9F5-48D2-9DD1-8D35679BFA21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E16F1F67-A9F5-48D2-9DD1-8D35679BFA21}.Release|Any CPU.Build.0 = Release|Any CPU
 		{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89EEC3BB-F1FA-48CD-AD42-27A7C4C7FC7C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5E3D91AE-174E-443F-A79D-D4E351C0E276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
