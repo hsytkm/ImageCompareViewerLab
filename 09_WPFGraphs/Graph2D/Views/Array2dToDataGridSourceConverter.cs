@@ -7,9 +7,12 @@ namespace Graph2D.Views
 {
     class Array2dToDataGridSourceConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture) =>
+            ConvertSub<int>(value, targetType, parameter, culture);
+
+        private static object ConvertSub<T>(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is int[,] array)) return null;
+            if (!(value is T[,] array)) return null;
 
             var rows = array.GetLength(0);
             var columns = array.GetLength(1);

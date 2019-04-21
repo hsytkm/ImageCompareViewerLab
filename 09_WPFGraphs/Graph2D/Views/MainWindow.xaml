@@ -22,6 +22,6 @@
 
     <StackPanel>
         <DataGrid Style="{StaticResource MyDataGrid}"
-                  ItemsSource="{Binding Array2D, Converter={StaticResource Array2dToDataGridSourceConverter}}" />
+                  ItemsSource="{Binding Array2D, Converter={StaticResource Array2dToDataGridSourceConverter}, Mode=OneWay}" />
     </StackPanel>
 </Window>
