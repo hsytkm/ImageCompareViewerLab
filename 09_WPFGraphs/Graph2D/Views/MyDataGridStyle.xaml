@@ -1,8 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:v="clr-namespace:Graph2D.Views" >
-    <v:PropBasedStringToColorConverter x:Key="StringToColorCnvKey"/>
-
     <Style x:Key="DataGridCellStyle"
            TargetType="{x:Type DataGridCell}">
         <Setter Property="TextBlock.TextAlignment"
