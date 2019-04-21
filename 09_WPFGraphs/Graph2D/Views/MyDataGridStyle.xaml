@@ -1,15 +1,46 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:v="clr-namespace:Graph2D.Views" >
+    <v:PropBasedStringToColorConverter x:Key="StringToColorCnvKey"/>
 
     <Style x:Key="DataGridCellStyle"
            TargetType="{x:Type DataGridCell}">
         <Setter Property="TextBlock.TextAlignment"
                 Value="Right" />
+
+        <!-- 思い出残し
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}" >
+                    <Border Background="{Binding Content, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource StringToColorCnvKey}}">
+                        <ContentPresenter VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        -->
+
+        <!-- 一応色変わる
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type DataGridCell}" >
+                    <Border v:GetStyleToLoadBehavior.StyleToLoad="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}">
+                        <ContentPresenter VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        -->
+
         <Style.Triggers>
             <Trigger Property="IsMouseOver"
                      Value="True">
                 <Setter Property="Background"
-                        Value="PaleGreen" />
+                        Value="Pink" />
                 <Setter Property="Foreground"
                         Value="Red" />
             </Trigger>

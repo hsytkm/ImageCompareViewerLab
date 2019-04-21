@@ -8,7 +8,7 @@ namespace Graph2D.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
-        public static int[,] Array2D { get; } = GetArray2DRandom(9, 9, 0, 255);
+        public static int[,] Array2D { get; } = GetArray2DRandom(4, 4, 0, 255);
 
         public MainWindowViewModel()
         {
@@ -28,7 +28,7 @@ namespace Graph2D.ViewModels
             {
                 ary[x.index / len0, x.index % len1] = x.data;
             }
-
+    
             ary[3, 3] = 0;
             return ary;
         }

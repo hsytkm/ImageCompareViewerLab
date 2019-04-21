@@ -73,6 +73,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Views\Array2dToDataGridSourceConverter.cs" />
+    <Compile Include="Views\GetStyleToLoadBehavior.cs" />
+    <Compile Include="Views\PropBasedStringToColorConverter.cs" />
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

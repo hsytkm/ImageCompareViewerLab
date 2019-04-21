@@ -13,28 +13,14 @@
     <Window.Resources>
         <ResourceDictionary>
             <v:Array2dToDataGridSourceConverter x:Key="Array2dToDataGridSourceConverter"/>
-            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="MyDataGridStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid>
+    <StackPanel>
         <DataGrid Style="{StaticResource MyDataGrid}"
-                  ItemsSource="{Binding Array2D, Converter={StaticResource Array2dToDataGridSourceConverter}}" >
-            <!--
-            <DataGrid.ItemContainerStyle>
-                <Style TargetType="DataGridRow">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding}" Value="0">
-                            <Setter Property="Background" Value="LimeGreen" />
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DataGrid.ItemContainerStyle>
-            -->
-        </DataGrid>
-
-    </Grid>
+                  ItemsSource="{Binding Array2D, Converter={StaticResource Array2dToDataGridSourceConverter}}" />
+    </StackPanel>
 </Window>
