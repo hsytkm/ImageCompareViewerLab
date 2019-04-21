@@ -30,8 +30,9 @@ namespace Graph2D.Views
                         {
                             try
                             {
-                                var lv1 = byte.Parse(text.Text);
-                                var lv2 = (byte)(255 - lv1);
+                                var val = int.Parse(text.Text);
+                                var lv1 = (byte)Math.Min(val, 0xff);
+                                var lv2 = (byte)~lv1;
 
                                 var bg = new SolidColorBrush(Color.FromArgb(0xFF, lv1, lv1, 0x00));
                                 var fg = new SolidColorBrush(Color.FromArgb(0xFF, lv2, lv2, lv2));

@@ -10,27 +10,24 @@ namespace Graph2D.ViewModels
     {
         public static int[,] Array2D { get; } = GetArray2DRandom(4, 4, 0, 255);
 
-        public MainWindowViewModel()
-        {
+        public MainWindowViewModel() { }
 
-        }
-
-        private static int[,] GetArray2DRandom(int xLen, int yLen, int dataMin, int dataMax)
+        private static int[,] GetArray2DRandom(int rLen, int cLen, int dataMin, int dataMax)
         {
-            var ary = new int[xLen, yLen];
-            int len0 = ary.GetLength(0);
-            int len1 = ary.GetLength(1);
+            var ary = new int[rLen, cLen];
+            int rowLength = ary.GetLength(0);
+            int columnLength = ary.GetLength(1);
 
             var rdm = new Random();
-            foreach (var x in Enumerable.Range(0, len0 * len1)
+            foreach (var x in Enumerable.Range(0, rowLength * columnLength)
                 .Select(_ => rdm.Next(dataMin, dataMax))
                 .Select((data, index) => (data, index)))
             {
-                ary[x.index / len0, x.index % len1] = x.data;
+                ary[x.index / columnLength, x.index % columnLength] = x.data;
             }
 
             ary[0, 0] = dataMin;
-            ary[len0 - 1, len1 - 1] = dataMax;
+            ary[rowLength - 1, columnLength - 1] = dataMax;
             return ary;
         }
 
