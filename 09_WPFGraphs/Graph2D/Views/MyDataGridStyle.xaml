@@ -33,6 +33,16 @@
                 Value="True" />
         <Setter Property="HeadersVisibility"
                 Value="All" />
+        <Setter Property="CanUserResizeRows"
+                Value="False" />
+        <Setter Property="CanUserResizeColumns"
+                Value="False" />
+        <Setter Property="SelectionMode"
+                Value="Extended" />
+        <Setter Property="SelectionUnit"
+                Value="Cell" />
+        <Setter Property="HeadersVisibility"
+                Value="None" />
         <Setter Property="CellStyle"
                 Value="{StaticResource DataGridCellStyle}" />
         <Setter Property="ColumnHeaderStyle"
