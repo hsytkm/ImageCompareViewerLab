@@ -23,6 +23,7 @@
     <Grid>
         <DataGrid Style="{StaticResource MyDataGrid}"
                   ItemsSource="{Binding Array2D, Converter={StaticResource Array2dToDataGridSourceConverter}}" >
+            <!--
             <DataGrid.ItemContainerStyle>
                 <Style TargetType="DataGridRow">
                     <Style.Triggers>
@@ -32,6 +33,7 @@
                     </Style.Triggers>
                 </Style>
             </DataGrid.ItemContainerStyle>
+            -->
         </DataGrid>
 
     </Grid>
