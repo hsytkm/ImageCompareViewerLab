@@ -28,8 +28,9 @@ namespace Graph2D.ViewModels
             {
                 ary[x.index / len0, x.index % len1] = x.data;
             }
-    
-            ary[3, 3] = 0;
+
+            ary[0, 0] = dataMin;
+            ary[len0 - 1, len1 - 1] = dataMax;
             return ary;
         }
 
