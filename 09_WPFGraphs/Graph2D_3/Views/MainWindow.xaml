@@ -28,53 +28,31 @@
                   AutoGenerateColumns="False" >
 
             <DataGrid.Columns>
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="R[0]" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.HeaderTemplate>
+                <DataGridTextColumn Binding="{Binding ColoredObjects[0].Object}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Foreground" Value="{Binding ColoredObjects[0].Foreground}" />
+                            <Setter Property="Background" Value="{Binding ColoredObjects[0].Background}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding ColoredObjects[1].Object}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Foreground" Value="{Binding ColoredObjects[1].Foreground}" />
+                            <Setter Property="Background" Value="{Binding ColoredObjects[1].Background}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
 
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding ColoredObjects[0].Object}"
-                                       Foreground="{Binding ColoredObjects[0].Foreground}"
-                                       Background="{Binding ColoredObjects[0].Background}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="R[1]" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.HeaderTemplate>
-
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding ColoredObjects[1].Object}"
-                                       Foreground="{Binding ColoredObjects[1].Foreground}"
-                                       Background="{Binding ColoredObjects[1].Background}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn>
-                    <DataGridTemplateColumn.HeaderTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="R[2]" />
-                        </DataTemplate>
-                    </DataGridTemplateColumn.HeaderTemplate>
-
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding ColoredObjects[2].Object}"
-                                       Foreground="{Binding ColoredObjects[2].Foreground}"
-                                       Background="{Binding ColoredObjects[2].Background}"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding ColoredObjects[2].Object}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Foreground" Value="{Binding ColoredObjects[2].Foreground}" />
+                            <Setter Property="Background" Value="{Binding ColoredObjects[2].Background}" />
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
 
             </DataGrid.Columns>
 
