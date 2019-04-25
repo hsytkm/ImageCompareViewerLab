@@ -16,6 +16,11 @@
     </Window.Resources>
 
     <StackPanel>
+        <Button Margin="0,0,0,5"
+                Height="30"
+                Content="Reflash"
+                Command="{Binding UpdateDataCommand, Mode=OneTime}" />
+
         <DataGrid IsReadOnly="True"
                   CanUserReorderColumns="False"
                   CanUserSortColumns="False"
