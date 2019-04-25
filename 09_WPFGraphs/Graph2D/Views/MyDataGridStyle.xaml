@@ -70,8 +70,6 @@
                 Value="False" />
         <Setter Property="AutoGenerateColumns"
                 Value="True" />
-        <Setter Property="HeadersVisibility"
-                Value="All" />
         <Setter Property="CanUserResizeRows"
                 Value="False" />
         <Setter Property="CanUserResizeColumns"
