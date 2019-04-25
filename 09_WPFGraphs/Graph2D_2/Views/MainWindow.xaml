@@ -1,0 +1,36 @@
+﻿<Window x:Class="Graph2D.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:v="clr-namespace:Graph2D.Views"
+        xmlns:prism="http://prismlibrary.com/"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        mc:Ignorable="d"
+        Title="Graph2D_2"
+        Height="300" Width="500">
+
+    <Window.Resources>
+        <v:Array2dToDataGridSourceConverter x:Key="Array2dToDataGridSourceConverter"/>
+    </Window.Resources>
+
+    <StackPanel>
+        <DataGrid AutoGenerateColumns="True"
+                  IsReadOnly="True"
+                  CanUserReorderColumns="False"
+                  CanUserSortColumns="False"
+                  CanUserResizeRows="False"
+                  CanUserResizeColumns="False"
+                  SelectionMode="Extended"
+                  SelectionUnit="Cell"
+                  HeadersVisibility="None"
+                  ItemsSource="{Binding Data, Converter={StaticResource Array2dToDataGridSourceConverter}, Mode=OneWay}" >
+
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <EventSetter Event="Loaded" Handler="DataGridCell_Loaded"/>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
+    </StackPanel>
+</Window>
