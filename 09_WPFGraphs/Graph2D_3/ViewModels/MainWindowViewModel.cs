@@ -6,8 +6,8 @@ namespace Graph2D.ViewModels
     class MainWindowViewModel : BindableBase
     {
         private static readonly int ValueMax = 4096;
-        private static readonly int RowLength = 3;
-        private static readonly int ColumnLength = 3;
+        private static readonly int RowLength = 5;
+        private static readonly int ColumnLength = 4;
 
         public ColoredObjectRow[] Data1 { get; }
         public ColoredObject[,] Data2 { get; }
@@ -16,7 +16,7 @@ namespace Graph2D.ViewModels
         {
             var random = new Random();
 
-            var data1 = new ColoredObjectRow[ColumnLength];
+            var data1 = new ColoredObjectRow[RowLength];
             for (int r = 0; r < RowLength; r++)
             {
                 var objects = new ColoredObject[ColumnLength];
