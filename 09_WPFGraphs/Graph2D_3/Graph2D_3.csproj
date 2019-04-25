@@ -76,6 +76,7 @@
     <Compile Include="ViewModels\ColoredObject.cs" />
     <Compile Include="ViewModels\ColoredObjectRow.cs" />
     <Compile Include="Views\Array2dToDataGridSourceConverter.cs" />
+    <Compile Include="Views\MyDataGrid.cs" />
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

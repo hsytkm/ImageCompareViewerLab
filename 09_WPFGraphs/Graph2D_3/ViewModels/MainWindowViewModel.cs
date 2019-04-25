@@ -7,8 +7,10 @@ namespace Graph2D.ViewModels
     class MainWindowViewModel : BindableBase
     {
         private static readonly int ValueMax = 4096;
-        private static readonly int RowLength = 5;
-        private static readonly int ColumnLength = 4;
+        private static readonly int RowLengthMin = 1;
+        private static readonly int RowLengthMax = 10;
+        private static readonly int ColumnLengthMin = 1;
+        private static readonly int ColumnLengthMax = 10;
 
         private static readonly Random Random = new Random();
 
@@ -37,23 +39,25 @@ namespace Graph2D.ViewModels
             }
             Data2 = data2;
 #endif
-
             UpdateDataCommand = new DelegateCommand(() => Data1 = GetRandomData1());
         }
 
         private static ColoredObjectRow[] GetRandomData1()
         {
-            var data1 = new ColoredObjectRow[RowLength];
-            for (int r = 0; r < RowLength; r++)
+            int rowLength = Random.Next(RowLengthMin, RowLengthMax);
+            int columnLength = Random.Next(ColumnLengthMin, ColumnLengthMax);
+
+            var data = new ColoredObjectRow[rowLength];
+            for (int r = 0; r < data.Length; r++)
             {
-                var objects = new ColoredObject[ColumnLength];
-                for (int c = 0; c < ColumnLength; c++)
+                var objects = new ColoredObject[columnLength];
+                for (int c = 0; c < objects.Length; c++)
                 {
                     objects[c] = new ColoredObject(Random.Next(ValueMax), ValueMax);
                 }
-                data1[r] = new ColoredObjectRow(objects);
+                data[r] = new ColoredObjectRow(objects);
             }
-            return data1;
+            return data;
         }
 
     }

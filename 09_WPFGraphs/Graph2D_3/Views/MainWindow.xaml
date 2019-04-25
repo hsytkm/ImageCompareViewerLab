@@ -23,16 +23,17 @@
                 Content="Reflash"
                 Command="{Binding UpdateDataCommand, Mode=OneTime}" />
 
-        <DataGrid IsReadOnly="True"
-                  CanUserReorderColumns="False"
-                  CanUserSortColumns="False"
-                  CanUserResizeRows="False"
-                  CanUserResizeColumns="False"
-                  SelectionMode="Extended"
-                  SelectionUnit="Cell"
-                  HeadersVisibility="None"
-                  ItemsSource="{Binding Data1, Mode=OneWay}"
-                  AutoGenerateColumns="False" >
+        <v:MyDataGrid IsReadOnly="True"
+                      CanUserReorderColumns="False"
+                      CanUserSortColumns="False"
+                      CanUserResizeRows="False"
+                      CanUserResizeColumns="False"
+                      SelectionMode="Extended"
+                      SelectionUnit="Cell"
+                      HeadersVisibility="None"
+                      ItemsSource="{Binding Data1, Mode=OneWay}"
+                      AutoGenerateColumns="False"
+                      SnapsToDevicePixels="True" >
 
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding ColoredObjects[0].Object, Mode=OneTime}">
@@ -62,7 +63,7 @@
                 </DataGridTextColumn>
 
             </DataGrid.Columns>
-
-        </DataGrid>
+        </v:MyDataGrid>
+        
     </StackPanel>
 </Window>
