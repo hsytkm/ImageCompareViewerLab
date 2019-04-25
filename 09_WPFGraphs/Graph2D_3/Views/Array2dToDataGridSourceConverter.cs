@@ -6,6 +6,7 @@ using System.Windows.Data;
 
 namespace Graph2D.Views
 {
+#if false
     class Array2dToDataGridSourceConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -44,6 +45,6 @@ namespace Graph2D.Views
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
             throw new NotImplementedException();
-
     }
+#endif
 }

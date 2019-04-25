@@ -12,7 +12,9 @@
         Height="300" Width="500">
 
     <Window.Resources>
+        <!--
         <v:Array2dToDataGridSourceConverter x:Key="Array2dToDataGridSourceConverter"/>
+        -->
     </Window.Resources>
 
     <StackPanel>
@@ -33,28 +35,28 @@
                   AutoGenerateColumns="False" >
 
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding ColoredObjects[0].Object}">
+                <DataGridTextColumn Binding="{Binding ColoredObjects[0].Object, Mode=OneTime}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Foreground" Value="{Binding ColoredObjects[0].Foreground}" />
-                            <Setter Property="Background" Value="{Binding ColoredObjects[0].Background}" />
+                            <Setter Property="Foreground" Value="{Binding ColoredObjects[0].Foreground, Mode=OneTime}" />
+                            <Setter Property="Background" Value="{Binding ColoredObjects[0].Background, Mode=OneTime}" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding ColoredObjects[1].Object}">
+                <DataGridTextColumn Binding="{Binding ColoredObjects[1].Object, Mode=OneTime}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Foreground" Value="{Binding ColoredObjects[1].Foreground}" />
-                            <Setter Property="Background" Value="{Binding ColoredObjects[1].Background}" />
+                            <Setter Property="Foreground" Value="{Binding ColoredObjects[1].Foreground, Mode=OneTime}" />
+                            <Setter Property="Background" Value="{Binding ColoredObjects[1].Background, Mode=OneTime}" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Binding="{Binding ColoredObjects[2].Object}">
+                <DataGridTextColumn Binding="{Binding ColoredObjects[2].Object, Mode=OneTime}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
-                            <Setter Property="Foreground" Value="{Binding ColoredObjects[2].Foreground}" />
-                            <Setter Property="Background" Value="{Binding ColoredObjects[2].Background}" />
+                            <Setter Property="Foreground" Value="{Binding ColoredObjects[2].Foreground, Mode=OneTime}" />
+                            <Setter Property="Background" Value="{Binding ColoredObjects[2].Background, Mode=OneTime}" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
