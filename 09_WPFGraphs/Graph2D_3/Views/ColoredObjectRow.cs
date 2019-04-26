@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Graph2D.ViewModels
+namespace Graph2D.Views
 {
     class ColoredObjectRow
     {

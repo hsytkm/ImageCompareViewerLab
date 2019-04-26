@@ -73,8 +73,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="ViewModels\ColoredObject.cs" />
-    <Compile Include="ViewModels\ColoredObjectRow.cs" />
+    <Compile Include="Views\ColoredObject.cs" />
+    <Compile Include="Views\ColoredObjectRow.cs" />
     <Compile Include="Views\ColoredObjectBindingConverter.cs" />
     <Compile Include="Views\MyDataGrid.cs" />
     <Page Include="Views\MainWindow.xaml">

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Media;
 
-namespace Graph2D.ViewModels
+namespace Graph2D.Views
 {
     class ColoredObject
     {

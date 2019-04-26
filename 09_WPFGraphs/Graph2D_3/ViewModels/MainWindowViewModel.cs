@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Graph2D.Views;
+using Prism.Commands;
 using Prism.Mvvm;
 using System;
 
