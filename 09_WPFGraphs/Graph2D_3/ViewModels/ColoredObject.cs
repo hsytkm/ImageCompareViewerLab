@@ -19,7 +19,7 @@ namespace Graph2D.ViewModels
             Foreground = new SolidColorBrush(Color.FromRgb(f, f, f));
         }
 
-        public override string ToString() => $"{Object},{Foreground},{Background}";
+        //public override string ToString() => $"{Object},{Foreground},{Background}";
 
     }
 }

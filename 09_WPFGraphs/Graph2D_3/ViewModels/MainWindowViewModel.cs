@@ -6,7 +6,6 @@ namespace Graph2D.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
-        private static readonly int ValueMax = 4096;
         private static readonly int RowLengthMin = 1;
         private static readonly int RowLengthMax = 10;
         private static readonly int ColumnLengthMin = 1;
@@ -14,48 +13,33 @@ namespace Graph2D.ViewModels
 
         private static readonly Random Random = new Random();
 
-        private ColoredObjectRow[] _Data1 = GetRandomData1();
-        public ColoredObjectRow[] Data1
+        private ColoredObject[,] _Array2d = GetSortedData();
+        public ColoredObject[,] Array2d
         {
-            get => _Data1;
-            private set => SetProperty(ref _Data1, value);
+            get => _Array2d;
+            private set => SetProperty(ref _Array2d, value);
         }
 
-        //public ColoredObject[,] Data2 { get; }
-
-        public DelegateCommand UpdateDataCommand { get; }
+        public DelegateCommand ReflashDataCommand { get; }
 
         public MainWindowViewModel()
         {
-#if false
-            var data2 = new ColoredObject[RowLength, ColumnLength];
-            for (int c = 0; c < data2.GetLength(0); c++)
-            {
-                for (int r = 0; r < data2.GetLength(1); r++)
-                {
-                    data2[c, r] = new ColoredObject(random.Next(ValueMax), ValueMax);
-                    //data2[c, r] = new ColoredObject(c * data2.GetLength(1) + r, data2.GetLength(0) * data2.GetLength(1));
-                }
-            }
-            Data2 = data2;
-#endif
-            UpdateDataCommand = new DelegateCommand(() => Data1 = GetRandomData1());
+            ReflashDataCommand = new DelegateCommand(() => Array2d = GetSortedData());
         }
 
-        private static ColoredObjectRow[] GetRandomData1()
+        private static ColoredObject[,] GetSortedData()
         {
             int rowLength = Random.Next(RowLengthMin, RowLengthMax);
             int columnLength = Random.Next(ColumnLengthMin, ColumnLengthMax);
+            int max = rowLength * columnLength;
 
-            var data = new ColoredObjectRow[rowLength];
-            for (int r = 0; r < data.Length; r++)
+            var data = new ColoredObject[rowLength, columnLength];
+            for (int r = 0; r < data.GetLength(0); r++)
             {
-                var objects = new ColoredObject[columnLength];
-                for (int c = 0; c < objects.Length; c++)
+                for (int c = 0; c < data.GetLength(1); c++)
                 {
-                    objects[c] = new ColoredObject(Random.Next(ValueMax), ValueMax);
+                    data[r, c] = new ColoredObject(1 + r * columnLength + c, max);
                 }
-                data[r] = new ColoredObjectRow(objects);
             }
             return data;
         }

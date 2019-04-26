@@ -4,26 +4,24 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:v="clr-namespace:Graph2D.Views"
-        xmlns:vm="clr-namespace:Graph2D.ViewModels"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
         Title="Graph2D_3"
-        Height="300" Width="500">
+        Height="300" Width="300">
 
     <Window.Resources>
-        <!--
-        <v:Array2dToDataGridSourceConverter x:Key="Array2dToDataGridSourceConverter"/>
-        -->
+        <v:ColoredObjectBindingConverter x:Key="ColoredObjectBindingConverter"/>
     </Window.Resources>
 
     <StackPanel>
-        <Button Margin="0,0,0,5"
+        <Button Margin="0,10"
                 Height="30"
                 Content="Reflash"
-                Command="{Binding UpdateDataCommand, Mode=OneTime}" />
+                Command="{Binding ReflashDataCommand, Mode=OneTime}" />
 
-        <v:MyDataGrid IsReadOnly="True"
+        <v:MyDataGrid SnapsToDevicePixels="True" 
+                      IsReadOnly="True"
                       CanUserReorderColumns="False"
                       CanUserSortColumns="False"
                       CanUserResizeRows="False"
@@ -31,10 +29,10 @@
                       SelectionMode="Extended"
                       SelectionUnit="Cell"
                       HeadersVisibility="None"
-                      ItemsSource="{Binding Data1, Mode=OneWay}"
-                      AutoGenerateColumns="False"
-                      SnapsToDevicePixels="True" >
+                      ItemsSource="{Binding Array2d, Converter={StaticResource ColoredObjectBindingConverter}, Mode=OneWay}"
+                      AutoGenerateColumns="False">
 
+            <!-- Viewで対応しよう試みたが、列分だけxaml定義が必要となり、何ともならなかった…
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding ColoredObjects[0].Object, Mode=OneTime}">
                     <DataGridTextColumn.ElementStyle>
@@ -44,6 +42,7 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+
                 <DataGridTextColumn Binding="{Binding ColoredObjects[1].Object, Mode=OneTime}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
@@ -61,8 +60,9 @@
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-
             </DataGrid.Columns>
+            -->
+
         </v:MyDataGrid>
         
     </StackPanel>

@@ -1,12 +1,21 @@
-﻿namespace Graph2D.ViewModels
+﻿using System.Collections.Generic;
+
+namespace Graph2D.ViewModels
 {
     class ColoredObjectRow
     {
-        public ColoredObject[] ColoredObjects { get; }
+        public IReadOnlyList<ColoredObject> ItemsSource { get; }
 
-        public ColoredObjectRow(ColoredObject[] obj)
+        public ColoredObjectRow(int r, ColoredObject[,] source)
         {
-            ColoredObjects = obj;
+            int colLength = source.GetLength(1);
+            var items = new List<ColoredObject>(colLength);
+            for (var c = 0; c < items.Capacity; c++)
+            {
+                items.Add(source[r, c]);
+            }
+            ItemsSource = items;
         }
+
     }
 }

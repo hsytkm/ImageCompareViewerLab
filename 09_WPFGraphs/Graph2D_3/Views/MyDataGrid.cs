@@ -1,7 +1,11 @@
-﻿using System;
+﻿using Graph2D.ViewModels;
 using System.Collections;
-using System.Collections.Specialized;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace Graph2D.Views
 {
@@ -12,24 +16,31 @@ namespace Graph2D.Views
         {
             base.OnItemsSourceChanged(oldValue, newValue);
 
-            // do something here? 
-        }
+            if (!(newValue is IEnumerable<ColoredObjectRow> newItems)) return;
 
-        protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
-        {
-            base.OnItemsChanged(e);
+            var col = newItems.First().ItemsSource.Count;
+            Debug.WriteLine($"Row={newItems.Count()}, Col={col}");
 
-            switch (e.Action)
+            this.Columns.Clear();
+            for (int c = 0; c < col; c++)
             {
-                case NotifyCollectionChangedAction.Add:
-                case NotifyCollectionChangedAction.Remove:
-                case NotifyCollectionChangedAction.Replace:
-                case NotifyCollectionChangedAction.Move:
-                case NotifyCollectionChangedAction.Reset:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                var bindingTarget = $"{nameof(ColoredObjectRow.ItemsSource)}[{c}].";
+
+                var style = new Style(typeof(TextBlock));
+
+                style.Setters.Add(new Setter(TextBlock.BackgroundProperty,
+                    new Binding($"{bindingTarget}{nameof(ColoredObject.Background)}") { Mode = BindingMode.OneTime }));
+
+                style.Setters.Add(new Setter(TextBlock.ForegroundProperty,
+                    new Binding($"{bindingTarget}{nameof(ColoredObject.Foreground)}") { Mode = BindingMode.OneTime }));
+
+                this.Columns.Add(new DataGridTextColumn()
+                {
+                    Binding = new Binding($"{bindingTarget}{nameof(ColoredObject.Object)}") { Mode = BindingMode.OneTime },
+                    ElementStyle = style,
+                });
             }
         }
+
     }
 }
