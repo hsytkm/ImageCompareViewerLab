@@ -25,13 +25,22 @@ namespace ZoomThumb.ViewModels
         public ReactiveProperty<Size> ImageScrollOffsetCenter { get; } =
             new ReactiveProperty<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
+        public ReactiveCommand LoadImageCommand { get; } = new ReactiveCommand();
         public ReactiveCommand ZoomAllCommand { get; } = new ReactiveCommand();
         public ReactiveCommand ZoomX1Command { get; } = new ReactiveCommand();
         public ReactiveCommand OffsetCenterCommand { get; } = new ReactiveCommand();
 
-        public ImageScrollViewerViewModel(IContainerExtension container, IRegionManager regionManager, MyImage myImage)
+        public ImageScrollViewerViewModel(IContainerExtension container, IRegionManager regionManager)
         {
-            ImageSource = myImage.ObserveProperty(x => x.ImageSource).ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.None);
+            var mainImages = container.Resolve<MainImages>();
+
+            // 画像管理クラスのインデックスを取得
+            int index = mainImages.GetImageIndex();
+
+            LoadImageCommand.Subscribe(x => mainImages.LoadImage(index));
+
+            ImageSource = mainImages.ImageSources[index].ObserveProperty(x => x.ImageSource)
+                .ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.None);
 
             // ズーム倍率のデバッグ表示
             ImageZoomPayload

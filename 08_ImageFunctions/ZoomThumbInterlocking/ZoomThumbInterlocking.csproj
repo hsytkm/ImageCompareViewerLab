@@ -106,7 +106,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\MyImage.cs" />
+    <Compile Include="Models\MainImage.cs" />
+    <Compile Include="Models\MainImages.cs" />
     <Compile Include="ViewModels\EventConverters\DropEventToUriConverter.cs" />
     <Compile Include="ViewModels\ImageScrollViewerViewModel.cs" />
     <Compile Include="Views\Common\ViewHelper.cs" />

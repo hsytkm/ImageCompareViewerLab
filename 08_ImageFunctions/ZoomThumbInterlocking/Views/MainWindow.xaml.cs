@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Prism.Ioc;
+using Prism.Regions;
+using System.Windows;
 
 namespace ZoomThumb.Views
 {
@@ -7,9 +9,17 @@ namespace ZoomThumb.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        public MainWindow(IContainerExtension container, IRegionManager regionManager)
         {
             InitializeComponent();
+
+            int count = 2;
+            for (int i = 0; i < count; i++)
+            {
+                regionManager.RegisterViewWithRegion(
+                    $"ImageScrollViewer{i}",
+                    () => container.Resolve<ImageScrollViewer>());
+            }
         }
     }
 }

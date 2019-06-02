@@ -23,17 +23,24 @@
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
+        <Button Grid.Row="0"
+                Margin="0,10,0,0"
+                Content="LoadImage"
+                Command="{Binding LoadImageCommand, Mode=OneTime}" />
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
             <Button Height="30" Width="100" Content="ZoomAll" Command="{Binding ZoomAllCommand, Mode=OneTime}" />
             <Button Height="30" Width="100" Content="ZoomX1" Command="{Binding ZoomX1Command, Mode=OneTime}" />
             <Button Height="30" Width="100" Content="OffsetCenter" Command="{Binding OffsetCenterCommand, Mode=OneTime}" />
         </StackPanel>
-        
-        <ScrollViewer x:Name="MainScrollViewer"
+
+        <ScrollViewer Grid.Row="1"
+                      x:Name="MainScrollViewer"
                       Style="{StaticResource ScrollViewerImageStyleKey}"
                       v:ImageScrollViewer.ZoomPayload="{Binding ImageZoomPayload.Value, Mode=TwoWay}"
                       v:ImageScrollViewer.ScrollOffsetCenter="{Binding ImageScrollOffsetCenter.Value, Mode=TwoWay}" >
@@ -43,7 +50,8 @@
 
         </ScrollViewer>
 
-        <Canvas x:Name="ThumbCanvas"
+        <Canvas Grid.Row="1"
+                x:Name="ThumbCanvas"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Margin="5,5,0,0"
