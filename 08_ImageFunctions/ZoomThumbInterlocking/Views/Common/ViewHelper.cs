@@ -1,5 +1,7 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ZoomThumb.Views.Common
 {
@@ -15,6 +17,15 @@ namespace ZoomThumb.Views.Common
                 if (control != default) return control;
             }
             return default;
+        }
+
+        public static Size GetControlActualSize(FrameworkElement fe) =>
+            (fe is null) ? default : new Size(fe.ActualWidth, fe.ActualHeight);
+
+        public static Size GetImageSourcePixelSize(Image image)
+        {
+            if (!(image?.Source is BitmapSource source)) return default;
+            return new Size(source.PixelWidth, source.PixelHeight);
         }
 
     }
