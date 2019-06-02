@@ -20,12 +20,12 @@ namespace ZoomThumb.ViewModels
         // 各画像の表示エリアを連動させるかフラグ(FALSE=連動しない)
         public ReadOnlyReactiveProperty<bool> IsImageViewerInterlock { get; }
 
-        // ズーム倍率の管理(今はOneWayToSource)
+        // ズーム倍率の管理(TwoWay)
         public ReactiveProperty<ImageZoomPayload> ImageZoomPayload { get; } =
             new ReactiveProperty<ImageZoomPayload>(mode: ReactivePropertyMode.DistinctUntilChanged);
         
-        // スクロールオフセット位置(OneWayToSource)
-        public ReactiveProperty<Size> ImageScrollOffsetCenter { get; } =
+        // スクロールオフセット位置(TwoWay)
+        public ReactiveProperty<Size> ImageScrollOffsetCenterRatio { get; } =
             new ReactiveProperty<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
         public ReactiveCommand LoadImageCommand { get; } = new ReactiveCommand();
@@ -52,7 +52,7 @@ namespace ZoomThumb.ViewModels
                 .Subscribe(x => Console.WriteLine($"VM({index})-ZoomMagRatio: {x.IsEntire} => {(x.MagRatio * 100.0):f2} %"));
 
             // スクロール位置のデバッグ表示
-            ImageScrollOffsetCenter
+            ImageScrollOffsetCenterRatio
                 .Subscribe(x => Console.WriteLine($"VM({index})-ScrollOffsetRatio: {x.Width:f2} x {x.Height:f2}"));
 
 
@@ -68,7 +68,7 @@ namespace ZoomThumb.ViewModels
                 .Subscribe(x => ImageZoomPayload.Value = new ImageZoomPayload(false, 1.0));
 
             OffsetCenterCommand
-                .Subscribe(x => ImageScrollOffsetCenter.Value = new Size(0.5, 0.5));
+                .Subscribe(x => ImageScrollOffsetCenterRatio.Value = new Size(0.5, 0.5));
 
         }
 

@@ -6,11 +6,11 @@ namespace ZoomThumb.Models
     class MainImages : BindableBase
     {
         // 各画像の表示エリアを連動させるかフラグ(FALSE=連動しない)
-        private bool _IsImageViewerInterlock = true;
+        private bool _IsImageViewerInterlock;
         public bool IsImageViewerInterlock
         {
             get => _IsImageViewerInterlock;
-            private set => SetProperty(ref _IsImageViewerInterlock, value);
+            set => SetProperty(ref _IsImageViewerInterlock, value);
         }
 
         private static readonly string ImagePath1 = @"C:/data/image1.jpg";

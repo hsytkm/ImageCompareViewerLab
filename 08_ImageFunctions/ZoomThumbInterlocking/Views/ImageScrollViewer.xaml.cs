@@ -26,8 +26,12 @@ namespace ZoomThumb.Views
         // スクロールバー位置の初期値
         private static readonly Size DefaultScrollOffsetRatio = new Size(0.5, 0.5);
 
+        // 各コントロールの連動フィールド
+        private static readonly ReactivePropertySlim<Size> ImageScrollOffsetRatioShare = new ReactivePropertySlim<Size>(DefaultScrollOffsetRatio, mode: ReactivePropertyMode.None);
+
+        // 自コントロールの状態
         private static readonly ReactivePropertySlim<ImageZoomMagnification> ImageZoomMag = new ReactivePropertySlim<ImageZoomMagnification>(ImageZoomMagnification.Entire);
-        private static readonly ReactivePropertySlim<Size> ImageScrollOffsetRatio = new ReactivePropertySlim<Size>(DefaultScrollOffsetRatio);
+        private readonly ReactivePropertySlim<Size> ImageScrollOffsetRatio = new ReactivePropertySlim<Size>(DefaultScrollOffsetRatio);
 
         //private readonly ReactivePropertySlim<BitmapSource> ImageSource = new ReactivePropertySlim<BitmapSource>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private readonly ReactivePropertySlim<Size> ImageSourcePixelSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
@@ -69,13 +73,13 @@ namespace ZoomThumb.Views
 
         #endregion
 
-        #region ScrollOffsetCenterProperty
+        #region ScrollOffsetCenterRatioProperty
 
-        private static readonly string ScrollOffsetCenter = nameof(ScrollOffsetCenter);
+        private static readonly string ScrollOffsetCenterRatio = nameof(ScrollOffsetCenterRatio);
 
-        private static readonly DependencyProperty ScrollOffsetCenterProperty =
+        private static readonly DependencyProperty ScrollOffsetCenterRatioProperty =
             DependencyProperty.RegisterAttached(
-                ScrollOffsetCenter,
+                ScrollOffsetCenterRatio,
                 typeof(Size),
                 typeof(ImageScrollViewer),
                 new FrameworkPropertyMetadata(
@@ -84,15 +88,51 @@ namespace ZoomThumb.Views
                     (d, e) =>
                     {
                         // ViewModel→View
-                        if (e.NewValue is Size size)
-                            ImageScrollOffsetRatio.Value = size;
+                        if (!(d is ScrollViewer scrollViewer)) return;
+                        if (e.NewValue is Size newRatio)
+                        {
+                            if (GetIsImageViewerInterlock(scrollViewer))
+                            {
+                                ImageScrollOffsetRatioShare.Value = newRatio;
+                            }
+                            else
+                            {
+                                // Viewからのスクロール位置割合の通知を基にコントロールを操作する
+                                var scrollContentPresenter = ViewHelper.GetChildControl<ScrollContentPresenter>(scrollViewer);
+                                var imageView = ViewHelper.GetChildControl<Image>(scrollViewer);
+
+                                var newHOffset = Math.Max(0.0, newRatio.Width * imageView.ActualWidth - (scrollContentPresenter.ActualWidth / 2.0));
+                                var newVOffset = Math.Max(0.0, newRatio.Height * imageView.ActualHeight - (scrollContentPresenter.ActualHeight / 2.0));
+
+                                scrollViewer.ScrollToHorizontalOffset(newHOffset);
+                                scrollViewer.ScrollToVerticalOffset(newVOffset);
+                            }
+                        }
                     }));
 
-        public static Size GetScrollOffsetCenter(DependencyObject depObj) =>
-            (Size)depObj.GetValue(ScrollOffsetCenterProperty);
+        public static Size GetScrollOffsetCenterRatio(DependencyObject depObj) =>
+            (Size)depObj.GetValue(ScrollOffsetCenterRatioProperty);
 
-        public static void SetScrollOffsetCenter(DependencyObject depObj, Size value) =>
-            depObj.SetValue(ScrollOffsetCenterProperty, value);
+        public static void SetScrollOffsetCenterRatio(DependencyObject depObj, Size value) =>
+            depObj.SetValue(ScrollOffsetCenterRatioProperty, value);
+
+        #endregion
+
+        #region IsImageViewerInterlockProperty
+
+        private static readonly string IsImageViewerInterlock = nameof(IsImageViewerInterlock);
+
+        private static readonly DependencyProperty IsImageViewerInterlockProperty =
+            DependencyProperty.RegisterAttached(
+                IsImageViewerInterlock,
+                typeof(bool),
+                typeof(ImageScrollViewer));
+
+        public static bool GetIsImageViewerInterlock(DependencyObject depObj) =>
+            (bool)depObj.GetValue(IsImageViewerInterlockProperty);
+
+        public static void SetIsImageViewerInterlock(DependencyObject depObj, bool value) =>
+            depObj.SetValue(IsImageViewerInterlockProperty, value);
 
         #endregion
 
@@ -264,10 +304,13 @@ namespace ZoomThumb.Views
 
             #region ScrollOffset
 
+            // スクロールバー移動の連動(自コントロールに移譲)
+            ImageScrollOffsetRatioShare.Subscribe(x => ImageScrollOffsetRatio.Value = x);
+
             // スクロールバーの移動
             ImageScrollOffsetRatio
                 .CombineLatest(ScrollContentActualSize, ImageViewActualSize, ImageZoomMag,
-                    (offset, sview, iview, _) => (offset, sview, iview, _))
+            (offset, sview, iview, _) => (offset, sview, iview, _))
                 .Subscribe(x =>
                 {
                     var width = Math.Max(0.0, x.offset.Width * x.iview.Width - (x.sview.Width / 2.0));
@@ -277,7 +320,7 @@ namespace ZoomThumb.Views
                     MainScrollViewer.ScrollToVerticalOffset(height);
 
                     // View→ViewModelへの通知
-                    SetScrollOffsetCenter(MainScrollViewer, x.offset);
+                    SetScrollOffsetCenterRatio(MainScrollViewer, x.offset);
                 });
 
             // ドラッグによる画像表示領域の移動
@@ -508,7 +551,7 @@ namespace ZoomThumb.Views
                 ImageScrollOffsetRatio.Value = size;
 
                 // View→ViewModel通知
-                SetScrollOffsetCenter(MainScrollViewer, size);
+                SetScrollOffsetCenterRatio(MainScrollViewer, size);
             }
         }
 

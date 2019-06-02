@@ -15,20 +15,31 @@
         Height="400" Width="650">
 
     <Grid AllowDrop="True" >
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="4" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <ContentControl Grid.Column="0"
-                        prism:RegionManager.RegionName="ImageScrollViewer0" />
+        <CheckBox Grid.Row="0"
+                  Margin="10,5,0,0"
+                  IsChecked="{Binding IsImageViewerInterlock.Value, Mode=TwoWay}"
+                  Content="各画像表示の連動フラグ" />
 
-        <Grid Grid.Column="1" Background="SkyBlue" />
+        <Grid Grid.Row="1" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <ContentControl Grid.Column="2"
-                        prism:RegionManager.RegionName="ImageScrollViewer1" />
+            <ContentControl Grid.Column="0"
+                            prism:RegionManager.RegionName="ImageScrollViewer0" />
 
+            <Grid Grid.Column="1" Background="SkyBlue" Width="4" />
+
+            <ContentControl Grid.Column="2"
+                            prism:RegionManager.RegionName="ImageScrollViewer1" />
+        </Grid>
     </Grid>
 
 </Window>
