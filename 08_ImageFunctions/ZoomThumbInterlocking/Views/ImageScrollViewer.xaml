@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="ZoomThumb.Views.ImageScrollViewer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:r="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.NET46"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="clr-namespace:ZoomThumb.Views"
+             xmlns:vmec="clr-namespace:ZoomThumb.ViewModels.EventConverters"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ImageScrollViewerStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button Height="30" Width="100" Content="ZoomAll" Command="{Binding ZoomAllCommand, Mode=OneTime}" />
+            <Button Height="30" Width="100" Content="ZoomX1" Command="{Binding ZoomX1Command, Mode=OneTime}" />
+            <Button Height="30" Width="100" Content="OffsetCenter" Command="{Binding OffsetCenterCommand, Mode=OneTime}" />
+        </StackPanel>
+        
+        <ScrollViewer x:Name="MainScrollViewer"
+                      Style="{StaticResource ScrollViewerImageStyleKey}"
+                      v:ImageScrollViewer.ZoomPayload="{Binding ImageZoomPayload.Value, Mode=TwoWay}"
+                      v:ImageScrollViewer.ScrollOffsetCenter="{Binding ImageScrollOffsetCenter.Value, Mode=TwoWay}" >
+
+            <Image x:Name="MainImage"
+                   Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}" />
+
+        </ScrollViewer>
+
+        <Canvas x:Name="ThumbCanvas"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Margin="5,5,0,0"
+                Visibility="Collapsed"
+                Width="{Binding ElementName=Thumbnail, Path=ActualWidth}"
+                Height="{Binding ElementName=Thumbnail, Path=ActualHeight}" >
+
+            <Image x:Name="Thumbnail"
+                   Width="100"
+                   Stretch="Uniform"
+                   Source="{Binding ImageSource.Value, Mode=OneWay}" />
+            
+            <Path Fill="#7FFFFFFF">
+                <Path.Data>
+                    <CombinedGeometry x:Name="CombinedGeometry"
+                                      GeometryCombineMode="Xor" />
+                </Path.Data>
+            </Path>
+
+            <Thumb x:Name="ThumbViewport"
+                   MinHeight="4"
+                   MinWidth="4" >
+                <Thumb.Template>
+                    <ControlTemplate TargetType="{x:Type Thumb}">
+                        <Border BorderBrush="Red"
+                                BorderThickness="2"
+                                Background="Transparent" />
+                    </ControlTemplate>
+                </Thumb.Template>
+            </Thumb>
+        </Canvas>
+    </Grid>
+
+</UserControl>
