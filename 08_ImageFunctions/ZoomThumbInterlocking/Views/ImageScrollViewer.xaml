@@ -39,17 +39,17 @@
             <Button Height="30" Width="100" Content="OffsetCenter" Command="{Binding OffsetCenterCommand, Mode=OneTime}" />
         </StackPanel>
 
-        <ScrollViewer Grid.Row="1"
-                      x:Name="MainScrollViewer"
-                      Style="{StaticResource ScrollViewerImageStyleKey}"
-                      v:ImageScrollViewer.ZoomPayload="{Binding ImageZoomPayload.Value, Mode=TwoWay}"
-                      v:ImageScrollViewer.ScrollOffsetCenterRatio="{Binding ImageScrollOffsetCenterRatio.Value, Mode=TwoWay}"
-                      v:ImageScrollViewer.IsImageViewerInterlock="{Binding IsImageViewerInterlock.Value, Mode=OneWay}" >
+        <v:ScrollImageViewer Grid.Row="1"
+                             x:Name="MainScrollViewer"
+                             Style="{StaticResource ScrollViewerImageStyleKey}"
+                             v:ImageScrollViewer.ZoomPayload="{Binding ImageZoomPayload.Value, Mode=TwoWay}"
+                             v:ImageScrollViewer.ScrollOffsetCenterRatio="{Binding ImageScrollOffsetCenterRatio.Value, Mode=TwoWay}"
+                             v:ImageScrollViewer.IsImageViewerInterlock="{Binding IsImageViewerInterlock.Value, Mode=OneWay}" >
 
             <Image x:Name="MainImage"
                    Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}" />
 
-        </ScrollViewer>
+        </v:ScrollImageViewer>
 
         <Canvas Grid.Row="1"
                 x:Name="ThumbCanvas"
