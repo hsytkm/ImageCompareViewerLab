@@ -1,16 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                    xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-                    xmlns:r="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.NET46"
-                    xmlns:v="clr-namespace:ZoomThumb.Views"
-                    xmlns:vmec="clr-namespace:ZoomThumb.ViewModels.EventConverters" >
+                    xmlns:v="clr-namespace:ZoomThumb.Views" >
 
     <!-- スクロールバー右下余白の色対応  http://aonasuzutsuki.hatenablog.jp/entry/2015/12/08/214214 -->
     <Style x:Key="ScrollViewerImageStyleKey"
            TargetType="ScrollViewer">
 
-        <!-- ScrollBarの表示はViewModelで管理するのでAutoにしない -->
+        <!-- ScrollBarの表示はCodeBehindで管理するのでAutoにしない -->
         <Setter Property="HorizontalScrollBarVisibility"
                 Value="Hidden" />
         <Setter Property="VerticalScrollBarVisibility"

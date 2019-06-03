@@ -7,6 +7,12 @@ namespace ZoomThumb.Views.Common
 {
     static class ViewHelper
     {
+        public static T GetChildControl<T>(object obj) where T : DependencyObject
+        {
+            if (obj is null) return default;
+            if (!(obj is DependencyObject d)) return default;
+            return GetChildControl<T>(d);
+        }
 
         public static T GetChildControl<T>(DependencyObject d) where T : DependencyObject
         {

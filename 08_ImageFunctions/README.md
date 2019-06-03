@@ -17,7 +17,8 @@
 
 ## ZoomThumbInterlocking
 
-	ZoomThumbCodeBehind2をベースに、左右画像で表示位置を連動させる
+	ZoomThumbCodeBehind2をベースに、左右画像で表示位置を連動させる。
+	結構がんばったけど、コードがめちゃくちゃ（特にxaml階層）なので捨てる。
 
 ## 参考にさせて頂いたページ
 

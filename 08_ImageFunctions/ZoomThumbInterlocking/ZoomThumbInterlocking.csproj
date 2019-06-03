@@ -111,6 +111,7 @@
     <Compile Include="ViewModels\EventConverters\DropEventToUriConverter.cs" />
     <Compile Include="ViewModels\ImageScrollViewerViewModel.cs" />
     <Compile Include="Views\Common\ViewHelper.cs" />
+    <Compile Include="Views\ImageBitmapScalingBehavior.cs" />
     <Compile Include="Views\ImageZoomMagnification.cs">
       <DependentUpon>ImageScrollViewer.xaml</DependentUpon>
     </Compile>
@@ -119,6 +120,7 @@
       <DependentUpon>ImageScrollViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MouseCaptureBehavior.cs" />
+    <Compile Include="Views\MouseHorizontalShiftBehavior.cs" />
     <Compile Include="Views\ScrollImageViewer.cs" />
     <Page Include="Views\ImageScrollViewer.xaml">
       <SubType>Designer</SubType>

@@ -37,7 +37,7 @@ namespace ZoomThumb.Views
         //private readonly ReactivePropertySlim<BitmapSource> ImageSource = new ReactivePropertySlim<BitmapSource>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private readonly ReactivePropertySlim<Size> ImageSourcePixelSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private readonly ReactivePropertySlim<Size> ImageViewActualSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
-        private readonly ReactivePropertySlim<int> MouseWheelZoomDelta = new ReactivePropertySlim<int>(mode: ReactivePropertyMode.None);
+        //private readonly ReactivePropertySlim<int> MouseWheelZoomDelta = new ReactivePropertySlim<int>(mode: ReactivePropertyMode.None);
 
         private readonly ReactivePropertySlim<Size> ScrollContentActualSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private readonly ReactivePropertySlim<Unit> ScrollContentMouseLeftDown = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
@@ -190,7 +190,7 @@ namespace ZoomThumb.Views
             };
 
             // ThumbCanvasのPreviewMouseWheelはMainScrollViewerに委託  ◆よりスマートな記述ありそう
-            ThumbCanvas.PreviewMouseWheel += new MouseWheelEventHandler(MainScrollViewer_PreviewMouseWheel);
+            //ThumbCanvas.PreviewMouseWheel += new MouseWheelEventHandler(MainScrollViewer_PreviewMouseWheel);
 
             ThumbViewport.DragDelta += new DragDeltaEventHandler(OnDragDelta);
 
@@ -471,12 +471,12 @@ namespace ZoomThumb.Views
                 || Math.Floor(imageViewActualSize.Height) > Math.Floor(ScrollContentActualSize.Value.Height));
 
             // 全画面よりズームインしてたらサムネイル
-            ThumbCanvas.Visibility = isZoomOverEntire ? Visibility.Visible : Visibility.Collapsed;
+            //ThumbCanvas.Visibility = isZoomOverEntire ? Visibility.Visible : Visibility.Collapsed;
 
             // 全画面よりズームアウトしたらスクロールバー位置を初期化
             if (!isZoomOverEntire) ImageScrollOffsetRatio.Value = DefaultScrollOffsetRatio;
 
-            UpdateBitmapScalingMode(image);
+            //UpdateBitmapScalingMode(image);
 
             // View→ViewModel
             var magRatio = GetCurrentZoomMagRatio(imageViewActualSize, ImageSourcePixelSize.Value);
@@ -484,42 +484,42 @@ namespace ZoomThumb.Views
             SetZoomPayload(MainScrollViewer, payload);
         }
 
-        // レンダリングオプションの指定(100%以上の拡大ズームならPixelが見える設定にする)
-        private void UpdateBitmapScalingMode(Image image)
-        {
-            if (!(image.Source is BitmapSource bitmap)) return;
+        //// レンダリングオプションの指定(100%以上の拡大ズームならPixelが見える設定にする)
+        //private void UpdateBitmapScalingMode(Image image)
+        //{
+        //    if (!(image.Source is BitmapSource bitmap)) return;
 
-            var mode = (image.ActualWidth < bitmap.PixelWidth) || (image.ActualHeight < bitmap.PixelHeight)
-                ? BitmapScalingMode.HighQuality : BitmapScalingMode.NearestNeighbor;
+        //    var mode = (image.ActualWidth < bitmap.PixelWidth) || (image.ActualHeight < bitmap.PixelHeight)
+        //        ? BitmapScalingMode.HighQuality : BitmapScalingMode.NearestNeighbor;
 
-            RenderOptions.SetBitmapScalingMode(image, mode);
-        }
+        //    RenderOptions.SetBitmapScalingMode(image, mode);
+        //}
 
         #endregion
 
         #region MouseWheelZoom
 
-        private void MainScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                MouseWheelZoomDelta.Value = e.Delta;
+        //private void MainScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        //{
+        //    if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+        //    {
+        //        MouseWheelZoomDelta.Value = e.Delta;
 
-                // 最大ズームでホイールすると画像の表示エリアが移動しちゃうので止める
-                e.Handled = true;
-            }
-            else if (Keyboard.Modifiers == ModifierKeys.Shift)
-            {
-                if (!(sender is ScrollViewer scrview)) return;
+        //        // 最大ズームでホイールすると画像の表示エリアが移動しちゃうので止める
+        //        e.Handled = true;
+        //    }
+        //    else if (Keyboard.Modifiers == ModifierKeys.Shift)
+        //    {
+        //        if (!(sender is ScrollViewer scrview)) return;
 
-                if (e.Delta < 0)
-                    scrview.LineRight();
-                else
-                    scrview.LineLeft();
+        //        if (e.Delta < 0)
+        //            scrview.LineRight();
+        //        else
+        //            scrview.LineLeft();
 
-                e.Handled = true;
-            }
-        }
+        //        e.Handled = true;
+        //    }
+        //}
         
         #endregion
 

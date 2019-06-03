@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ZoomThumb.Views.Common;
 
@@ -43,6 +44,28 @@ namespace ZoomThumb.Views
         private readonly ReactivePropertySlim<Size> ImageViewActualSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
         private readonly ReactivePropertySlim<int> MouseWheelZoomDelta = new ReactivePropertySlim<int>(mode: ReactivePropertyMode.None);
 
+        #region VisibilityReducedImageProperty
+
+        // ズーム時の縮小画像表示フラグ
+        private static readonly string VisibilityReducedImage = nameof(VisibilityReducedImage);
+
+        private static readonly DependencyProperty VisibilityReducedImageProperty =
+            DependencyProperty.Register(
+                nameof(VisibilityReducedImage),
+                typeof(Visibility),
+                typeof(ScrollImageViewer),
+                new FrameworkPropertyMetadata(
+                    Visibility.Collapsed,
+                    FrameworkPropertyMetadataOptions.None));
+
+        public static Visibility GetVisibilityReducedImage(DependencyObject depObj) =>
+            (Visibility)depObj.GetValue(VisibilityReducedImageProperty);
+
+        public static void SetVisibilityReducedImage(DependencyObject depObj, Visibility value) =>
+            depObj.SetValue(VisibilityReducedImageProperty, value);
+
+        #endregion
+
         public ScrollImageViewer()
         {
             this.Loaded += (_, __) =>
@@ -71,14 +94,16 @@ namespace ZoomThumb.Views
                 mainImage.SizeChanged += (sender, e) =>
                 {
                     ImageViewActualSize.Value = e.NewSize; //=ActualSize
-                    //MainImage_SizeChanged(sender, e); ♪
+                    MainImage_SizeChanged(sender, e);
                 };
 
 
+                if (VisualTreeHelper.GetParent(this) is Panel parentPanel)
+                {
+                    // サムネイルコントロール(Canvas)でもズーム操作を有効にするため、親パネルに添付イベントを貼る
+                    parentPanel.AddHandler(PreviewMouseWheelEvent, new MouseWheelEventHandler(MainScrollViewer_PreviewMouseWheel));
+                }
             };
-
-            this.PreviewMouseWheel += new MouseWheelEventHandler(MainScrollViewer_PreviewMouseWheel);
-
 
             // ズーム倍率変更
             _ImageZoomMagni.CombineLatest(ImageSourcePixelSize, ScrollContentActualSize,
@@ -116,8 +141,6 @@ namespace ZoomThumb.Views
                 });
 
             #endregion
-
-
 
         }
 
@@ -208,20 +231,34 @@ namespace ZoomThumb.Views
                 // 最大ズームでホイールすると画像の表示エリアが移動しちゃうので止める
                 e.Handled = true;
             }
-            else if (Keyboard.Modifiers == ModifierKeys.Shift)
-            {
-                if (!(sender is ScrollViewer scrview)) return;
-
-                if (e.Delta < 0)
-                    scrview.LineRight();
-                else
-                    scrview.LineLeft();
-
-                e.Handled = true;
-            }
         }
 
         #endregion
 
+        #region ImageSizeChanged
+
+        // 画像のサイズ変更(ズーム操作)
+        private void MainImage_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var imageViewActualSize = e.NewSize;
+
+            // 全画面表示よりもズームしてるかフラグ(e.NewSize == Size of MainImage)
+            // 小数点以下がちょいずれして意図通りの判定にならないことがあるので整数化する
+            bool isZoomOverEntire = (Math.Floor(imageViewActualSize.Width) > Math.Floor(ScrollContentActualSize.Value.Width)
+                || Math.Floor(imageViewActualSize.Height) > Math.Floor(ScrollContentActualSize.Value.Height));
+
+            // 全画面よりズームインしてたら縮小画像を表示
+            SetVisibilityReducedImage(this, isZoomOverEntire ? Visibility.Visible : Visibility.Collapsed);
+
+            //// 全画面よりズームアウトしたらスクロールバー位置を初期化
+            //if (!isZoomOverEntire) ImageScrollOffsetRatio.Value = DefaultScrollOffsetRatio; ♪
+
+            //// View→ViewModel
+            //var magRatio = GetCurrentZoomMagRatio(imageViewActualSize, ImageSourcePixelSize.Value); ♪
+            //var payload = new ImageZoomPayload(MainScrollViewer.ImageZoomMagni.IsEntire, magRatio); ♪
+            //SetZoomPayload(MainScrollViewer, payload); ♪
+        }
+
+        #endregion
     }
 }
