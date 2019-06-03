@@ -34,5 +34,19 @@ namespace ZoomThumb.Views.Common
             return new Size(source.PixelWidth, source.PixelHeight);
         }
 
+        public static bool IsValidValue(this double d)
+        {
+            if (double.IsNaN(d)) return false;
+            if (d == 0.0) return false;
+            return true;
+        }
+
+        public static bool IsValidValue(this Size size)
+        {
+            if (!size.Width.IsValidValue()) return false;
+            if (!size.Height.IsValidValue()) return false;
+            return true;
+        }
+
     }
 }

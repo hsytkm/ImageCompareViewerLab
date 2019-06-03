@@ -250,25 +250,22 @@ namespace ZoomThumb.Views.Controls
                 };
 
 
-                var mainImage = ViewHelper.GetChildControl<Image>(this);
-                if (mainImage is null) throw new NullReferenceException("Not Found Image Control. Invalid xaml");
-
-                mainImage.TargetUpdated += (sender, e) =>
+                MainImage.TargetUpdated += (sender, e) =>
                 {
                     if (!(e.OriginalSource is Image image)) return;
                     imageSourcePixelSize.Value = ViewHelper.GetImageSourcePixelSize(image);
                 };
-                mainImage.SizeChanged += (sender, e) =>
+                MainImage.SizeChanged += (sender, e) =>
                 {
                     imageViewActualSize.Value = e.NewSize; //=ActualSize
                     MainImage_SizeChanged(sender, e);
                 };
-                mainImage.MouseMove += (sender, e) =>
+                MainImage.MouseMove += (sender, e) =>
                 {
                     double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
 
                     // 原画像のピクセル位置を返す
-                    if (imageViewActualSize.Value.Width != 0.0 && imageViewActualSize.Value.Height != 0.0)
+                    if (imageViewActualSize.Value.IsValidValue())
                     {
                         var cursorPoint = e.GetPosition((IInputElement)sender);
                         var x = Math.Round(cursorPoint.X * imageSourcePixelSize.Value.Width / imageViewActualSize.Value.Width);
@@ -372,6 +369,7 @@ namespace ZoomThumb.Views.Controls
 
                     // 全画面表示時を跨ぐ場合は全画面表示にする
                     var enrireZoomMag = GetEntireZoomMagRatio(scrollContentActualSize.Value, imageSourcePixelSize.Value);
+
                     if ((oldImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < newImageZoomMag.MagnificationRatio)
                         || (newImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < oldImageZoomMag.MagnificationRatio))
                     {
@@ -393,10 +391,13 @@ namespace ZoomThumb.Views.Controls
                     (offset, sview, iview) => (offset, sview, iview))
                 .Subscribe(x =>
                 {
-                    var width = Math.Max(0.0, x.offset.Width * x.iview.Width - (x.sview.Width / 2.0));
-                    var height = Math.Max(0.0, x.offset.Height * x.iview.Height - (x.sview.Height / 2.0));
-                    var scrollViewer = MainScrollViewer;
+                    var sviewHalf = new Size(x.sview.Width / 2.0, x.sview.Height / 2.0);
+                    if (!sviewHalf.IsValidValue()) return;
 
+                    var width = Math.Max(0.0, x.offset.Width * x.iview.Width - sviewHalf.Width);
+                    var height = Math.Max(0.0, x.offset.Height * x.iview.Height - sviewHalf.Height);
+
+                    var scrollViewer = MainScrollViewer;
                     scrollViewer.ScrollToHorizontalOffset(width);
                     scrollViewer.ScrollToVerticalOffset(height);
 
@@ -417,6 +418,8 @@ namespace ZoomThumb.Views.Controls
                 {
                     double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
 
+                    if (!imageViewActualSize.Value.IsValidValue()) return;
+
                     // マウスドラッグ中の表示位置のシフト
                     double shiftRatioX = shift.X / imageViewActualSize.Value.Width;
                     double shiftRatioY = shift.Y / imageViewActualSize.Value.Height;
@@ -436,7 +439,7 @@ namespace ZoomThumb.Views.Controls
 
         private void UpdateImageZoom(ImageZoomMagnification zoomMagnification, Size imageSourceSize, Size scrollPresenterSize)
         {
-            if (imageSourceSize.Width == 0.0 || imageSourceSize.Height == 0.0) return;
+            if (!imageSourceSize.IsValidValue()) return;
 
             var scrollViewer = MainScrollViewer;
             var image = MainImage;
@@ -603,7 +606,7 @@ namespace ZoomThumb.Views.Controls
             // スクロールの範囲(割合)を更新
             scrollOffsetRateRange = UpdateScrollOffsetRateRange(e);
 
-            if (imageViewActualSize.Value.Width != 0.0 && imageViewActualSize.Value.Height != 0.0)
+            if (imageViewActualSize.Value.IsValidValue()) return;
             {
                 var size = new Size(
                     (e.HorizontalOffset + e.ViewportWidth / 2.0) / imageViewActualSize.Value.Width,
@@ -630,7 +633,7 @@ namespace ZoomThumb.Views.Controls
             {
                 return nolimit;
             }
-            else if (e.ExtentWidth != 0.0 && e.ExtentHeight != 0.0)
+            else if (e.ExtentWidth.IsValidValue() && e.ExtentHeight.IsValidValue())
             {
                 var widthRateMin = (e.ViewportWidth / 2.0) / e.ExtentWidth;
                 var widthRateMax = (e.ExtentWidth - e.ViewportWidth / 2.0) / e.ExtentWidth;
