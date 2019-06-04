@@ -21,6 +21,15 @@ namespace ZoomThumb.Models
             get => _CanVisibleReducedImage;
             set => SetProperty(ref _CanVisibleReducedImage, value);
         }
+
+        // 画像上のサンプリング枠の表示フラグ(FALSE=表示しない)
+        private bool _IsVisibleImageOverlapSamplingFrame;
+        public bool IsVisibleImageOverlapSamplingFrame
+        {
+            get => _IsVisibleImageOverlapSamplingFrame;
+            set => SetProperty(ref _IsVisibleImageOverlapSamplingFrame, value);
+        }
         
+
     }
 }

@@ -23,6 +23,9 @@ namespace ZoomThumb.ViewModels
         // 縮小画像の表示可能フラグ(FALSE=表示禁止)
         public ReadOnlyReactiveProperty<bool> CanVisibleReducedImage { get; }
 
+        // 画像上のサンプリング枠の表示フラグ(FALSE=表示しない)
+        public ReadOnlyReactiveProperty<bool> IsVisibleImageOverlapSamplingFrame { get; }
+        
         // ズーム倍率の管理(TwoWay)
         public ReactiveProperty<ImageZoomPayload> ImageZoomPayload { get; } =
             new ReactiveProperty<ImageZoomPayload>(mode: ReactivePropertyMode.DistinctUntilChanged);
@@ -46,6 +49,7 @@ namespace ZoomThumb.ViewModels
 
             IsImageViewerInterlock = viewSettings.ObserveProperty(x => x.IsImageViewerInterlock).ToReadOnlyReactiveProperty();
             CanVisibleReducedImage = viewSettings.ObserveProperty(x => x.CanVisibleReducedImage).ToReadOnlyReactiveProperty();
+            IsVisibleImageOverlapSamplingFrame = viewSettings.ObserveProperty(x => x.IsVisibleImageOverlapSamplingFrame).ToReadOnlyReactiveProperty();
 
             // 画像管理クラスのインデックスを取得
             int index = mainImages.GetImageIndex();

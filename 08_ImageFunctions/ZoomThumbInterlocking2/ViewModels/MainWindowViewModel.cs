@@ -11,6 +11,7 @@ namespace ZoomThumb.ViewModels
     {
         public ReactiveProperty<bool> IsImageViewerInterlock { get; } = new ReactiveProperty<bool>(true);
         public ReactiveProperty<bool> CanVisibleReducedImage { get; } = new ReactiveProperty<bool>(true);
+        public ReactiveProperty<bool> IsVisibleImageOverlapSamplingFrame { get; } = new ReactiveProperty<bool>(true);
 
         public MainWindowViewModel(IContainerExtension container, IRegionManager regionManager)
         {
@@ -18,6 +19,7 @@ namespace ZoomThumb.ViewModels
 
             IsImageViewerInterlock.Subscribe(x => viewSettings.IsImageViewerInterlock = x);
             CanVisibleReducedImage.Subscribe(x => viewSettings.CanVisibleReducedImage = x);
+            IsVisibleImageOverlapSamplingFrame.Subscribe(x => viewSettings.IsVisibleImageOverlapSamplingFrame = x);
 
         }
 

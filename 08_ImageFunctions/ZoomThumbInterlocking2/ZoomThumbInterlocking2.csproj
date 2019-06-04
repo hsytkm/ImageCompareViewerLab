@@ -113,6 +113,9 @@
     <Compile Include="ViewModels\ImageScrollControlViewModel.cs" />
     <Compile Include="Views\Common\ViewHelper.cs" />
     <Compile Include="Views\Behaviors\ImageBitmapScalingBehavior.cs" />
+    <Compile Include="Views\Controls\ImageOverlapSamplingFrame.xaml.cs">
+      <DependentUpon>ImageOverlapSamplingFrame.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\ReducedImageCanvas.xaml.cs">
       <DependentUpon>ReducedImageCanvas.xaml</DependentUpon>
     </Compile>
@@ -127,6 +130,10 @@
     </Compile>
     <Compile Include="Views\Behaviors\MouseCaptureBehavior.cs" />
     <Compile Include="Views\Behaviors\MouseHorizontalShiftBehavior.cs" />
+    <Page Include="Views\Controls\ImageOverlapSamplingFrame.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Controls\ReducedImageCanvas.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

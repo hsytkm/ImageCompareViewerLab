@@ -4,7 +4,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:v="clr-namespace:ZoomThumb.Views"
+             xmlns:vc="clr-namespace:ZoomThumb.Views.Controls"
              xmlns:vb="clr-namespace:ZoomThumb.Views.Behaviors"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -25,14 +25,22 @@
             <vb:MouseHorizontalShiftBehavior />
         </i:Interaction.Behaviors>
 
-        <Image x:Name="MainImage"
-               Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}" >
-            <i:Interaction.Behaviors>
-                <!-- 画像ズーム時のスケーリング更新 -->
-                <vb:ImageBitmapScalingBehavior />
-            </i:Interaction.Behaviors>
-        </Image>
-
+        <Grid>
+            <Image x:Name="MainImage"
+                   Source="{Binding ImageSource.Value, Mode=OneWay, NotifyOnTargetUpdated=True}" >
+                <i:Interaction.Behaviors>
+                    <!-- 画像ズーム時のスケーリング更新 -->
+                    <vb:ImageBitmapScalingBehavior />
+                </i:Interaction.Behaviors>
+            </Image>
+            
+            <!--
+            <vc:ImageOverlapSamplingFrame
+                ImageViewActualSize="{Binding ImageViewActualSize, ElementName=root, Mode=OneWay}"
+                />
+            -->
+            
+        </Grid>
     </ScrollViewer>
 
 </UserControl>
