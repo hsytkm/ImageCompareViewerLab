@@ -1,7 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using ZoomThumb.Views.Common;
 
 namespace ZoomThumb.Views.Controls
@@ -40,15 +42,34 @@ namespace ZoomThumb.Views.Controls
             this.Loaded += (_, __) =>
             {
                 var scrollViewer = ViewHelper.GetChildControl<ScrollViewer>(this.Parent);
-                ScrollViewer = scrollViewer;
+                if (scrollViewer != null)
+                {
+                    // 主画像のスクロール時にViewportを更新する
+                    // +=とAddHandlerで同じ動作っぽい(stackoverflow) https://stackoverflow.com/questions/2146982/uielement-addhandler-vs-event-definition
+                    //scrollViewer?.AddHandler(ScrollViewer.ScrollChangedEvent, new ScrollChangedEventHandler(UpdateThumbnailViewport));
+                    scrollViewer.ScrollChanged += UpdateThumbnailViewport;
+                    ScrollViewer = scrollViewer;
+                }
 
-                MainImage = ViewHelper.GetChildControl<Image>(scrollViewer);
+                var mainImage = ViewHelper.GetChildControl<Image>(scrollViewer);
+                if (mainImage != null)
+                {
+                    // AddHandlerでの実装方法が分からなかった
+                    mainImage.TargetUpdated += ThumbImage_TargetUpdated;
+                    MainImage = mainImage;
+                }
 
-                // 主画像のスクロール時にViewportを更新する
-                scrollViewer?.AddHandler(ScrollViewer.ScrollChangedEvent, new ScrollChangedEventHandler(UpdateThumbnailViewport));
             };
 
             ThumbViewport.DragDelta += new DragDeltaEventHandler(OnDragDelta);
+        }
+
+        // 主画像の更新時に縮小画像も更新
+        private void ThumbImage_TargetUpdated(object sender, DataTransferEventArgs e)
+        {
+            if (!(e.OriginalSource is Image image)) return;
+            if (!(image?.Source is BitmapSource source)) return;
+            ThumbImage.Source = source;
         }
 
         private void OnDragDelta(object sender, DragDeltaEventArgs e)

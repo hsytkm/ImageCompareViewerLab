@@ -14,8 +14,7 @@
 
         <Image x:Name="ThumbImage"
                Width="100"
-               Stretch="Uniform"
-               Source="{Binding ImageSource.Value, Mode=OneWay}" />
+               Stretch="Uniform" />
             
         <Path Fill="#7FFFFFFF">
             <Path.Data>

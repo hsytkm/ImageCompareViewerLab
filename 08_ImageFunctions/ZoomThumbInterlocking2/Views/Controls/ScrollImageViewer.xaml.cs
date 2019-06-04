@@ -275,7 +275,7 @@ namespace ZoomThumb.Views.Controls
                 if (VisualTreeHelper.GetParent(this) is Panel parentPanel)
                 {
                     // サムネイルコントロール(Canvas)でもズーム操作を有効にするため、親パネルに添付イベントを貼る
-                    parentPanel.AddHandler(PreviewMouseWheelEvent, new MouseWheelEventHandler(ScrollImageViewer_PreviewMouseWheel));
+                    parentPanel.PreviewMouseWheel += ScrollImageViewer_PreviewMouseWheel;
                 }
             };
 
