@@ -20,10 +20,12 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <CheckBox Grid.Row="0"
-                  Margin="10,5,0,0"
-                  IsChecked="{Binding IsImageViewerInterlock.Value, Mode=TwoWay}"
-                  Content="各画像表示の連動フラグ" />
+        <StackPanel Grid.Row="0" Margin="10,5,0,0" Orientation="Horizontal">
+            <CheckBox IsChecked="{Binding IsImageViewerInterlock.Value, Mode=TwoWay}"
+                      Content="各画像表示の連動フラグ" />
+            <CheckBox IsChecked="{Binding CanVisibleReducedImage.Value, Mode=TwoWay}"
+                      Content="縮小画像の表示フラグ" />
+        </StackPanel>
 
         <Grid Grid.Row="1" >
             <Grid.ColumnDefinitions>

@@ -9,13 +9,16 @@ namespace ZoomThumb.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
-        public ReactiveProperty<bool> IsImageViewerInterlock { get; set; } = new ReactiveProperty<bool>(true);
+        public ReactiveProperty<bool> IsImageViewerInterlock { get; } = new ReactiveProperty<bool>(true);
+        public ReactiveProperty<bool> CanVisibleReducedImage { get; } = new ReactiveProperty<bool>(true);
 
         public MainWindowViewModel(IContainerExtension container, IRegionManager regionManager)
         {
-            var mainImages = container.Resolve<MainImages>();
+            var viewSettings = container.Resolve<ViewSettings>();
 
-            IsImageViewerInterlock.Subscribe(x => mainImages.IsImageViewerInterlock = x);
+            IsImageViewerInterlock.Subscribe(x => viewSettings.IsImageViewerInterlock = x);
+            CanVisibleReducedImage.Subscribe(x => viewSettings.CanVisibleReducedImage = x);
+
         }
 
     }

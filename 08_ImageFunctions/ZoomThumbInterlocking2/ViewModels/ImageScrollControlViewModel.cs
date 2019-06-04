@@ -20,6 +20,9 @@ namespace ZoomThumb.ViewModels
         // 各画像の表示エリアを連動させるかフラグ(FALSE=連動しない)
         public ReadOnlyReactiveProperty<bool> IsImageViewerInterlock { get; }
 
+        // 縮小画像の表示可能フラグ(FALSE=表示禁止)
+        public ReadOnlyReactiveProperty<bool> CanVisibleReducedImage { get; }
+
         // ズーム倍率の管理(TwoWay)
         public ReactiveProperty<ImageZoomPayload> ImageZoomPayload { get; } =
             new ReactiveProperty<ImageZoomPayload>(mode: ReactivePropertyMode.DistinctUntilChanged);
@@ -39,8 +42,10 @@ namespace ZoomThumb.ViewModels
         public ImageScrollControlViewModel(IContainerExtension container, IRegionManager regionManager)
         {
             var mainImages = container.Resolve<MainImages>();
+            var viewSettings = container.Resolve<ViewSettings>();
 
-            IsImageViewerInterlock = mainImages.ObserveProperty(x => x.IsImageViewerInterlock).ToReadOnlyReactiveProperty();
+            IsImageViewerInterlock = viewSettings.ObserveProperty(x => x.IsImageViewerInterlock).ToReadOnlyReactiveProperty();
+            CanVisibleReducedImage = viewSettings.ObserveProperty(x => x.CanVisibleReducedImage).ToReadOnlyReactiveProperty();
 
             // 画像管理クラスのインデックスを取得
             int index = mainImages.GetImageIndex();

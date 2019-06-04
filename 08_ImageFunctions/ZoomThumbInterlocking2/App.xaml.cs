@@ -21,6 +21,7 @@ namespace ZoomThumb
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<MainImages>();
+            containerRegistry.RegisterSingleton<ViewSettings>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

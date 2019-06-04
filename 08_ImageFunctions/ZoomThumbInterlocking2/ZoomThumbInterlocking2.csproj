@@ -108,13 +108,18 @@
     </ApplicationDefinition>
     <Compile Include="Models\MainImage.cs" />
     <Compile Include="Models\MainImages.cs" />
+    <Compile Include="Models\ViewSettings.cs" />
     <Compile Include="ViewModels\EventConverters\DropEventToUriConverter.cs" />
     <Compile Include="ViewModels\ImageScrollControlViewModel.cs" />
     <Compile Include="Views\Common\ViewHelper.cs" />
     <Compile Include="Views\Behaviors\ImageBitmapScalingBehavior.cs" />
+    <Compile Include="Views\Controls\ReducedImageCanvas.xaml.cs">
+      <DependentUpon>ReducedImageCanvas.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Controls\ScrollImageViewer.xaml.cs">
       <DependentUpon>ScrollImageViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Converters\BooleansToVisibilityConverter.cs" />
     <Compile Include="Views\ImageZoomMagnification.cs" />
     <Compile Include="ViewModels\ImageZoomPayload.cs" />
     <Compile Include="Views\ImageScrollControl.xaml.cs">
@@ -122,6 +127,10 @@
     </Compile>
     <Compile Include="Views\Behaviors\MouseCaptureBehavior.cs" />
     <Compile Include="Views\Behaviors\MouseHorizontalShiftBehavior.cs" />
+    <Page Include="Views\Controls\ReducedImageCanvas.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Controls\ScrollImageViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

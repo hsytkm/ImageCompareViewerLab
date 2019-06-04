@@ -9,12 +9,17 @@
              xmlns:v="clr-namespace:ZoomThumb.Views"
              xmlns:vb="clr-namespace:ZoomThumb.Views.Behaviors"
              xmlns:vc="clr-namespace:ZoomThumb.Views.Controls"
+             xmlns:vcnv="clr-namespace:ZoomThumb.Views.Converters"
              xmlns:vmec="clr-namespace:ZoomThumb.ViewModels.EventConverters"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
 
+    <UserControl.Resources>
+        <vcnv:BooleansToVisibilityConverter x:Key="BooleansToVisibilityConverter" />
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -39,48 +44,33 @@
                               ScrollOffsetCenterRatio="{Binding ImageScrollOffsetCenterRatio.Value, Mode=TwoWay}"
                               />
 
-        <!--
-                              ImageCursorPoint="{Binding PointTest.Value, Mode=OneWayToSource}"
-                              ScrollContentActualSize="{Binding SizeTest.Value, Mode=OneWayToSource}"
-                              ImageSourcePixelSize="{Binding SizeTest.Value, Mode=OneWayToSource}"
-                              ImageViewActualSize="{Binding SizeTest.Value, Mode=OneWayToSource}"
+        <!-- カーソル位置のRGB取得用 ImageCursorPoint="{Binding PointTest.Value, Mode=OneWayToSource}" -->
+        <!-- 以下、実装したけどいらんかも
+                ScrollContentActualSize="{Binding SizeTest.Value, Mode=OneWayToSource}"
+                ImageSourcePixelSize="{Binding SizeTest.Value, Mode=OneWayToSource}"
+                ImageViewActualSize="{Binding SizeTest.Value, Mode=OneWayToSource}"
         -->
-        
-        <!--
-        <Canvas Grid.Row="1"
-                x:Name="ThumbCanvas"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Top"
-                Margin="5,5,0,0"
-                Visibility="{Binding VisibilityReducedImage, ElementName=MainScrollViewer, Mode=OneWay}"
-                Width="{Binding ElementName=Thumbnail, Path=ActualWidth}"
-                Height="{Binding ElementName=Thumbnail, Path=ActualHeight}" >
 
-            <Image x:Name="Thumbnail"
-                   Width="100"
-                   Stretch="Uniform"
-                   Source="{Binding ImageSource.Value, Mode=OneWay}" />
-            
-            <Path Fill="#7FFFFFFF">
-                <Path.Data>
-                    <CombinedGeometry x:Name="CombinedGeometry"
-                                      GeometryCombineMode="Xor" />
-                </Path.Data>
-            </Path>
+        <vc:ReducedImageCanvas
+            Grid.Row="1"
+            ScrollOffsetCenterRatioRequest="{Binding ScrollOffsetCenterRatio, ElementName=MainScrollImageViewer, Mode=OneWayToSource}"
+            >
 
-            <Thumb x:Name="ThumbViewport"
-                   MinHeight="4"
-                   MinWidth="4" >
-                <Thumb.Template>
-                    <ControlTemplate TargetType="{x:Type Thumb}">
-                        <Border BorderBrush="Red"
-                                BorderThickness="2"
-                                Background="Transparent" />
-                    </ControlTemplate>
-                </Thumb.Template>
-            </Thumb>
-        </Canvas>
-        -->
+            <vc:ReducedImageCanvas.Style>
+                <Style TargetType="vc:ReducedImageCanvas">
+                    <Setter Property="Visibility">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource BooleansToVisibilityConverter}">
+                                <MultiBinding.Bindings>
+                                    <Binding Path="CanVisibleReducedImage.Value" Mode="OneWay" />
+                                    <Binding Path="IsVisibleReducedImage" ElementName="MainScrollImageViewer" Mode="OneWay" />
+                                </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </vc:ReducedImageCanvas.Style>
+        </vc:ReducedImageCanvas>
 
     </Grid>
 

@@ -5,14 +5,6 @@ namespace ZoomThumb.Models
 {
     class MainImages : BindableBase
     {
-        // 各画像の表示エリアを連動させるかフラグ(FALSE=連動しない)
-        private bool _IsImageViewerInterlock;
-        public bool IsImageViewerInterlock
-        {
-            get => _IsImageViewerInterlock;
-            set => SetProperty(ref _IsImageViewerInterlock, value);
-        }
-
         private static readonly string ImagePath1 = @"C:/data/image1.jpg";
         private static readonly string ImagePath2 = @"C:/data/image2.jpg";
         private static readonly string ImagePath3 = @"C:/data/image3.jpg";
