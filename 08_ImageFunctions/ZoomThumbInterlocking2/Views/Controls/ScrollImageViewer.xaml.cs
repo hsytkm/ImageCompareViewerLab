@@ -54,8 +54,6 @@ namespace ZoomThumb.Views.Controls
         #region ZoomPayloadProperty(TwoWay)
 
         // 画像ズーム倍率
-        private static readonly string ZoomPayload = nameof(ZoomPayload);
-
         private static readonly DependencyProperty ZoomPayloadProperty =
             DependencyProperty.Register(
                 nameof(ZoomPayload),
@@ -75,22 +73,20 @@ namespace ZoomThumb.Views.Controls
                         }
                     }));
 
-        public static ImageZoomPayload GetZoomPayload(DependencyObject depObj) =>
-            (ImageZoomPayload)depObj.GetValue(ZoomPayloadProperty);
-
-        public static void SetZoomPayload(DependencyObject depObj, ImageZoomPayload value) =>
-            depObj.SetValue(ZoomPayloadProperty, value);
+        public ImageZoomPayload ZoomPayload
+        {
+            get => (ImageZoomPayload)GetValue(ZoomPayloadProperty);
+            set => SetValue(ZoomPayloadProperty, value);
+        }
 
         #endregion
 
         #region ScrollOffsetCenterRatioProperty(TwoWay)
 
         // スクロールバーの位置割合(0~1)
-        private static readonly string ScrollOffsetCenterRatio = nameof(ScrollOffsetCenterRatio);
-
         private static readonly DependencyProperty ScrollOffsetCenterRatioProperty =
-            DependencyProperty.RegisterAttached(
-                ScrollOffsetCenterRatio,
+            DependencyProperty.Register(
+                nameof(ScrollOffsetCenterRatio),
                 typeof(Size),
                 typeof(ScrollImageViewer),
                 new FrameworkPropertyMetadata(
@@ -107,19 +103,17 @@ namespace ZoomThumb.Views.Controls
                         }
                     }));
 
-        public static Size GetScrollOffsetCenterRatio(DependencyObject depObj) =>
-            (Size)depObj.GetValue(ScrollOffsetCenterRatioProperty);
-
-        public static void SetScrollOffsetCenterRatio(DependencyObject depObj, Size value) =>
-            depObj.SetValue(ScrollOffsetCenterRatioProperty, value);
+        public Size ScrollOffsetCenterRatio
+        {
+            get => (Size)GetValue(ScrollOffsetCenterRatioProperty);
+            set => SetValue(ScrollOffsetCenterRatioProperty, value);
+        }
 
         #endregion
 
         #region ScrollContentActualSizeProperty(OneWayToSource) ※いらんかも
 
         // スクロールバー除いた領域の実サイズ
-        private static readonly string ScrollContentActualSize = nameof(ScrollContentActualSize);
-
         private static readonly DependencyProperty ScrollContentActualSizeProperty =
             DependencyProperty.Register(
                 nameof(ScrollContentActualSize),
@@ -129,19 +123,17 @@ namespace ZoomThumb.Views.Controls
                     default(Size),
                     FrameworkPropertyMetadataOptions.None));
 
-        public static Size GetScrollContentActualSize(DependencyObject depObj) =>
-            (Size)depObj.GetValue(ScrollContentActualSizeProperty);
-
-        public static void SetScrollContentActualSize(DependencyObject depObj, Size value) =>
-            depObj.SetValue(ScrollContentActualSizeProperty, value);
+        public Size ScrollContentActualSize
+        {
+            get => (Size)GetValue(ScrollContentActualSizeProperty);
+            set => SetValue(ScrollContentActualSizeProperty, value);
+        }
 
         #endregion
 
         #region ImageViewActualSizeProperty(OneWayToSource) ※いらんかも
 
         // Imageコントロールの実サイズ
-        private static readonly string ImageViewActualSize = nameof(ImageViewActualSize);
-
         private static readonly DependencyProperty ImageViewActualSizeProperty =
             DependencyProperty.Register(
                 nameof(ImageViewActualSize),
@@ -151,19 +143,17 @@ namespace ZoomThumb.Views.Controls
                     default(Size),
                     FrameworkPropertyMetadataOptions.None));
 
-        public static Size GetImageViewActualSize(DependencyObject depObj) =>
-            (Size)depObj.GetValue(ImageViewActualSizeProperty);
-
-        public static void SetImageViewActualSize(DependencyObject depObj, Size value) =>
-            depObj.SetValue(ImageViewActualSizeProperty, value);
+        public Size ImageViewActualSize
+        {
+            get => (Size)GetValue(ImageViewActualSizeProperty);
+            set => SetValue(ImageViewActualSizeProperty, value);
+        }
 
         #endregion
 
         #region ImageSourcePixelSizeProperty(OneWayToSource) ※いらんかも
 
         // Imageコントロールの実サイズ
-        private static readonly string ImageSourcePixelSize = nameof(ImageSourcePixelSize);
-
         private static readonly DependencyProperty ImageSourcePixelSizeProperty =
             DependencyProperty.Register(
                 nameof(ImageSourcePixelSize),
@@ -173,19 +163,17 @@ namespace ZoomThumb.Views.Controls
                     default(Size),
                     FrameworkPropertyMetadataOptions.None));
 
-        public static Size GetImageSourcePixelSize(DependencyObject depObj) =>
-            (Size)depObj.GetValue(ImageSourcePixelSizeProperty);
-
-        public static void SetImageSourcePixelSize(DependencyObject depObj, Size value) =>
-            depObj.SetValue(ImageSourcePixelSizeProperty, value);
+        public Size ImageSourcePixelSize
+        {
+            get => (Size)GetValue(ImageSourcePixelSizeProperty);
+            set => SetValue(ImageSourcePixelSizeProperty, value);
+        }
 
         #endregion
 
         #region IsVisibleReducedImageProperty(OneWayToSource)
 
         // 縮小画像の表示切り替えフラグ(画像の全体表示中は非表示)
-        private static readonly string IsVisibleReducedImage = nameof(IsVisibleReducedImage);
-
         private static readonly DependencyProperty IsVisibleReducedImageProperty =
             DependencyProperty.Register(
                 nameof(IsVisibleReducedImage),
@@ -195,19 +183,17 @@ namespace ZoomThumb.Views.Controls
                     false,
                     FrameworkPropertyMetadataOptions.None));
 
-        public static bool GetIsVisibleReducedImage(DependencyObject depObj) =>
-            (bool)depObj.GetValue(IsVisibleReducedImageProperty);
-
-        public static void SetIsVisibleReducedImage(DependencyObject depObj, bool value) =>
-            depObj.SetValue(IsVisibleReducedImageProperty, value);
+        public bool IsVisibleReducedImage
+        {
+            get => (bool)GetValue(IsVisibleReducedImageProperty);
+            set => SetValue(IsVisibleReducedImageProperty, value);
+        }
 
         #endregion
 
         #region ImageCursorPointProperty(OneWayToSource)
 
         // View画像上のカーソル位置(画像Pixel座標系)
-        private static readonly string ImageCursorPoint = nameof(ImageCursorPoint);
-
         private static readonly DependencyProperty ImageCursorPointProperty =
             DependencyProperty.Register(
                 nameof(ImageCursorPoint),
@@ -217,11 +203,11 @@ namespace ZoomThumb.Views.Controls
                     default(Point),
                     FrameworkPropertyMetadataOptions.None));
 
-        public static Point GetImageCursorPoint(DependencyObject depObj) =>
-            (Point)depObj.GetValue(ImageCursorPointProperty);
-
-        public static void SetImageCursorPoint(DependencyObject depObj, Point value) =>
-            depObj.SetValue(ImageCursorPointProperty, value);
+        public Point ImageCursorPoint
+        {
+            get => (Point)GetValue(ImageCursorPointProperty);
+            set => SetValue(ImageCursorPointProperty, value);
+        }
 
         #endregion
 
@@ -267,7 +253,7 @@ namespace ZoomThumb.Views.Controls
                         x = clip(x, 0, imageSourcePixelSize.Value.Width - 1);
                         var y = Math.Round(cursorPoint.Y * imageSourcePixelSize.Value.Height / imageViewActualSize.Value.Height);
                         y = clip(y, 0, imageSourcePixelSize.Value.Height - 1);
-                        SetImageCursorPoint(this, new Point(x, y));
+                        ImageCursorPoint = new Point(x, y);
                     }
                 };
 
@@ -281,9 +267,9 @@ namespace ZoomThumb.Views.Controls
 
             MainScrollViewer.ScrollChanged += new ScrollChangedEventHandler(ScrollImageViewer_ScrollChanged);
 
-            scrollContentActualSize.Subscribe(x => SetScrollContentActualSize(this, x));
-            imageViewActualSize.Subscribe(x => SetImageViewActualSize(this, x));
-            imageSourcePixelSize.Subscribe(x => SetImageSourcePixelSize(this, x));
+            scrollContentActualSize.Subscribe(x => ScrollContentActualSize = x);
+            imageViewActualSize.Subscribe(x => ImageViewActualSize = x);
+            imageSourcePixelSize.Subscribe(x => ImageSourcePixelSize = x);
 
 
             // ズーム倍率変更
@@ -406,7 +392,7 @@ namespace ZoomThumb.Views.Controls
                     scrollViewer.ScrollToVerticalOffset(height);
 
                     // View→ViewModelへの通知
-                    SetScrollOffsetCenterRatio(this, newOffset);
+                    ScrollOffsetCenterRatio = newOffset;
                 });
 
             // ドラッグによる画像表示領域の移動
@@ -544,16 +530,14 @@ namespace ZoomThumb.Views.Controls
                 || Math.Floor(imageViewActualSize.Height) > Math.Floor(scrollContentActualSize.Value.Height));
 
             // 全画面よりズームインしてたら縮小画像を表示
-            bool reducedImageVisible = isZoomOverEntire;
-            SetIsVisibleReducedImage(this, reducedImageVisible);
+            IsVisibleReducedImage = isZoomOverEntire;
 
             // 全画面よりズームアウトしたらスクロールバー位置を初期化
             if (!isZoomOverEntire) imageScrollOffsetRatio.Value = DefaultScrollOffsetRatio;
 
             // View→ViewModel
             var magRatio = GetCurrentZoomMagRatio(imageViewActualSize, imageSourcePixelSize.Value);
-            var payload = new ImageZoomPayload(ImageZoomMag.IsEntire, magRatio);
-            SetZoomPayload(this, payload);
+            ZoomPayload = new ImageZoomPayload(ImageZoomMag.IsEntire, magRatio);
         }
 
         #endregion
@@ -616,7 +600,7 @@ namespace ZoomThumb.Views.Controls
                 imageScrollOffsetRatio.Value = size;
 
                 // View→ViewModel通知
-                SetScrollOffsetCenterRatio(this, size);
+                ScrollOffsetCenterRatio = size;
             }
         }
 

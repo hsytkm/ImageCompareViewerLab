@@ -14,8 +14,6 @@ namespace ZoomThumb.Views.Controls
         #region ImageViewActualSizeProperty(OneWay)
 
         // 画像コントロールのサイズ
-        private static readonly string ImageViewActualSize = nameof(ImageViewActualSize);
-
         private static readonly DependencyProperty ImageViewActualSizeProperty =
             DependencyProperty.Register(
                 nameof(ImageViewActualSize),
@@ -25,11 +23,11 @@ namespace ZoomThumb.Views.Controls
                     default(Size),
                     FrameworkPropertyMetadataOptions.None));
 
-        public static Size GetImageViewActualSize(DependencyObject depObj) =>
-            (Size)depObj.GetValue(ImageViewActualSizeProperty);
-
-        public static void SetImageViewActualSize(DependencyObject depObj, Size value) =>
-            depObj.SetValue(ImageViewActualSizeProperty, value);
+        public Size ImageViewActualSize
+        {
+            get => (Size)GetValue(ImageViewActualSizeProperty);
+            set => SetValue(ImageViewActualSizeProperty, value);
+        }
 
         #endregion
 

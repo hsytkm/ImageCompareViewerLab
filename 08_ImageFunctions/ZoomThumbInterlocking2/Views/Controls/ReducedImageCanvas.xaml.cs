@@ -19,19 +19,17 @@ namespace ZoomThumb.Views.Controls
 
         #region ScrollOffsetCenterRatioRequestProperty(OneWayToSource)
 
-        private static readonly string ScrollOffsetCenterRatioRequest = nameof(ScrollOffsetCenterRatioRequest);
-
         private static readonly DependencyProperty ScrollOffsetCenterRatioRequestProperty =
             DependencyProperty.RegisterAttached(
-                ScrollOffsetCenterRatioRequest,
+                nameof(ScrollOffsetCenterRatioRequest),
                 typeof(Size),
                 typeof(ReducedImageCanvas));
 
-        public static Size GetScrollOffsetCenterRatioRequest(DependencyObject depObj) =>
-            (Size)depObj.GetValue(ScrollOffsetCenterRatioRequestProperty);
-
-        public static void SetScrollOffsetCenterRatioRequest(DependencyObject depObj, Size value) =>
-            depObj.SetValue(ScrollOffsetCenterRatioRequestProperty, value);
+        public Size ScrollOffsetCenterRatioRequest
+        {
+            get => (Size)GetValue(ScrollOffsetCenterRatioRequestProperty);
+            set => SetValue(ScrollOffsetCenterRatioRequestProperty, value);
+        }
 
         #endregion
 
@@ -100,7 +98,7 @@ namespace ZoomThumb.Views.Controls
             height = clip(height, 0.0, 1.0);
 
             // スクロール位置の更新依頼(厳密な範囲制限はScrollViewer内で行ってもらう)
-            SetScrollOffsetCenterRatioRequest(this, new Size(width, height));
+            ScrollOffsetCenterRatioRequest = new Size(width, height);
         }
 
         // 主画像のスクロール時にViewportを更新する
