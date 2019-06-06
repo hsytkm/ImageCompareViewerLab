@@ -42,6 +42,7 @@
                               x:Name="MainScrollImageViewer"
                               ZoomPayload="{Binding ImageZoomPayload.Value, Mode=TwoWay}"
                               ScrollOffsetCenterRatio="{Binding ImageScrollOffsetCenterRatio.Value, Mode=TwoWay}"
+                              IsScrollInterlock="{Binding IsImageViewerInterlock.Value, Mode=OneWay}"
                               />
 
         <!-- カーソル位置のRGB取得用 ImageCursorPoint="{Binding PointTest.Value, Mode=OneWayToSource}" -->

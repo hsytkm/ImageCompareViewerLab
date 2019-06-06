@@ -22,6 +22,8 @@ namespace ZoomThumb.Views.Controls
     /// </summary>
     public partial class ScrollImageViewer : UserControl
     {
+        private static readonly Type SelfType = typeof(ScrollImageViewer);
+
         // スクロールバー位置の初期値
         private static readonly Size DefaultScrollOffsetRatio = new Size(0.5, 0.5);
 
@@ -58,7 +60,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(ZoomPayload),
                 typeof(ImageZoomPayload),
-                typeof(ScrollImageViewer),
+                SelfType,
                 new FrameworkPropertyMetadata(
                     default(ImageZoomPayload),
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
@@ -88,7 +90,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(ScrollOffsetCenterRatio),
                 typeof(Size),
-                typeof(ScrollImageViewer),
+                SelfType,
                 new FrameworkPropertyMetadata(
                     default(Size),
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
@@ -99,7 +101,9 @@ namespace ZoomThumb.Views.Controls
                         {
                             var scrollImageViewer = ViewHelper.GetChildControl<ScrollImageViewer>(d);
                             if (scrollImageViewer != null)
+                            {
                                 scrollImageViewer.imageScrollOffsetRatio.Value = size;
+                            }
                         }
                     }));
 
@@ -118,7 +122,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(ScrollContentActualSize),
                 typeof(Size),
-                typeof(ScrollImageViewer),
+                SelfType,
                 new FrameworkPropertyMetadata(
                     default(Size),
                     FrameworkPropertyMetadataOptions.None));
@@ -138,7 +142,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(ImageViewActualSize),
                 typeof(Size),
-                typeof(ScrollImageViewer),
+                SelfType,
                 new FrameworkPropertyMetadata(
                     default(Size),
                     FrameworkPropertyMetadataOptions.None));
@@ -158,7 +162,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(ImageSourcePixelSize),
                 typeof(Size),
-                typeof(ScrollImageViewer),
+                SelfType,
                 new FrameworkPropertyMetadata(
                     default(Size),
                     FrameworkPropertyMetadataOptions.None));
@@ -178,7 +182,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(IsVisibleReducedImage),
                 typeof(bool),
-                typeof(ScrollImageViewer),
+                SelfType,
                 new FrameworkPropertyMetadata(
                     false,
                     FrameworkPropertyMetadataOptions.None));
@@ -198,7 +202,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(ImageCursorPoint),
                 typeof(Point),
-                typeof(ScrollImageViewer),
+                SelfType,
                 new FrameworkPropertyMetadata(
                     default(Point),
                     FrameworkPropertyMetadataOptions.None));
@@ -207,6 +211,26 @@ namespace ZoomThumb.Views.Controls
         {
             get => (Point)GetValue(ImageCursorPointProperty);
             set => SetValue(ImageCursorPointProperty, value);
+        }
+
+        #endregion
+
+        #region ImageCursorPointProperty(OneWay)
+
+        // スクロールを他コントロールに連動
+        private static readonly DependencyProperty IsScrollInterlockProperty =
+            DependencyProperty.Register(
+                nameof(IsScrollInterlock),
+                typeof(bool),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    default(bool),
+                    FrameworkPropertyMetadataOptions.None));
+
+        public bool IsScrollInterlock
+        {
+            get => (bool)GetValue(IsScrollInterlockProperty);
+            set => SetValue(IsScrollInterlockProperty, value);
         }
 
         #endregion
@@ -430,21 +454,18 @@ namespace ZoomThumb.Views.Controls
             var scrollViewer = MainScrollViewer;
             var image = MainImage;
 
+            // 画像サイズの更新前にスクロールバーの表示を更新(ContentSizeに影響出るので)
+            UpdateScrollBarVisibility(scrollViewer, zoomMagnification, scrollPresenterSize, imageSourceSize);
+
             if (!zoomMagnification.IsEntire)
             {
                 // ズーム表示に切り替え
-                // 画像サイズの更新前にスクロールバーの表示を更新(ContentSizeに影響出るので)
-                UpdateScrollBarVisibility(scrollViewer, zoomMagnification, scrollPresenterSize, imageSourceSize);
-
                 image.Width = imageSourceSize.Width * zoomMagnification.MagnificationRatio;
                 image.Height = imageSourceSize.Height * zoomMagnification.MagnificationRatio;
             }
             else
             {
                 // 全画面表示に切り替え
-                // 画像サイズの更新前にスクロールバーの表示を更新(ContentSizeに影響出るので)
-                UpdateScrollBarVisibility(scrollViewer, zoomMagnification, scrollPresenterSize, imageSourceSize);
-
                 var size = GetEntireZoomSize(scrollPresenterSize, imageSourceSize);
                 image.Width = size.Width;
                 image.Height = size.Height;
@@ -470,9 +491,13 @@ namespace ZoomThumb.Views.Controls
         // 全画面表示のサイズを取得
         private static Size GetEntireZoomSize(Size sviewSize, Size sourceSize)
         {
+            if (!sourceSize.Height.IsValidValue()) return default;
             var imageRatio = sourceSize.Width / sourceSize.Height;
 
             double width, height;
+
+            if (!sviewSize.Height.IsValidValue()) return default;
+
             if (imageRatio > sviewSize.Width / sviewSize.Height)
             {
                 width = sviewSize.Width;      // 横パンパン
@@ -520,8 +545,6 @@ namespace ZoomThumb.Views.Controls
         // 画像のサイズ変更(ズーム操作)
         private void MainImage_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (!(e.OriginalSource is Image image)) return;
-
             var imageViewActualSize = e.NewSize;
 
             // 全画面表示よりもズームしてるかフラグ(e.NewSize == Size of MainImage)
@@ -557,6 +580,7 @@ namespace ZoomThumb.Views.Controls
                 ImageZoomMag = ImageZoomMagnification.MagX1;  // ToZoom
 
                 // ズーム表示への切り替えならスクロールバーを移動(ImageViewSizeを変更した後に実施する)
+                if (imageViewActualSize.Value.IsValidValue())
                 {
                     double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
 
@@ -598,9 +622,6 @@ namespace ZoomThumb.Views.Controls
 
                 //Debug.WriteLine($"ScrollChanged: {size.Width} x {size.Height}");
                 imageScrollOffsetRatio.Value = size;
-
-                // View→ViewModel通知
-                ScrollOffsetCenterRatio = size;
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
@@ -11,6 +12,8 @@ namespace ZoomThumb.Views.Controls
     /// </summary>
     public partial class ImageOverlapSamplingFrame : UserControl
     {
+        private static readonly Type SelfType = typeof(ImageOverlapSamplingFrame);
+
         #region ImageViewActualSizeProperty(OneWay)
 
         // 画像コントロールのサイズ
@@ -18,7 +21,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(ImageViewActualSize),
                 typeof(Size),
-                typeof(ImageOverlapSamplingFrame),
+                SelfType,
                 new FrameworkPropertyMetadata(
                     default(Size),
                     FrameworkPropertyMetadataOptions.None));

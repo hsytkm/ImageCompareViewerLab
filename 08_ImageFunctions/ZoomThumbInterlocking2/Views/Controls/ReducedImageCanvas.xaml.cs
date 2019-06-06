@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
@@ -13,6 +14,8 @@ namespace ZoomThumb.Views.Controls
     /// </summary>
     public partial class ReducedImageCanvas : UserControl
     {
+        private static readonly Type SelfType = typeof(ReducedImageCanvas);
+
         // 無理やりコントロールを取得（良くない）
         private ScrollViewer ScrollViewer;
         private Image MainImage;
@@ -23,7 +26,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.RegisterAttached(
                 nameof(ScrollOffsetCenterRatioRequest),
                 typeof(Size),
-                typeof(ReducedImageCanvas));
+                SelfType);
 
         public Size ScrollOffsetCenterRatioRequest
         {
