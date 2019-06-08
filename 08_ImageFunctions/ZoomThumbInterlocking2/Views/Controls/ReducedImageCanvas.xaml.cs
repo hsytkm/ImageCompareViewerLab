@@ -25,12 +25,12 @@ namespace ZoomThumb.Views.Controls
         private static readonly DependencyProperty ScrollOffsetCenterRatioRequestProperty =
             DependencyProperty.RegisterAttached(
                 nameof(ScrollOffsetCenterRatioRequest),
-                typeof(Size),
+                typeof(Point),
                 SelfType);
 
-        public Size ScrollOffsetCenterRatioRequest
+        public Point ScrollOffsetCenterRatioRequest
         {
-            get => (Size)GetValue(ScrollOffsetCenterRatioRequestProperty);
+            get => (Point)GetValue(ScrollOffsetCenterRatioRequestProperty);
             set => SetValue(ScrollOffsetCenterRatioRequestProperty, value);
         }
 
@@ -90,18 +90,18 @@ namespace ZoomThumb.Views.Controls
             var thumbImageActualSize = ViewHelper.GetControlActualSize(ThumbImage);
             if (!thumbImageActualSize.IsValidValue()) return;
 
-            var width = scrollViewer.HorizontalOffset + (e.HorizontalChange * scrollViewer.ExtentWidth / thumbImageActualSize.Width);
-            width += scrollViewerActualSize.Width / 2.0;
-            width /= mainImageActualSize.Width;
-            width = clip(width, 0.0, 1.0);
+            var pointX = scrollViewer.HorizontalOffset + (e.HorizontalChange * scrollViewer.ExtentWidth / thumbImageActualSize.Width);
+            pointX += scrollViewerActualSize.Width / 2.0;
+            pointX /= mainImageActualSize.Width;
+            pointX = clip(pointX, 0.0, 1.0);
 
-            var height = scrollViewer.VerticalOffset + (e.VerticalChange * scrollViewer.ExtentHeight / thumbImageActualSize.Height);
-            height += scrollViewerActualSize.Height / 2.0;
-            height /= mainImageActualSize.Height;
-            height = clip(height, 0.0, 1.0);
+            var pointY = scrollViewer.VerticalOffset + (e.VerticalChange * scrollViewer.ExtentHeight / thumbImageActualSize.Height);
+            pointY += scrollViewerActualSize.Height / 2.0;
+            pointY /= mainImageActualSize.Height;
+            pointY = clip(pointY, 0.0, 1.0);
 
             // スクロール位置の更新依頼(厳密な範囲制限はScrollViewer内で行ってもらう)
-            ScrollOffsetCenterRatioRequest = new Size(width, height);
+            ScrollOffsetCenterRatioRequest = new Point(pointX, pointY);
         }
 
         // 主画像のスクロール時にViewportを更新する

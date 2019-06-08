@@ -31,8 +31,8 @@ namespace ZoomThumb.ViewModels
             new ReactiveProperty<ImageZoomPayload>(mode: ReactivePropertyMode.DistinctUntilChanged);
         
         // スクロールオフセット位置(TwoWay)
-        public ReactiveProperty<Size> ImageScrollOffsetCenterRatio { get; } =
-            new ReactiveProperty<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
+        public ReactiveProperty<Point> ImageScrollOffsetCenterRatio { get; } =
+            new ReactiveProperty<Point>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
         public ReactiveCommand LoadImageCommand { get; } = new ReactiveCommand();
         public ReactiveCommand ZoomAllCommand { get; } = new ReactiveCommand();
@@ -65,7 +65,7 @@ namespace ZoomThumb.ViewModels
 
             // スクロール位置のデバッグ表示
             ImageScrollOffsetCenterRatio
-                .Subscribe(x => Console.WriteLine($"VM({index})-ScrollOffsetRatio: {x.Width:f2} x {x.Height:f2}"));
+                .Subscribe(x => Console.WriteLine($"VM({index})-ScrollOffsetRatio: {x.X:f2} x {x.Y:f2}"));
 
 
             ZoomAllCommand
@@ -80,11 +80,11 @@ namespace ZoomThumb.ViewModels
                 .Subscribe(x => ImageZoomPayload.Value = new ImageZoomPayload(false, 1.0));
 
             OffsetCenterCommand
-                .Subscribe(x => ImageScrollOffsetCenterRatio.Value = new Size(0.5, 0.5));
+                .Subscribe(x => ImageScrollOffsetCenterRatio.Value = new Point(0.5, 0.5));
 
 
-            SizeTest.Subscribe(x => Console.WriteLine(x));
-            PointTest.Subscribe(x => Console.WriteLine(x));
+            SizeTest.Subscribe(x => Console.WriteLine($"VM-SizeTest: {x}"));
+            PointTest.Subscribe(x => Console.WriteLine($"VM-PointTest: {x}"));
 
         }
 

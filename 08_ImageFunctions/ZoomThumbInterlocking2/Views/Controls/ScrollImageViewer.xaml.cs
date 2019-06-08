@@ -25,7 +25,7 @@ namespace ZoomThumb.Views.Controls
         private static readonly Type SelfType = typeof(ScrollImageViewer);
 
         // スクロールバー位置の初期値
-        private static readonly Size DefaultScrollOffsetRatio = new Size(0.5, 0.5);
+        private static readonly Point DefaultScrollOffsetRatio = new Point(0.5, 0.5);
 
         // ズーム倍率(変数の操作用)
         internal ImageZoomMagnification ImageZoomMag
@@ -40,7 +40,7 @@ namespace ZoomThumb.Views.Controls
 
         // ズーム倍率(内部イベント用)
         private readonly ReactivePropertySlim<ImageZoomMagnification> imageZoomMag = new ReactivePropertySlim<ImageZoomMagnification>(ImageZoomMagnification.Entire);
-        private readonly ReactivePropertySlim<Size> imageScrollOffsetRatio = new ReactivePropertySlim<Size>(DefaultScrollOffsetRatio);
+        private readonly ReactivePropertySlim<Point> imageScrollOffsetRatio = new ReactivePropertySlim<Point>(DefaultScrollOffsetRatio);
 
         // スクロールバー除いた領域のコントロール（全画面でバーが消えた後にサイズ更新するために必要）
         private readonly ReactivePropertySlim<Size> scrollContentActualSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
@@ -89,27 +89,27 @@ namespace ZoomThumb.Views.Controls
         private static readonly DependencyProperty ScrollOffsetCenterRatioProperty =
             DependencyProperty.Register(
                 nameof(ScrollOffsetCenterRatio),
-                typeof(Size),
+                typeof(Point),
                 SelfType,
                 new FrameworkPropertyMetadata(
-                    default(Size),
+                    default(Point),
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                     (d, e) =>
                     {
                         // ViewModel→View
-                        if (e.NewValue is Size size)
+                        if (e.NewValue is Point newPoint)
                         {
                             var scrollImageViewer = ViewHelper.GetChildControl<ScrollImageViewer>(d);
                             if (scrollImageViewer != null)
                             {
-                                scrollImageViewer.imageScrollOffsetRatio.Value = size;
+                                scrollImageViewer.imageScrollOffsetRatio.Value = newPoint;
                             }
                         }
                     }));
 
-        public Size ScrollOffsetCenterRatio
+        public Point ScrollOffsetCenterRatio
         {
-            get => (Size)GetValue(ScrollOffsetCenterRatioProperty);
+            get => (Point)GetValue(ScrollOffsetCenterRatioProperty);
             set => SetValue(ScrollOffsetCenterRatioProperty, value);
         }
 
@@ -378,12 +378,9 @@ namespace ZoomThumb.Views.Controls
                     if ((oldImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < newImageZoomMag.MagnificationRatio)
                         || (newImageZoomMag.MagnificationRatio < enrireZoomMag && enrireZoomMag < oldImageZoomMag.MagnificationRatio))
                     {
-                        ImageZoomMag = new ImageZoomMagnification(true, enrireZoomMag);
+                        newImageZoomMag = new ImageZoomMagnification(true, enrireZoomMag);
                     }
-                    else
-                    {
-                        ImageZoomMag = newImageZoomMag;
-                    }
+                    ImageZoomMag = newImageZoomMag;
                 });
 
             #endregion
@@ -402,18 +399,18 @@ namespace ZoomThumb.Views.Controls
 
                     // 好き勝手に要求された位置を範囲制限する
                     var rateRange = GetScrollOffsetRateRange(scrollViewer);
-                    var newOffset = new Size(
-                        clip(x.offset.Width, rateRange.widthMin, rateRange.widthMax),
-                        clip(x.offset.Height, rateRange.heightMin, rateRange.heightMax));
+                    var newOffset = new Point(
+                        clip(x.offset.X, rateRange.widthMin, rateRange.widthMax),
+                        clip(x.offset.Y, rateRange.heightMin, rateRange.heightMax));
 
                     var sviewHalf = new Size(x.sview.Width / 2.0, x.sview.Height / 2.0);
                     if (!sviewHalf.IsValidValue()) return;
 
-                    var width = Math.Max(0.0, newOffset.Width * x.iview.Width - sviewHalf.Width);
-                    var height = Math.Max(0.0, newOffset.Height * x.iview.Height - sviewHalf.Height);
+                    var horiOffset = Math.Max(0.0, newOffset.X * x.iview.Width - sviewHalf.Width);
+                    var vertOffset = Math.Max(0.0, newOffset.Y * x.iview.Height - sviewHalf.Height);
 
-                    scrollViewer.ScrollToHorizontalOffset(width);
-                    scrollViewer.ScrollToVerticalOffset(height);
+                    scrollViewer.ScrollToHorizontalOffset(horiOffset);
+                    scrollViewer.ScrollToVerticalOffset(vertOffset);
 
                     // View→ViewModelへの通知
                     ScrollOffsetCenterRatio = newOffset;
@@ -428,17 +425,16 @@ namespace ZoomThumb.Views.Controls
                 .Repeat()
                 .Where(_ => !ImageZoomMag.IsEntire)         // ズーム中のみ流す(全画面表示中は画像移動不要)
                 .Where(_ => !temporaryZoom.Value)           // ◆一時ズームは移動させない仕様
-                .Subscribe(shift =>
+                .Subscribe(vector =>
                 {
                     if (!imageViewActualSize.Value.IsValidValue()) return;
 
                     // マウスドラッグ中の表示位置のシフト
-                    double shiftRatioX = shift.X / imageViewActualSize.Value.Width;
-                    double shiftRatioY = shift.Y / imageViewActualSize.Value.Height;
+                    var vecRatio = new Vector(
+                        vector.X / imageViewActualSize.Value.Width,
+                        vector.Y / imageViewActualSize.Value.Height);
 
-                    imageScrollOffsetRatio.Value = new Size(
-                        imageScrollOffsetRatio.Value.Width + shiftRatioX,
-                        imageScrollOffsetRatio.Value.Height + shiftRatioY);
+                    imageScrollOffsetRatio.Value = imageScrollOffsetRatio.Value + vecRatio;
                 });
 
             #endregion
@@ -595,7 +591,7 @@ namespace ZoomThumb.Views.Controls
                         Math.Max(0.0, scrollContentMouseMove.Value.Y - imageControlSizeOffset.Height));
 
                     // ズーム後の中心座標の割合
-                    var zoomCenterRate = new Size(
+                    var zoomCenterRate = new Point(
                         clip(mousePos.X / imageViewActualSize.Value.Width, 0.0, 1.0),
                         clip(mousePos.Y / imageViewActualSize.Value.Height, 0.0, 1.0));
 
@@ -612,16 +608,15 @@ namespace ZoomThumb.Views.Controls
         {
             if (imageViewActualSize.Value.IsValidValue())
             {
-                var size = new Size(
+                var point = new Point(
                     (e.HorizontalOffset + e.ViewportWidth / 2.0) / imageViewActualSize.Value.Width,
                     (e.VerticalOffset + e.ViewportHeight / 2.0) / imageViewActualSize.Value.Height);
 
                 // 全体表示なら中央位置を上書き
                 if (e.ViewportWidth == e.ExtentWidth || e.ViewportHeight == e.ExtentHeight)
-                    size = DefaultScrollOffsetRatio;
+                    point = DefaultScrollOffsetRatio;
 
-                //Debug.WriteLine($"ScrollChanged: {size.Width} x {size.Height}");
-                imageScrollOffsetRatio.Value = size;
+                imageScrollOffsetRatio.Value = point;
             }
         }
 
