@@ -16,22 +16,18 @@ namespace ZoomThumb.Views.Controls
     {
         private static readonly Type SelfType = typeof(ReducedImageCanvas);
 
-        // 無理やりコントロールを取得（良くない）
-        private ScrollViewer ScrollViewer;
-        private Image MainImage;
+        #region ScrollOffsetVectorRatioRequestProperty(OneWayToSource)
 
-        #region ScrollOffsetCenterRatioRequestProperty(OneWayToSource)
-
-        private static readonly DependencyProperty ScrollOffsetCenterRatioRequestProperty =
-            DependencyProperty.RegisterAttached(
-                nameof(ScrollOffsetCenterRatioRequest),
-                typeof(Point),
+        private static readonly DependencyProperty ScrollOffsetVectorRatioRequestProperty =
+            DependencyProperty.Register(
+                nameof(ScrollOffsetVectorRatioRequest),
+                typeof(Vector),
                 SelfType);
 
-        public Point ScrollOffsetCenterRatioRequest
+        public Vector ScrollOffsetVectorRatioRequest
         {
-            get => (Point)GetValue(ScrollOffsetCenterRatioRequestProperty);
-            set => SetValue(ScrollOffsetCenterRatioRequestProperty, value);
+            get => (Vector)GetValue(ScrollOffsetVectorRatioRequestProperty);
+            set => SetValue(ScrollOffsetVectorRatioRequestProperty, value);
         }
 
         #endregion
@@ -45,11 +41,9 @@ namespace ZoomThumb.Views.Controls
                 var scrollViewer = ViewHelper.GetChildControl<ScrollViewer>(this.Parent);
                 if (scrollViewer != null)
                 {
-                    // 主画像のスクロール時にViewportを更新する
                     // +=とAddHandlerで同じ動作っぽい(stackoverflow) https://stackoverflow.com/questions/2146982/uielement-addhandler-vs-event-definition
                     //scrollViewer?.AddHandler(ScrollViewer.ScrollChangedEvent, new ScrollChangedEventHandler(UpdateThumbnailViewport));
                     scrollViewer.ScrollChanged += UpdateThumbnailViewport;
-                    ScrollViewer = scrollViewer;
                 }
 
                 var mainImage = ViewHelper.GetChildControl<Image>(scrollViewer);
@@ -57,15 +51,13 @@ namespace ZoomThumb.Views.Controls
                 {
                     // AddHandlerでの実装方法が分からなかった
                     mainImage.TargetUpdated += ThumbImage_TargetUpdated;
-                    MainImage = mainImage;
                 }
-
             };
 
             ThumbViewport.DragDelta += new DragDeltaEventHandler(OnDragDelta);
         }
 
-        // 主画像の更新時に縮小画像も更新
+        // 主画像の更新時に縮小画像も連動して更新
         private void ThumbImage_TargetUpdated(object sender, DataTransferEventArgs e)
         {
             if (!(e.OriginalSource is Image image)) return;
@@ -73,38 +65,19 @@ namespace ZoomThumb.Views.Controls
             ThumbImage.Source = source;
         }
 
+        // 縮小画像のドラッグ操作を主画像に伝える
         private void OnDragDelta(object sender, DragDeltaEventArgs e)
         {
-            double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
-
-            var scrollViewer = ScrollViewer;
-            var mainImage = MainImage;
-            if (scrollViewer == null || mainImage == null) return;
-
-            var scrollViewerActualSize = ViewHelper.GetControlActualSize(scrollViewer);
-            if (!scrollViewerActualSize.IsValidValue()) return;
-
-            var mainImageActualSize = ViewHelper.GetControlActualSize(mainImage);
-            if (!mainImageActualSize.IsValidValue()) return;
-
             var thumbImageActualSize = ViewHelper.GetControlActualSize(ThumbImage);
             if (!thumbImageActualSize.IsValidValue()) return;
 
-            var pointX = scrollViewer.HorizontalOffset + (e.HorizontalChange * scrollViewer.ExtentWidth / thumbImageActualSize.Width);
-            pointX += scrollViewerActualSize.Width / 2.0;
-            pointX /= mainImageActualSize.Width;
-            pointX = clip(pointX, 0.0, 1.0);
-
-            var pointY = scrollViewer.VerticalOffset + (e.VerticalChange * scrollViewer.ExtentHeight / thumbImageActualSize.Height);
-            pointY += scrollViewerActualSize.Height / 2.0;
-            pointY /= mainImageActualSize.Height;
-            pointY = clip(pointY, 0.0, 1.0);
-
-            // スクロール位置の更新依頼(厳密な範囲制限はScrollViewer内で行ってもらう)
-            ScrollOffsetCenterRatioRequest = new Point(pointX, pointY);
+            // スクロール位置の変化割合を通知
+            ScrollOffsetVectorRatioRequest = new Vector(
+                e.HorizontalChange / thumbImageActualSize.Width,
+                e.VerticalChange / thumbImageActualSize.Height);
         }
 
-        // 主画像のスクロール時にViewportを更新する
+        // 主画像のスクロール更新時にViewportを更新する
         private void UpdateThumbnailViewport(object sender, ScrollChangedEventArgs e)
         {
             double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);

@@ -42,20 +42,13 @@
                               x:Name="MainScrollImageViewer"
                               ZoomPayload="{Binding ImageZoomPayload.Value, Mode=TwoWay}"
                               ScrollOffsetCenterRatio="{Binding ImageScrollOffsetCenterRatio.Value, Mode=TwoWay}"
-                              IsScrollInterlock="{Binding IsImageViewerInterlock.Value, Mode=OneWay}"
+                              IsViewerInterlock="{Binding IsImageViewerInterlock.Value, Mode=OneWay}"
                               />
 
         <!-- カーソル位置のRGB取得用 ImageCursorPoint="{Binding PointTest.Value, Mode=OneWayToSource}" -->
-        <!-- 以下、実装したけどいらんかも
-                ScrollContentActualSize="{Binding SizeTest.Value, Mode=OneWayToSource}"
-                ImageSourcePixelSize="{Binding SizeTest.Value, Mode=OneWayToSource}"
-                ImageViewActualSize="{Binding SizeTest.Value, Mode=OneWayToSource}"
-        -->
 
-        <vc:ReducedImageCanvas
-            Grid.Row="1"
-            ScrollOffsetCenterRatioRequest="{Binding ScrollOffsetCenterRatio, ElementName=MainScrollImageViewer, Mode=OneWayToSource}"
-            >
+        <vc:ReducedImageCanvas Grid.Row="1"
+                              ScrollOffsetVectorRatioRequest="{Binding ScrollOffsetVectorRatio, ElementName=MainScrollImageViewer, Mode=OneWayToSource}" >
 
             <vc:ReducedImageCanvas.Style>
                 <Style TargetType="vc:ReducedImageCanvas">
