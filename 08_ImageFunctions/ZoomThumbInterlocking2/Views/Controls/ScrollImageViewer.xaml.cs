@@ -184,6 +184,26 @@ namespace ZoomThumb.Views.Controls
 
         #endregion
 
+        #region ImageSourceProperty(OneWay)
+
+        // ソース画像
+        private static readonly DependencyProperty ImageSourceProperty =
+            DependencyProperty.Register(
+                nameof(ImageSource),
+                typeof(ImageSource),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    default(ImageSource),
+                    FrameworkPropertyMetadataOptions.None));
+
+        public ImageSource ImageSource
+        {
+            get => (ImageSource)GetValue(ImageSourceProperty);
+            set => SetValue(ImageSourceProperty, value);
+        }
+
+        #endregion
+
         #region ScrollOffsetVectorRatioProperty(OneWay)
 
         // スクロールバーのシフト量の割合(0~1)

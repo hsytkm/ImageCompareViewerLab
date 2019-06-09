@@ -6,31 +6,28 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vb="clr-namespace:ZoomThumb.Views.Behaviors"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="400">
+             d:DesignHeight="50" d:DesignWidth="50">
 
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-    </UserControl.Resources>
-    
-    <!-- ♪未実装 -->
-    <Canvas Width="{Binding ImageSize.Value.Width, Mode=OneWay}"
-            Height="{Binding ImageSize.Value.Height, Mode=OneWay}" >
+    <Canvas x:Name="GroundCanvas" >
 
-        <Border Visibility="{Binding IsRectVisible.Value, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+        <Border MinWidth="5"
+                MinHeight="5"
+                BorderBrush="Cyan"
+                Background="Transparent"
+                BorderThickness="2" >
+
+                <!--
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
                 Canvas.Left="{Binding FrameRect.Value.Left, Mode=OneWay}"
                 Canvas.Top="{Binding FrameRect.Value.Top, Mode=OneWay}"
                 Width="{Binding FrameRect.Value.Width, Mode=OneWay}"
                 Height="{Binding FrameRect.Value.Height, Mode=OneWay}"
-                MinWidth="{Binding FrameMinSize.Value.Width, Mode=OneWay}"
-                MinHeight="{Binding FrameMinSize.Value.Height, Mode=OneWay}"
-                BorderBrush="Cyan"
-                Background="Transparent"
-                BorderThickness="2"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center">
+                -->
 
             <i:Interaction.Behaviors>
                 <vb:MouseCaptureBehavior />
+                <vb:MovableFrameBehavior />
             </i:Interaction.Behaviors>
         </Border>
     </Canvas>

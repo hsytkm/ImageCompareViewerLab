@@ -17,9 +17,10 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <vcnv:BooleansToVisibilityConverter x:Key="BooleansToVisibilityConverter" />
     </UserControl.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -40,15 +41,19 @@
 
         <vc:ScrollImageViewer Grid.Row="1"
                               x:Name="MainScrollImageViewer"
+                              ImageSource="{Binding ImageSource.Value, Mode=OneWay}"
                               ZoomPayload="{Binding ImageZoomPayload.Value, Mode=TwoWay}"
                               ScrollOffsetCenterRatio="{Binding ImageScrollOffsetCenterRatio.Value, Mode=TwoWay}"
                               IsViewerInterlock="{Binding IsImageViewerInterlock.Value, Mode=OneWay}"
-                              />
+                              ImageCursorPoint="{Binding PointTest.Value, Mode=OneWayToSource}" />
 
-        <!-- カーソル位置のRGB取得用 ImageCursorPoint="{Binding PointTest.Value, Mode=OneWayToSource}" -->
+        <vc:ImageOverlapSamplingFrame Grid.Row="1"
+                                      Visibility="{Binding IsVisibleImageSamplingFrame.Value, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
+                                      FrameRectRate="{Binding SamplingFrameRectRatio.Value, Mode=TwoWay}"
+                                      />
 
         <vc:ReducedImageCanvas Grid.Row="1"
-                              ScrollOffsetVectorRatioRequest="{Binding ScrollOffsetVectorRatio, ElementName=MainScrollImageViewer, Mode=OneWayToSource}" >
+                               ScrollOffsetVectorRatioRequest="{Binding ScrollOffsetVectorRatio, ElementName=MainScrollImageViewer, Mode=OneWayToSource}" >
 
             <vc:ReducedImageCanvas.Style>
                 <Style TargetType="vc:ReducedImageCanvas">

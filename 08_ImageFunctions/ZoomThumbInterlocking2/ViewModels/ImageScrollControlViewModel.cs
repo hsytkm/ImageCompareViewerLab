@@ -24,7 +24,7 @@ namespace ZoomThumb.ViewModels
         public ReadOnlyReactiveProperty<bool> CanVisibleReducedImage { get; }
 
         // 画像上のサンプリング枠の表示フラグ(FALSE=表示しない)
-        public ReadOnlyReactiveProperty<bool> IsVisibleImageOverlapSamplingFrame { get; }
+        public ReadOnlyReactiveProperty<bool> IsVisibleImageSamplingFrame { get; }
         
         // ズーム倍率の管理(TwoWay)
         public ReactiveProperty<ImageZoomPayload> ImageZoomPayload { get; } =
@@ -33,6 +33,10 @@ namespace ZoomThumb.ViewModels
         // スクロールオフセット位置(TwoWay)
         public ReactiveProperty<Point> ImageScrollOffsetCenterRatio { get; } =
             new ReactiveProperty<Point>(mode: ReactivePropertyMode.DistinctUntilChanged);
+
+        // サンプリング枠の位置(TwoWay)
+        public ReactiveProperty<Rect> SamplingFrameRectRatio { get; } =
+            new ReactiveProperty<Rect>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
         public ReactiveCommand LoadImageCommand { get; } = new ReactiveCommand();
         public ReactiveCommand ZoomAllCommand { get; } = new ReactiveCommand();
@@ -49,7 +53,7 @@ namespace ZoomThumb.ViewModels
 
             IsImageViewerInterlock = viewSettings.ObserveProperty(x => x.IsImageViewerInterlock).ToReadOnlyReactiveProperty();
             CanVisibleReducedImage = viewSettings.ObserveProperty(x => x.CanVisibleReducedImage).ToReadOnlyReactiveProperty();
-            IsVisibleImageOverlapSamplingFrame = viewSettings.ObserveProperty(x => x.IsVisibleImageOverlapSamplingFrame).ToReadOnlyReactiveProperty();
+            IsVisibleImageSamplingFrame = viewSettings.ObserveProperty(x => x.IsVisibleImageOverlapSamplingFrame).ToReadOnlyReactiveProperty();
 
             // 画像管理クラスのインデックスを取得
             int index = mainImages.GetImageIndex();
@@ -59,14 +63,15 @@ namespace ZoomThumb.ViewModels
             ImageSource = mainImages.ImageSources[index].ObserveProperty(x => x.ImageSource)
                 .ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.None);
 
-            // ズーム倍率のデバッグ表示
+            // View通知情報のデバッグ表示
             ImageZoomPayload
                 .Subscribe(x => Console.WriteLine($"VM({index})-ZoomMagRatio: {x.IsEntire} => {(x.MagRatio * 100.0):f2} %"));
 
-            // スクロール位置のデバッグ表示
             ImageScrollOffsetCenterRatio
-                .Subscribe(x => Console.WriteLine($"VM({index})-ScrollOffsetRatio: {x.X:f2} x {x.Y:f2}"));
+                .Subscribe(x => Console.WriteLine($"VM({index})-ScrollOffsetRatio: ({x.X:f2}, {x.Y:f2})"));
 
+            SamplingFrameRectRatio
+                .Subscribe(x => Console.WriteLine($"VM({index})-FrameRectRatio: ({x.X:f2}, {x.Y:f2}) {x.Width:f2} x {x.Height:f2}"));
 
             ZoomAllCommand
                 .Subscribe(x =>

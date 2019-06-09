@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Reactive.Bindings;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Data;
 using System.Windows.Media;
 using ZoomThumb.Views.Common;
 
@@ -14,22 +16,30 @@ namespace ZoomThumb.Views.Controls
     {
         private static readonly Type SelfType = typeof(ImageOverlapSamplingFrame);
 
-        #region ImageViewActualSizeProperty(OneWay)
+        //private readonly ReactivePropertySlim<Size> ImageViewActualSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
-        // 画像コントロールのサイズ
-        private static readonly DependencyProperty ImageViewActualSizeProperty =
+        #region FrameRectRateProperty(TwoWay)
+
+        // サンプリング枠の表示位置の割合
+        private static readonly DependencyProperty FrameRectRateProperty =
             DependencyProperty.Register(
-                nameof(ImageViewActualSize),
-                typeof(Size),
+                nameof(FrameRectRate),
+                typeof(Rect),
                 SelfType,
                 new FrameworkPropertyMetadata(
-                    default(Size),
-                    FrameworkPropertyMetadataOptions.None));
+                    default(Rect),
+                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
+                    (d, e) =>
+                    {
+                        if (e.NewValue is Rect rect)
+                        {
+                        }
+                    }));
 
-        public Size ImageViewActualSize
+        public Rect FrameRectRate
         {
-            get => (Size)GetValue(ImageViewActualSizeProperty);
-            set => SetValue(ImageViewActualSizeProperty, value);
+            get => (Rect)GetValue(FrameRectRateProperty);
+            set => SetValue(FrameRectRateProperty, value);
         }
 
         #endregion
@@ -37,6 +47,29 @@ namespace ZoomThumb.Views.Controls
         public ImageOverlapSamplingFrame()
         {
             InitializeComponent();
+
+            this.Loaded += (_, __) =>
+            {
+                var scrollViewer = ViewHelper.GetChildControl<ScrollViewer>(this.Parent);
+                if (scrollViewer != null)
+                {
+                }
+
+                var mainImage = ViewHelper.GetChildControl<Image>(scrollViewer);
+                if (mainImage != null)
+                {
+                    mainImage.SizeChanged += (sender, e) =>
+                    {
+                        //ImageViewActualSize.Value = e.NewSize; //=ActualSize
+
+                        GroundCanvas.Width = e.NewSize.Width; //=ActualSize
+                        GroundCanvas.Height = e.NewSize.Height;
+                    };
+                }
+            };
+
+
+
         }
 
 
