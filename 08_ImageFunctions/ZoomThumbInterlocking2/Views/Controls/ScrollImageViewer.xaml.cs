@@ -256,6 +256,26 @@ namespace ZoomThumb.Views.Controls
 
         #endregion
 
+        #region IsLoadImageProperty(OneWayToSource)
+
+        // 画像の読み込み済みフラグ
+        private static readonly DependencyProperty IsLoadImageProperty =
+            DependencyProperty.Register(
+                nameof(IsLoadImage),
+                typeof(bool),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    false,
+                    FrameworkPropertyMetadataOptions.None));
+
+        public bool IsLoadImage
+        {
+            get => (bool)GetValue(IsLoadImageProperty);
+            set => SetValue(IsLoadImageProperty, value);
+        }
+
+        #endregion
+
         #region IsVisibleReducedImageProperty(OneWayToSource)
 
         // 縮小画像の表示切り替えフラグ(画像の全体表示中は非表示)
@@ -326,6 +346,7 @@ namespace ZoomThumb.Views.Controls
                 {
                     if (!(e.OriginalSource is Image image)) return;
                     ImageSourcePixelSize.Value = ViewHelper.GetImageSourcePixelSize(image);
+                    IsLoadImage = true;     // 画像読み込み済みフラグ
                 };
                 MainImage.SizeChanged += (sender, e) =>
                 {

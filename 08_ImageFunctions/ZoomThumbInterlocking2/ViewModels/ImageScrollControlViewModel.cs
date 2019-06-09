@@ -88,8 +88,8 @@ namespace ZoomThumb.ViewModels
                 .Subscribe(x => ImageScrollOffsetCenterRatio.Value = new Point(0.5, 0.5));
 
 
-            SizeTest.Subscribe(x => Console.WriteLine($"VM-SizeTest: {x}"));
-            PointTest.Subscribe(x => Console.WriteLine($"VM-PointTest: {x}"));
+            //SizeTest.Subscribe(x => Console.WriteLine($"VM-SizeTest: {x}"));
+            //PointTest.Subscribe(x => Console.WriteLine($"VM-PointTest: {x}"));
 
         }
 

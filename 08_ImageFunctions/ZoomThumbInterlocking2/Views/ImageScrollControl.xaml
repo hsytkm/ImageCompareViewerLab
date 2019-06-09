@@ -17,7 +17,9 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
+        <!--
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        -->
         <vcnv:BooleansToVisibilityConverter x:Key="BooleansToVisibilityConverter" />
     </UserControl.Resources>
 
@@ -42,19 +44,32 @@
         <vc:ScrollImageViewer Grid.Row="1"
                               x:Name="MainScrollImageViewer"
                               ImageSource="{Binding ImageSource.Value, Mode=OneWay}"
+                              IsViewerInterlock="{Binding IsImageViewerInterlock.Value, Mode=OneWay}"
                               ZoomPayload="{Binding ImageZoomPayload.Value, Mode=TwoWay}"
                               ScrollOffsetCenterRatio="{Binding ImageScrollOffsetCenterRatio.Value, Mode=TwoWay}"
-                              IsViewerInterlock="{Binding IsImageViewerInterlock.Value, Mode=OneWay}"
                               ImageCursorPoint="{Binding PointTest.Value, Mode=OneWayToSource}" />
 
         <vc:ImageOverlapSamplingFrame Grid.Row="1"
-                                      Visibility="{Binding IsVisibleImageSamplingFrame.Value, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneWay}"
-                                      FrameRectRate="{Binding SamplingFrameRectRatio.Value, Mode=TwoWay}"
-                                      />
+                                      FrameRectRatio="{Binding SamplingFrameRectRatio.Value, Mode=TwoWay}"
+                                      FrameBorderBrush="Cyan" >
+            <vc:ImageOverlapSamplingFrame.Style>
+                <Style TargetType="vc:ImageOverlapSamplingFrame">
+                    <Setter Property="Visibility">
+                        <Setter.Value>
+                            <MultiBinding Converter="{StaticResource BooleansToVisibilityConverter}">
+                                <MultiBinding.Bindings>
+                                    <Binding Path="IsVisibleImageSamplingFrame.Value" Mode="OneWay" />
+                                    <Binding Path="IsLoadImage" ElementName="MainScrollImageViewer" Mode="OneWay" />
+                                </MultiBinding.Bindings>
+                            </MultiBinding>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </vc:ImageOverlapSamplingFrame.Style>
+        </vc:ImageOverlapSamplingFrame>
 
         <vc:ReducedImageCanvas Grid.Row="1"
                                ScrollOffsetVectorRatioRequest="{Binding ScrollOffsetVectorRatio, ElementName=MainScrollImageViewer, Mode=OneWayToSource}" >
-
             <vc:ReducedImageCanvas.Style>
                 <Style TargetType="vc:ReducedImageCanvas">
                     <Setter Property="Visibility">

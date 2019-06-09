@@ -16,14 +16,12 @@ namespace ZoomThumb.Views.Controls
     {
         private static readonly Type SelfType = typeof(ImageOverlapSamplingFrame);
 
-        //private readonly ReactivePropertySlim<Size> ImageViewActualSize = new ReactivePropertySlim<Size>(mode: ReactivePropertyMode.DistinctUntilChanged);
-
-        #region FrameRectRateProperty(TwoWay)
+        #region FrameRectRatioProperty(TwoWay)
 
         // サンプリング枠の表示位置の割合
-        private static readonly DependencyProperty FrameRectRateProperty =
+        private static readonly DependencyProperty FrameRectRatioProperty =
             DependencyProperty.Register(
-                nameof(FrameRectRate),
+                nameof(FrameRectRatio),
                 typeof(Rect),
                 SelfType,
                 new FrameworkPropertyMetadata(
@@ -36,10 +34,30 @@ namespace ZoomThumb.Views.Controls
                         }
                     }));
 
-        public Rect FrameRectRate
+        public Rect FrameRectRatio
         {
-            get => (Rect)GetValue(FrameRectRateProperty);
-            set => SetValue(FrameRectRateProperty, value);
+            get => (Rect)GetValue(FrameRectRatioProperty);
+            set => SetValue(FrameRectRatioProperty, value);
+        }
+
+        #endregion
+
+        #region FrameBorderBrushProperty(OneWay)
+
+        // 枠色
+        private static readonly DependencyProperty FrameBorderBrushProperty =
+            DependencyProperty.Register(
+                nameof(FrameBorderBrush),
+                typeof(Brush),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    default(Brush),
+                    FrameworkPropertyMetadataOptions.None));
+
+        public Brush FrameBorderBrush
+        {
+            get => (Brush)GetValue(FrameBorderBrushProperty);
+            set => SetValue(FrameBorderBrushProperty, value);
         }
 
         #endregion
@@ -53,6 +71,18 @@ namespace ZoomThumb.Views.Controls
                 var scrollViewer = ViewHelper.GetChildControl<ScrollViewer>(this.Parent);
                 if (scrollViewer != null)
                 {
+                    var scrollContentPresenter = ViewHelper.GetChildControl<ScrollContentPresenter>(scrollViewer);
+                    if (scrollContentPresenter != null)
+                    {
+                        //ScrollContentActualSize.Value = ViewHelper.GetControlActualSize(scrollContentPresenter);
+                        GroundCanvas.Width = scrollContentPresenter.ActualWidth;
+                        GroundCanvas.Height = scrollContentPresenter.ActualHeight;
+                        scrollContentPresenter.SizeChanged += (sender, e) =>
+                        {
+                            GroundCanvas.Width = e.NewSize.Width; //=ActualSize
+                            GroundCanvas.Height = e.NewSize.Height;
+                        };
+                    }
                 }
 
                 var mainImage = ViewHelper.GetChildControl<Image>(scrollViewer);
@@ -62,8 +92,8 @@ namespace ZoomThumb.Views.Controls
                     {
                         //ImageViewActualSize.Value = e.NewSize; //=ActualSize
 
-                        GroundCanvas.Width = e.NewSize.Width; //=ActualSize
-                        GroundCanvas.Height = e.NewSize.Height;
+                        //GroundCanvas.Width = e.NewSize.Width; //=ActualSize
+                        //GroundCanvas.Height = e.NewSize.Height;
                     };
                 }
             };

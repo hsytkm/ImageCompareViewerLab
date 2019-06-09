@@ -5,30 +5,25 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vb="clr-namespace:ZoomThumb.Views.Behaviors"
+             x:Name="root"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="50">
 
-    <Canvas x:Name="GroundCanvas" >
+    <Canvas x:Name="GroundCanvas"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top" >
 
         <Border MinWidth="5"
                 MinHeight="5"
-                BorderBrush="Cyan"
+                BorderBrush="{Binding FrameBorderBrush, ElementName=root, Mode=OneWay}"
                 Background="Transparent"
                 BorderThickness="2" >
 
-                <!--
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                Canvas.Left="{Binding FrameRect.Value.Left, Mode=OneWay}"
-                Canvas.Top="{Binding FrameRect.Value.Top, Mode=OneWay}"
-                Width="{Binding FrameRect.Value.Width, Mode=OneWay}"
-                Height="{Binding FrameRect.Value.Height, Mode=OneWay}"
-                -->
-
             <i:Interaction.Behaviors>
                 <vb:MouseCaptureBehavior />
-                <vb:MovableFrameBehavior />
+                <vb:MovableFrameBehavior FrameRectRatio="{Binding FrameRectRatio, ElementName=root, Mode=TwoWay}" />
             </i:Interaction.Behaviors>
         </Border>
+
     </Canvas>
 </UserControl>
