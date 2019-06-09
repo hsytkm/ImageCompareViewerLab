@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
 using System.Windows.Media;
+using ZoomThumb.Common;
 using ZoomThumb.Views.Common;
 
 namespace ZoomThumb.Views.Behaviors
@@ -15,6 +16,8 @@ namespace ZoomThumb.Views.Behaviors
     class MovableFrameBehavior : Behavior<FrameworkElement>
     {
         private static bool IsSizeChanging => (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
+
+        private readonly MyCompositeDisposable CompositeDisposable = new MyCompositeDisposable();
 
         private readonly ReactivePropertySlim<Unit> MouseLeftDown = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
         private readonly ReactivePropertySlim<Unit> MouseLeftUp = new ReactivePropertySlim<Unit>(mode: ReactivePropertyMode.None);
@@ -58,7 +61,8 @@ namespace ZoomThumb.Views.Behaviors
                         : GetFrameRectFromAddrShift(AssociatedObject, groundSize, vector);
 
                     FrameAddrSizeRatio.Value = rect;
-                });
+                })
+                .AddTo(CompositeDisposable);
 
             // 枠の描画更新
             FrameAddrSizeRatio
@@ -71,7 +75,9 @@ namespace ZoomThumb.Views.Behaviors
                     Canvas.SetTop(AssociatedObject, x.frameRect.Y);
                     AssociatedObject.Width = x.frameRect.Width;
                     AssociatedObject.Height = x.frameRect.Height;
-                });
+                })
+                .AddTo(CompositeDisposable);
+
         }
 
         protected override void OnDetaching()
@@ -87,6 +93,8 @@ namespace ZoomThumb.Views.Behaviors
             {
                 parentPanel.SizeChanged -= ParentPanel_SizeChanged;
             }
+
+            CompositeDisposable.Dispose();
         }
 
         // 親パネルのサイズ変更時に枠が食み出ないように制限する
