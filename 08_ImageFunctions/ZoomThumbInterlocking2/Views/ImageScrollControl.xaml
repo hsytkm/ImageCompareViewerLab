@@ -43,15 +43,19 @@
 
         <vc:ScrollImageViewer Grid.Row="1"
                               x:Name="MainScrollImageViewer"
-                              ImageSource="{Binding ImageSource.Value, Mode=OneWay}"
+                              BitmapSource="{Binding ImageSource.Value, Mode=OneWay}"
                               IsViewerInterlock="{Binding IsImageViewerInterlock.Value, Mode=OneWay}"
                               ZoomPayload="{Binding ImageZoomPayload.Value, Mode=TwoWay}"
                               ScrollOffsetCenterRatio="{Binding ImageScrollOffsetCenterRatio.Value, Mode=TwoWay}"
-                              ImageCursorPoint="{Binding PointTest.Value, Mode=OneWayToSource}" />
+                              ImageCursorPoint="{Binding PointTest.Value, Mode=OneWayToSource}"
+                              IsVisibleImageSamplingFrame="{Binding IsVisibleImageSamplingFrame.Value, Mode=OneWay}"
+                              ImageOverlapSamplingFrameRect="{Binding SamplingFrameRect.Value, Mode=OneWayToSource}"
+                              />
 
+        <!-- ScrollViewer上のサンプリング枠の残骸
         <vc:ImageOverlapSamplingFrame Grid.Row="1"
                                       FrameRectRatio="{Binding SamplingFrameRectRatio.Value, Mode=TwoWay}"
-                                      FrameBorderBrush="Cyan" >
+                                      FrameBorderBrush="Magenta" >
             <vc:ImageOverlapSamplingFrame.Style>
                 <Style TargetType="vc:ImageOverlapSamplingFrame">
                     <Setter Property="Visibility">
@@ -67,6 +71,7 @@
                 </Style>
             </vc:ImageOverlapSamplingFrame.Style>
         </vc:ImageOverlapSamplingFrame>
+        -->
 
         <vc:ReducedImageCanvas Grid.Row="1"
                                ScrollOffsetVectorRatioRequest="{Binding ScrollOffsetVectorRatio, ElementName=MainScrollImageViewer, Mode=OneWayToSource}" >

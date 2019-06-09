@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -46,6 +47,24 @@ namespace ZoomThumb.Views.Common
             if (!size.Width.IsValidValue()) return false;
             if (!size.Height.IsValidValue()) return false;
             return true;
+        }
+
+        public static Rect Round(this Rect rect)
+        {
+            rect.X = Math.Round(rect.X);
+            rect.Y = Math.Round(rect.Y);
+            rect.Width = Math.Round(rect.Width);
+            rect.Height = Math.Round(rect.Height);
+            return rect;
+        }
+        
+        public static Rect MinLength(this Rect rect, double minLength)
+        {
+            if (minLength <= 0.0) throw new ArgumentOutOfRangeException(nameof(minLength));
+
+            if (rect.Width < minLength) rect.Width = minLength;
+            if (rect.Height < minLength) rect.Height = minLength;
+            return rect;
         }
 
     }

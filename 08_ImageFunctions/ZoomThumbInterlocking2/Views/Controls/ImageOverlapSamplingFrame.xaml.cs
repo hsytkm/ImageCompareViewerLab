@@ -1,9 +1,6 @@
-﻿using Reactive.Bindings;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
 using System.Windows.Media;
 using ZoomThumb.Views.Common;
 
@@ -62,46 +59,39 @@ namespace ZoomThumb.Views.Controls
 
         #endregion
 
+        #region GroundPanelSizeProperty(OneWay)
+
+        // 下地パネルのサイズ
+        private static readonly DependencyProperty GroundPanelSizeProperty =
+            DependencyProperty.Register(
+                nameof(GroundPanelSize),
+                typeof(Size),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    default(Size),
+                    FrameworkPropertyMetadataOptions.None,
+                    (d, e) =>
+                    {
+                        if (ViewHelper.GetChildControl<Canvas>(d) is Canvas canvas
+                        && e.NewValue is Size newSize)
+                        {
+                            canvas.Width = newSize.Width;
+                            canvas.Height = newSize.Height;
+                        }
+                    }));
+
+        public Size GroundPanelSize
+        {
+            get => (Size)GetValue(GroundPanelSizeProperty);
+            set => SetValue(GroundPanelSizeProperty, value);
+        }
+
+        #endregion
+
         public ImageOverlapSamplingFrame()
         {
             InitializeComponent();
-
-            this.Loaded += (_, __) =>
-            {
-                var scrollViewer = ViewHelper.GetChildControl<ScrollViewer>(this.Parent);
-                if (scrollViewer != null)
-                {
-                    var scrollContentPresenter = ViewHelper.GetChildControl<ScrollContentPresenter>(scrollViewer);
-                    if (scrollContentPresenter != null)
-                    {
-                        //ScrollContentActualSize.Value = ViewHelper.GetControlActualSize(scrollContentPresenter);
-                        GroundCanvas.Width = scrollContentPresenter.ActualWidth;
-                        GroundCanvas.Height = scrollContentPresenter.ActualHeight;
-                        scrollContentPresenter.SizeChanged += (sender, e) =>
-                        {
-                            GroundCanvas.Width = e.NewSize.Width; //=ActualSize
-                            GroundCanvas.Height = e.NewSize.Height;
-                        };
-                    }
-                }
-
-                var mainImage = ViewHelper.GetChildControl<Image>(scrollViewer);
-                if (mainImage != null)
-                {
-                    mainImage.SizeChanged += (sender, e) =>
-                    {
-                        //ImageViewActualSize.Value = e.NewSize; //=ActualSize
-
-                        //GroundCanvas.Width = e.NewSize.Width; //=ActualSize
-                        //GroundCanvas.Height = e.NewSize.Height;
-                    };
-                }
-            };
-
-
-
         }
-
 
     }
 }

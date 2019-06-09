@@ -18,8 +18,8 @@ namespace ZoomThumb.Views.Behaviors
         private static readonly Type SelfType = typeof(MovableFrameBehavior);
         private static bool IsSizeChanging => (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
 
-        private readonly static double DefaultSizeRatio = 0.1;
-        private readonly static double DefaultAddrRatio = 0.5 - (DefaultSizeRatio / 2.0);
+        private static readonly double DefaultSizeRatio = 0.1;
+        private static readonly double DefaultAddrRatio = 0.5 - (DefaultSizeRatio / 2.0);
 
         private readonly ReactivePropertySlim<Rect> FrameAddrSizeRatio =
             new ReactivePropertySlim<Rect>(initialValue: new Rect(DefaultAddrRatio, DefaultAddrRatio, DefaultSizeRatio, DefaultSizeRatio));
@@ -61,11 +61,10 @@ namespace ZoomThumb.Views.Behaviors
         protected override void OnAttached()
         {
             base.OnAttached();
-            AssociatedObject.PreviewMouseMove += AssociatedObject_PreviewMouseMove;
-            AssociatedObject.MouseLeave += AssociatedObject_MouseLeave;
             AssociatedObject.MouseLeftButtonDown += AssociatedObject_MouseLeftButtonDown;
             AssociatedObject.MouseLeftButtonUp += AssociatedObject_MouseLeftButtonUp;
             AssociatedObject.MouseMove += AssociatedObject_MouseMove;
+            AssociatedObject.MouseLeave += AssociatedObject_MouseLeave;
 
             // 親パネル
             if (VisualTreeHelper.GetParent(AssociatedObject) is Panel parentPanel)
@@ -119,11 +118,10 @@ namespace ZoomThumb.Views.Behaviors
         protected override void OnDetaching()
         {
             base.OnDetaching();
-            AssociatedObject.PreviewMouseMove -= AssociatedObject_PreviewMouseMove;
-            AssociatedObject.MouseLeave -= AssociatedObject_MouseLeave;
             AssociatedObject.MouseLeftButtonDown -= AssociatedObject_MouseLeftButtonDown;
             AssociatedObject.MouseLeftButtonUp -= AssociatedObject_MouseLeftButtonUp;
             AssociatedObject.MouseMove -= AssociatedObject_MouseMove;
+            AssociatedObject.MouseLeave -= AssociatedObject_MouseLeave;
 
             if (VisualTreeHelper.GetParent(AssociatedObject) is Panel parentPanel)
             {
@@ -144,14 +142,33 @@ namespace ZoomThumb.Views.Behaviors
 
         #endregion
 
-        #region MouseCursor
+        #region MouseMove
 
-        private static void AssociatedObject_PreviewMouseMove(object sender, MouseEventArgs e)
+        private void AssociatedObject_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            MouseLeftDown.Value = Unit.Default;
+            e.Handled = true;
+        }
+
+        private void AssociatedObject_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            MouseLeftUp.Value = Unit.Default;
+            e.Handled = true;
+        }
+
+        private void AssociatedObject_MouseMove(object sender, MouseEventArgs e)
         {
             if (!(sender is DependencyObject d)) return;
 
             // サイズ変更:斜め両矢印 / 位置変更:両矢印の十字
             Window.GetWindow(d).Cursor = IsSizeChanging ? Cursors.SizeNWSE : Cursors.SizeAll;
+
+            // 移動させるコントロール基準にすると移動により相対的にマウス位置が変化して
+            // ハンチングするので親パネルを基準にする
+            if (VisualTreeHelper.GetParent(d) is Panel panel)
+            {
+                MouseMove.Value = e.GetPosition((IInputElement)panel);
+            }
         }
 
         private static void AssociatedObject_MouseLeave(object sender, MouseEventArgs e)
@@ -162,26 +179,6 @@ namespace ZoomThumb.Views.Behaviors
             Window.GetWindow(d).Cursor = Cursors.Arrow;
         }
 
-        #endregion
-
-        #region MouseMove
-
-        private void AssociatedObject_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) =>
-            MouseLeftDown.Value = Unit.Default;
-
-        private void AssociatedObject_MouseLeftButtonUp(object sender, MouseButtonEventArgs e) =>
-            MouseLeftUp.Value = Unit.Default;
-
-        private void AssociatedObject_MouseMove(object sender, MouseEventArgs e)
-        {
-            // 移動させるコントロール基準にすると移動により相対的にマウス位置が変化して
-            // ハンチングするので親パネルを基準にする
-            if (sender is DependencyObject dependency
-                && VisualTreeHelper.GetParent(dependency) is Panel panel)
-            {
-                MouseMove.Value = e.GetPosition((IInputElement)panel);
-            }
-        }
 
         #endregion
 

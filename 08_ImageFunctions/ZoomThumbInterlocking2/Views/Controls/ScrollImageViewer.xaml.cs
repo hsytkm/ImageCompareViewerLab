@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using ZoomThumb.ViewModels;
 using ZoomThumb.Views.Common;
 
@@ -184,22 +185,22 @@ namespace ZoomThumb.Views.Controls
 
         #endregion
 
-        #region ImageSourceProperty(OneWay)
+        #region BitmapSourceProperty(OneWay)
 
         // ソース画像
-        private static readonly DependencyProperty ImageSourceProperty =
+        private static readonly DependencyProperty BitmapSourceProperty =
             DependencyProperty.Register(
-                nameof(ImageSource),
-                typeof(ImageSource),
+                nameof(BitmapSource),
+                typeof(BitmapSource),
                 SelfType,
                 new FrameworkPropertyMetadata(
-                    default(ImageSource),
+                    default(BitmapSource),
                     FrameworkPropertyMetadataOptions.None));
 
-        public ImageSource ImageSource
+        public BitmapSource BitmapSource
         {
-            get => (ImageSource)GetValue(ImageSourceProperty);
-            set => SetValue(ImageSourceProperty, value);
+            get => (BitmapSource)GetValue(BitmapSourceProperty);
+            set => SetValue(BitmapSourceProperty, value);
         }
 
         #endregion
@@ -316,6 +317,97 @@ namespace ZoomThumb.Views.Controls
 
         #endregion
 
+        #region ImageControlSizeProperty(OneWayToSource)
+
+        // View画像表示部のActualサイズ(画像重畳パネル用のサイズ通知)
+        private static readonly DependencyProperty ImageControlSizeProperty =
+            DependencyProperty.Register(
+                nameof(ImageControlSize),
+                typeof(Size),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    default(Size),
+                    FrameworkPropertyMetadataOptions.None));
+
+        public Size ImageControlSize
+        {
+            get => (Size)GetValue(ImageControlSizeProperty);
+            set => SetValue(ImageControlSizeProperty, value);
+        }
+
+        #endregion
+
+        #region IsVisibleImageSamplingFrameProperty(OneWay)
+
+        // サンプリング枠の表示フラグ
+        private static readonly DependencyProperty IsVisibleImageSamplingFrameProperty =
+            DependencyProperty.Register(
+                nameof(IsVisibleImageSamplingFrame),
+                typeof(bool),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    default(bool),
+                    FrameworkPropertyMetadataOptions.None));
+
+        public bool IsVisibleImageSamplingFrame
+        {
+            get => (bool)GetValue(IsVisibleImageSamplingFrameProperty);
+            set => SetValue(IsVisibleImageSamplingFrameProperty, value);
+        }
+
+        #endregion
+
+        #region ImageOverlapSamplingFrameRectProperty(OneWayToSource)
+
+        // 外部公開用のサンプリング枠の表示位置(現画像の座標系)
+        private static readonly DependencyProperty ImageOverlapSamplingFrameRectProperty =
+            DependencyProperty.Register(
+                nameof(ImageOverlapSamplingFrameRect),
+                typeof(Rect),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    default(Rect),
+                    FrameworkPropertyMetadataOptions.None));
+
+        public Rect ImageOverlapSamplingFrameRect
+        {
+            get => (Rect)GetValue(ImageOverlapSamplingFrameRectProperty);
+            set => SetValue(ImageOverlapSamplingFrameRectProperty, value);
+        }
+
+        #endregion
+
+        #region ImageOverlapSamplingFrameRectRatioProperty(OneWay)
+
+        // 内部受取用のサンプリング枠の表示位置割合
+        private static readonly DependencyProperty ImageOverlapSamplingFrameRectRatioProperty =
+            DependencyProperty.Register(
+                nameof(ImageOverlapSamplingFrameRectRatio),
+                typeof(Rect),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    default(Rect),
+                    FrameworkPropertyMetadataOptions.None,
+                    (d, e) =>
+                    {
+                        // 割合を画像の実座標系に変換する
+                        if (d is ScrollImageViewer siViewer && e.NewValue is Rect rectRatio)
+                        {
+                            //Console.WriteLine($"FrameRect1: {rectRatio.X:f3}  {rectRatio.Y:f3}  {rectRatio.Width:f3}  {rectRatio.Height:f3} ");
+                            var rect = rectRatio;
+                            rect.Scale(siViewer.BitmapSource.PixelWidth, siViewer.BitmapSource.PixelHeight);
+                            siViewer.ImageOverlapSamplingFrameRect = rect.Round().MinLength(1.0);
+                        }
+                    }));
+
+        public Rect ImageOverlapSamplingFrameRectRatio
+        {
+            get => (Rect)GetValue(ImageOverlapSamplingFrameRectRatioProperty);
+            set => SetValue(ImageOverlapSamplingFrameRectRatioProperty, value);
+        }
+
+        #endregion
+
         public ScrollImageViewer()
         {
             InitializeComponent();
@@ -329,7 +421,8 @@ namespace ZoomThumb.Views.Controls
                 var scrollContentPresenter = ViewHelper.GetChildControl<ScrollContentPresenter>(this);
                 if (scrollContentPresenter != null)
                 {
-                    scrollContentPresenter.PreviewMouseLeftButtonDown += (sender, e) => ScrollContentMouseLeftDown.Value = Unit.Default;
+                    // PreviewMouseLeftButtonDownだと画像上のサンプリング枠中に反応してしまうのでダメ
+                    scrollContentPresenter.MouseLeftButtonDown += (sender, e) => ScrollContentMouseLeftDown.Value = Unit.Default;
                     scrollContentPresenter.PreviewMouseLeftButtonUp += (sender, e) => ScrollContentMouseLeftUp.Value = Unit.Default;
                     scrollContentPresenter.MouseMove += (sender, e) => ScrollContentMouseMove.Value = e.GetPosition((IInputElement)sender);
 
@@ -351,6 +444,7 @@ namespace ZoomThumb.Views.Controls
                 MainImage.SizeChanged += (sender, e) =>
                 {
                     ImageViewActualSize.Value = e.NewSize; //=ActualSize
+                    ImageControlSize = e.NewSize;
                     MainImage_SizeChanged(sender, e);
                 };
                 MainImage.MouseMove += (sender, e) =>

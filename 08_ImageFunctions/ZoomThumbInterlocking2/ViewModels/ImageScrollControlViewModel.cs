@@ -34,8 +34,8 @@ namespace ZoomThumb.ViewModels
         public ReactiveProperty<Point> ImageScrollOffsetCenterRatio { get; } =
             new ReactiveProperty<Point>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
-        // サンプリング枠の位置(TwoWay)
-        public ReactiveProperty<Rect> SamplingFrameRectRatio { get; } =
+        // 実座標系のサンプリング枠の位置(TwoWay)
+        public ReactiveProperty<Rect> SamplingFrameRect { get; } =
             new ReactiveProperty<Rect>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
         public ReactiveCommand LoadImageCommand { get; } = new ReactiveCommand();
@@ -70,8 +70,8 @@ namespace ZoomThumb.ViewModels
             ImageScrollOffsetCenterRatio
                 .Subscribe(x => Console.WriteLine($"VM({index})-ScrollOffsetRatio: ({x.X:f2}, {x.Y:f2})"));
 
-            SamplingFrameRectRatio
-                .Subscribe(x => Console.WriteLine($"VM({index})-FrameRectRatio: ({x.X:f2}, {x.Y:f2}) {x.Width:f2} x {x.Height:f2}"));
+            SamplingFrameRect
+                .Subscribe(x => Console.WriteLine($"VM({index})-SamplingFrameRect: ({x.X:f2}, {x.Y:f2}) {x.Width:f2} x {x.Height:f2}"));
 
             ZoomAllCommand
                 .Subscribe(x =>

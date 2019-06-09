@@ -6,6 +6,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vc="clr-namespace:ZoomThumb.Views.Controls"
              xmlns:vb="clr-namespace:ZoomThumb.Views.Behaviors"
+             xmlns:vcnv="clr-namespace:ZoomThumb.Views.Converters"
              x:Name="root"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -15,6 +16,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../Styles/ImageScrollControlStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <vcnv:BooleansToVisibilityConverter x:Key="BooleansToVisibilityConverter" />
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -26,13 +28,35 @@
             <vb:MouseHorizontalShiftBehavior />
         </i:Interaction.Behaviors>
 
-        <Image x:Name="MainImage"
-               Source="{Binding ImageSource, ElementName=root, Mode=OneWay, NotifyOnTargetUpdated=True}" >
-            <i:Interaction.Behaviors>
-                <!-- 画像ズーム時のスケーリング更新 -->
-                <vb:ImageBitmapScalingBehavior />
-            </i:Interaction.Behaviors>
-        </Image>
+        <Grid>
+            <Image x:Name="MainImage"
+                   Source="{Binding BitmapSource, ElementName=root, Mode=OneWay, NotifyOnTargetUpdated=True}" >
+                <i:Interaction.Behaviors>
+                    <!-- 画像ズーム時のスケーリング更新 -->
+                    <vb:ImageBitmapScalingBehavior />
+                </i:Interaction.Behaviors>
+            </Image>
+
+            <vc:ImageOverlapSamplingFrame FrameRectRatio="{Binding ImageOverlapSamplingFrameRectRatio, ElementName=root, Mode=OneWayToSource}"
+                                          GroundPanelSize="{Binding ImageControlSize, ElementName=root, Mode=OneWay}"
+                                          FrameBorderBrush="Cyan" >
+                <vc:ImageOverlapSamplingFrame.Style>
+                    <Style TargetType="vc:ImageOverlapSamplingFrame">
+                        <Setter Property="Visibility">
+                            <Setter.Value>
+                                <MultiBinding Converter="{StaticResource BooleansToVisibilityConverter}">
+                                    <MultiBinding.Bindings>
+                                        <Binding Path="IsVisibleImageSamplingFrame" ElementName="root" Mode="OneWay" />
+                                        <Binding Path="IsLoadImage" ElementName="root" Mode="OneWay" />
+                                    </MultiBinding.Bindings>
+                                </MultiBinding>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </vc:ImageOverlapSamplingFrame.Style>
+            </vc:ImageOverlapSamplingFrame>
+            
+        </Grid>
            
     </ScrollViewer>
 
