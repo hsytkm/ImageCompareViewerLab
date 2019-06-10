@@ -71,12 +71,12 @@ namespace ZoomThumb.Views.Behaviors
                 .AddTo(CompositeDisposable);
 
             // 親パネルのサイズ取得
-            var groundPanelSize = parentPanel?.SizeChangedAsObservable().Select(e => e.NewSize)
+            var groundPanelSize = parentPanel.SizeChangedAsObservable().Select(e => e.NewSize)
                 .ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.DistinctUntilChanged)
                 .AddTo(CompositeDisposable);
 
             // マウスクリック移動による枠位置の更新
-            AssociatedObject.MouseLeftClickMoveAsObservable(parentPanel)
+            AssociatedObject.MouseLeftClickMoveAsObservable(originControl: parentPanel, handled: true)
                 .Subscribe(v => FrameAddrSizeRatio.Value = GetNewFrameAddrSizeRatio(AssociatedObject, groundPanelSize.Value, v))
                 .AddTo(CompositeDisposable);
 
