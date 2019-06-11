@@ -3,11 +3,10 @@ using System.Windows.Controls;
 using System.Windows.Interactivity;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ZoomThumb.Views.Common;
 
 namespace ZoomThumb.Views.Behaviors
 {
-    class ImageBitmapScalingBehavior : Behavior<FrameworkElement>
+    class ImageBitmapScalingBehavior : Behavior<Image>
     {
         protected override void OnAttached()
         {
@@ -28,9 +27,7 @@ namespace ZoomThumb.Views.Behaviors
         /// <param name="e"></param>
         private static void AssociatedObject_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var image = ViewHelper.GetChildControl<Image>(sender);
-            if (image is null) return;
-
+            if (!(sender is Image image)) return;
             UpdateBitmapScalingMode(image);
         }
 

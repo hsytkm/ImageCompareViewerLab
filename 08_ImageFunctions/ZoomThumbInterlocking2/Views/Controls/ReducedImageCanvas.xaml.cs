@@ -60,7 +60,7 @@ namespace ZoomThumb.Views.Controls
                 {
                     // 主画像のスクロール更新時にViewportを更新する
                     scrollViewer.ScrollChangedAsObservable()
-                        .Subscribe(e => UpdateThumbnailViewport(e))
+                        .Subscribe(UpdateThumbnailViewport)
                         .AddTo(CompositeDisposable);
 
                     if (ViewHelper.GetChildControl<Image>(scrollViewer) is Image mainImage)
@@ -69,8 +69,8 @@ namespace ZoomThumb.Views.Controls
                         mainImage.TargetUpdatedAsObservable()
                             .Select(e => e.OriginalSource as Image)
                             .Select(image => image?.Source as BitmapSource)
-                            .Where(source => source != null)
-                            .Subscribe(source => ThumbImage.Source = source)
+                            .Where(x => x != null)
+                            .Subscribe(x => ThumbImage.Source = x)
                             .AddTo(CompositeDisposable);
                     }
                 }

@@ -53,6 +53,26 @@ namespace ZoomThumb.Views.Behaviors
 
         #endregion
 
+        #region IsFrameInterlockProperty(OneWay)
+
+        // スクロール/サイズを他コントロールと連動
+        private static readonly DependencyProperty IsFrameInterlockProperty =
+            DependencyProperty.Register(
+                nameof(IsFrameInterlock),
+                typeof(bool),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    default(bool),
+                    FrameworkPropertyMetadataOptions.None));
+
+        public bool IsFrameInterlock
+        {
+            get => (bool)GetValue(IsFrameInterlockProperty);
+            set => SetValue(IsFrameInterlockProperty, value);
+        }
+
+        #endregion
+
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -76,7 +96,7 @@ namespace ZoomThumb.Views.Behaviors
                 .AddTo(CompositeDisposable);
 
             // マウスクリック移動による枠位置の更新
-            AssociatedObject.MouseLeftClickMoveAsObservable(originControl: parentPanel, handled: true)
+            AssociatedObject.MouseLeftDragAsObservable(originControl: parentPanel, handled: true)
                 .Subscribe(v => FrameAddrSizeRatio.Value = GetNewFrameAddrSizeRatio(AssociatedObject, groundPanelSize.Value, v))
                 .AddTo(CompositeDisposable);
 

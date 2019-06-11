@@ -39,6 +39,7 @@
 
             <vc:ImageOverlapSamplingFrame FrameRectRatio="{Binding ImageOverlapSamplingFrameRectRatio, ElementName=root, Mode=OneWayToSource}"
                                           GroundPanelSize="{Binding ImageControlSize, ElementName=root, Mode=OneWay}"
+                                          IsFrameInterlock="{Binding IsViewerInterlock, ElementName=root, Mode=OneWay}"
                                           FrameBorderBrush="Cyan" >
                 <vc:ImageOverlapSamplingFrame.Style>
                     <Style TargetType="vc:ImageOverlapSamplingFrame">

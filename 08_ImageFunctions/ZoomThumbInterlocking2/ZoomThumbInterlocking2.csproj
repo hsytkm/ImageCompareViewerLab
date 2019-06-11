@@ -115,6 +115,7 @@
     <Compile Include="Views\Behaviors\MovableFrameBehavior.cs" />
     <Compile Include="Views\Common\UIEventObservableExtensions.cs" />
     <Compile Include="Views\Common\MouseObservableExtensions.cs" />
+    <Compile Include="Views\Common\InterlockedData.cs" />
     <Compile Include="Views\Common\ViewHelper.cs" />
     <Compile Include="Views\Behaviors\ImageBitmapScalingBehavior.cs" />
     <Compile Include="Views\Controls\ImageOverlapSamplingFrame.xaml.cs">

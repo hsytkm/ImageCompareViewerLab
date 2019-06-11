@@ -4,7 +4,7 @@ using System.Windows.Interactivity;
 
 namespace ZoomThumb.Views.Behaviors
 {
-    public class MouseCaptureBehavior : Behavior<FrameworkElement>
+    public class MouseCaptureBehavior : Behavior<UIElement>
     {
         protected override void OnAttached()
         {
@@ -26,18 +26,18 @@ namespace ZoomThumb.Views.Behaviors
 
         private void AssociatedObject_MouseButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (!(sender is FrameworkElement fe)) return;
+            if (!(sender is UIElement uie)) return;
 
             // コレが無いと素早い操作時に食み出て、マウスイベントを拾えなくなる(追従しない)
-            fe.CaptureMouse();
+            uie.CaptureMouse();
         }
 
         private void AssociatedObject_MouseButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (!(sender is FrameworkElement fe)) return;
+            if (!(sender is UIElement uie)) return;
 
             // マウスの強制補足を終了
-            fe.ReleaseMouseCapture();
+            uie.ReleaseMouseCapture();
         }
 
     }

@@ -27,6 +27,14 @@ namespace ZoomThumb.Views.Common
                 handler => control.MouseLeftButtonDown -= handler
             );
 
+        public static IObservable<MouseEventArgs> PreviewMouseLeftButtonUpAsObservable(this UIElement control, bool handled = false)
+            => Observable.FromEvent<MouseButtonEventHandler, MouseButtonEventArgs>
+            (
+                handler => (sender, e) => { e.Handled = handled; handler(e); },
+                handler => control.PreviewMouseLeftButtonUp += handler,
+                handler => control.PreviewMouseLeftButtonUp -= handler
+            );
+
         public static IObservable<MouseEventArgs> MouseLeftButtonUpAsObservable(this UIElement control, bool handled = false)
             => Observable.FromEvent<MouseButtonEventHandler, MouseButtonEventArgs>
             (
@@ -57,7 +65,7 @@ namespace ZoomThumb.Views.Common
         /// <param name="control">対象コントロール</param>
         /// <param name="originControl">マウス移動量の原点コントロール</param>
         /// <returns>移動量</returns>
-        public static IObservable<Vector> MouseLeftClickMoveAsObservable(this UIElement control, bool handled = false, IInputElement originControl = null)
+        public static IObservable<Vector> MouseLeftDragAsObservable(this UIElement control, bool handled = false, IInputElement originControl = null)
         {
             if (originControl is null) originControl = control;
 
@@ -82,6 +90,6 @@ namespace ZoomThumb.Views.Common
                 handler => control.PreviewMouseWheel -= handler
             );
 
-        
+
     }
 }

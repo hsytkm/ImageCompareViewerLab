@@ -1,12 +1,10 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interactivity;
-using ZoomThumb.Views.Common;
 
 namespace ZoomThumb.Views.Behaviors
 {
-    class MouseHorizontalShiftBehavior : Behavior<FrameworkElement>
+    class MouseHorizontalShiftBehavior : Behavior<ScrollViewer>
     {
         protected override void OnAttached()
         {
@@ -27,11 +25,10 @@ namespace ZoomThumb.Views.Behaviors
         /// <param name="e"></param>
         private static void AssociatedObject_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (!(sender is ScrollViewer scrollViewer)) return;
+
             if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
             {
-                var scrollViewer = ViewHelper.GetChildControl<ScrollViewer>(sender);
-                if (scrollViewer is null) return;
-
                 if (e.Delta < 0)
                     scrollViewer.LineRight();
                 else

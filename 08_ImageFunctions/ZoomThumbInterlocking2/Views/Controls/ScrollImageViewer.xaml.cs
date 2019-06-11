@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -26,32 +25,9 @@ namespace ZoomThumb.Views.Controls
     {
         private static readonly Type SelfType = typeof(ScrollImageViewer);
 
-        #region InterlockedData
-
-        private class UniqueId
-        {
-            private static int BaseId = 0;  // 1からID割り振られる
-            public int Id { get; }
-
-            // newする度に一意IDをインクリ
-            public UniqueId() => Id = Interlocked.Increment(ref BaseId);
-        }
-        private readonly UniqueId MyInstanceId = new UniqueId();
-
-        private struct InterlockedData<T>
-        {
-            public int PublisherId { get; }
-            public T Data { get; }
-            public InterlockedData(int id, T data)
-            {
-                PublisherId = id;
-                Data = data;
-            }
-        }
-
-        #endregion
-
         #region InterlockedField
+
+        private readonly UniqueId MyInstanceId = new UniqueId();
 
         // staticにより全インスタンスでズーム倍率を共有する
         private static readonly ReactivePropertySlim<InterlockedData<ImageZoomMagnification>> InterlockedImageZoomMag =

@@ -88,6 +88,26 @@ namespace ZoomThumb.Views.Controls
 
         #endregion
 
+        #region IsFrameInterlockProperty(OneWay)
+
+        // スクロール/サイズを他コントロールと連動
+        private static readonly DependencyProperty IsFrameInterlockProperty =
+            DependencyProperty.Register(
+                nameof(IsFrameInterlock),
+                typeof(bool),
+                SelfType,
+                new FrameworkPropertyMetadata(
+                    default(bool),
+                    FrameworkPropertyMetadataOptions.None));
+
+        public bool IsFrameInterlock
+        {
+            get => (bool)GetValue(IsFrameInterlockProperty);
+            set => SetValue(IsFrameInterlockProperty, value);
+        }
+
+        #endregion
+
         public ImageOverlapSamplingFrame()
         {
             InitializeComponent();
