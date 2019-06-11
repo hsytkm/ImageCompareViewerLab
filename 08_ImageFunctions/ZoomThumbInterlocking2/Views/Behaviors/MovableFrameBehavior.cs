@@ -16,13 +16,32 @@ namespace ZoomThumb.Views.Behaviors
     {
         private static readonly Type SelfType = typeof(MovableFrameBehavior);
 
+        #region InterlockedField
+
+        private readonly UniqueId MyInstanceId = new UniqueId();
+
+        // staticにより全インスタンスで枠位置のシフト量を共有する
+        private static readonly ReactivePropertySlim<InterlockedData<Vector>> InterlockedPointShiftRatio =
+            new ReactivePropertySlim<InterlockedData<Vector>>(mode: ReactivePropertyMode.None);
+
+        private void PulishInterlockedPointShiftRatio(Vector vector) =>
+            InterlockedPointShiftRatio.Value = new InterlockedData<Vector>(MyInstanceId.Id, vector);
+
+        // staticにより全インスタンスで枠サイズを共有する
+        private static readonly ReactivePropertySlim<InterlockedData<Size>> InterlockedSizeChangeRatio =
+            new ReactivePropertySlim<InterlockedData<Size>>(mode: ReactivePropertyMode.None);
+
+        private void PulishInterlockedSizeChangeRatio(Size size) =>
+            InterlockedSizeChangeRatio.Value = new InterlockedData<Size>(MyInstanceId.Id, size);
+
+        #endregion
+
         private static bool IsSizeChanging => (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control;
 
-        private static readonly double DefaultSizeRatio = 0.1;
-        private static readonly double DefaultAddrRatio = 0.5 - (DefaultSizeRatio / 2.0);
-
-        private readonly ReactivePropertySlim<Rect> FrameAddrSizeRatio =
-            new ReactivePropertySlim<Rect>(new Rect(DefaultAddrRatio, DefaultAddrRatio, DefaultSizeRatio, DefaultSizeRatio));
+        private static readonly double DefaultLengthRatio = 0.1;
+        private static readonly double DefaultAddrRatio = 0.5 - (DefaultLengthRatio / 2.0);
+        private static readonly Size DefaultSizeRatio = new Size(DefaultLengthRatio, DefaultLengthRatio);
+        private static readonly Point DefaultPointRatio = new Point(DefaultAddrRatio, DefaultAddrRatio);
 
         private readonly MyCompositeDisposable CompositeDisposable = new MyCompositeDisposable();
 
@@ -41,7 +60,7 @@ namespace ZoomThumb.Views.Behaviors
                     {
                         if (d is MovableFrameBehavior behavior && e.NewValue is Rect rectRatio)
                         {
-                            behavior.FrameAddrSizeRatio.Value = rectRatio;
+                            //behavior.FrameAddrSizeRatio.Value = rectRatio;
                         }
                     }));
 
@@ -95,29 +114,84 @@ namespace ZoomThumb.Views.Behaviors
                 .ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.DistinctUntilChanged)
                 .AddTo(CompositeDisposable);
 
+            var frameNewSizeRatio = new ReactivePropertySlim<Size>(DefaultSizeRatio).AddTo(CompositeDisposable);
+            var frameNewPointRatio = new ReactivePropertySlim<Point>(DefaultPointRatio).AddTo(CompositeDisposable);
+
             // マウスクリック移動による枠位置の更新
             AssociatedObject.MouseLeftDragAsObservable(originControl: parentPanel, handled: true)
-                .Subscribe(v => FrameAddrSizeRatio.Value = GetNewFrameAddrSizeRatio(AssociatedObject, groundPanelSize.Value, v))
-                .AddTo(CompositeDisposable);
-
-            // 枠の描画更新
-            FrameAddrSizeRatio
-                .CombineLatest(groundPanelSize, (rectRate, groundSize) => (rectRate, groundSize))
+                .CombineLatest(groundPanelSize, (mousePoint, groundSize) => (mousePoint, groundSize))
                 .Subscribe(x =>
                 {
-                    //Console.WriteLine($"FrameRect: {x.frameRect.X:f3}  {x.frameRect.Y:f3}  {x.frameRect.Width:f3}  {x.frameRect.Height:f3} ");
-                    var rect = x.rectRate;
-                    rect.Scale(x.groundSize.Width, x.groundSize.Height);
-
-                    Canvas.SetLeft(AssociatedObject, rect.X);
-                    Canvas.SetTop(AssociatedObject, rect.Y);
-                    AssociatedObject.Width = rect.Width;
-                    AssociatedObject.Height = rect.Height;
-
-                    // プロパティの更新
-                    FrameRectRatio = x.rectRate;
+                    if (IsSizeChanging)
+                        frameNewSizeRatio.Value = GetSizeRatio(AssociatedObject, x.groundSize, x.mousePoint);
+                    else
+                        frameNewPointRatio.Value = GetPointRatio(AssociatedObject, x.groundSize, x.mousePoint);
                 })
                 .AddTo(CompositeDisposable);
+
+            #region サイズ変更イベント
+
+            // サイズ変更イベント
+            frameNewSizeRatio
+                .CombineLatest(groundPanelSize, (frameSizeRatio, groundSize) => (frameSizeRatio, groundSize))
+                .Subscribe(x =>
+                {
+                    // 他コントロールへの通知
+                    if (IsFrameInterlock) PulishInterlockedSizeChangeRatio(x.frameSizeRatio);
+
+                    // 自コントロールの位置
+                    UpdateFrameView(AssociatedObject, x.groundSize, x.frameSizeRatio);
+                })
+                .AddTo(CompositeDisposable);
+
+            // インスタンス間のサイズの共有
+            InterlockedSizeChangeRatio
+                .Where(x => x.PublisherId != MyInstanceId.Id)
+                .Select(x => x.Data)
+                .CombineLatest(groundPanelSize, (frameSizeRatio, groundSize) => (frameSizeRatio, groundSize))
+                .Subscribe(x =>
+                {
+                    UpdateFrameView(AssociatedObject, x.groundSize, x.frameSizeRatio);
+                })
+                .AddTo(CompositeDisposable);
+
+            #endregion
+
+            #region 位置変更イベント
+
+            // 位置変更イベント
+            frameNewPointRatio
+                .CombineLatest(groundPanelSize, (framePointRatio, groundSize) => (framePointRatio, groundSize))
+                .Subscribe(x =>
+                {
+                    // 他コントロールへの通知
+                    if (IsFrameInterlock)
+                    {
+                        var pointVector = x.framePointRatio - FrameRectRatio.TopLeft;
+                        if (pointVector != new Vector(0, 0))
+                        {
+                            PulishInterlockedPointShiftRatio(pointVector);
+                        }
+                    }
+
+                    // 自コントロールの位置
+                    UpdateFrameView(AssociatedObject, x.groundSize, x.framePointRatio);
+                })
+                .AddTo(CompositeDisposable);
+
+            // インスタンス間のシフト量の共有
+            InterlockedPointShiftRatio
+                .Where(x => x.PublisherId != MyInstanceId.Id)
+                .Select(x => x.Data)
+                .CombineLatest(groundPanelSize, (shiftRatio, groundSize) => (shiftRatio, groundSize))
+                .Subscribe(x =>
+                {
+                    var newPointRatio = FrameRectRatio.TopLeft + x.shiftRatio;
+                    UpdateFrameView(AssociatedObject, x.groundSize, newPointRatio);
+                })
+                .AddTo(CompositeDisposable);
+
+            #endregion
 
         }
 
@@ -127,52 +201,62 @@ namespace ZoomThumb.Views.Behaviors
             CompositeDisposable.Dispose();
         }
 
-        #region FrameAddrSizeRatio
+        #region UpdateFrameView
 
-        private static Rect GetNewFrameAddrSizeRatio(FrameworkElement frameControl, Size groundSize, Vector shift) =>
-            IsSizeChanging
-                ? GetFrameAddrSizeFromSizeShift(frameControl, groundSize, shift)
-                : GetFrameAddrSizeFromAddrShift(frameControl, groundSize, shift);
+        // サイズのみ変更
+        private void UpdateFrameView(FrameworkElement fe, Size groundSize, Size size) =>
+            UpdateFrameView(fe, groundSize, new Rect(FrameRectRatio.TopLeft, size));
 
-        // 枠のサイズ変更
-        private static Rect GetFrameAddrSizeFromSizeShift(FrameworkElement frameControl, Size groundSize, Vector shift)
+        // 位置のみ変更
+        private void UpdateFrameView(FrameworkElement fe, Size groundSize, Point point) =>
+            UpdateFrameView(fe, groundSize, new Rect(point, FrameRectRatio.Size));
+
+        private void UpdateFrameView(FrameworkElement fe, Size groundSize, Rect rectRatio)
         {
             double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
 
-            var currentPoint = new Point(Canvas.GetLeft(frameControl), Canvas.GetTop(frameControl));
+            var rect = rectRatio;
+            rect.Scale(groundSize.Width, groundSize.Height);
 
+            var width = clip(rect.Width, 0.0, groundSize.Width);
+            var height = clip(rect.Height, 0.0, groundSize.Height);
+            var left = clip(rect.X, 0.0, groundSize.Width - width);
+            var top = clip(rect.Y, 0.0, groundSize.Height - height);
+
+            Canvas.SetLeft(fe, left);
+            Canvas.SetTop(fe, top);
+            fe.Width = width;
+            fe.Height = height;
+
+            // プロパティの更新
+            FrameRectRatio = new Rect(
+                left / groundSize.Width, top / groundSize.Height,
+                width / groundSize.Width, height / groundSize.Height);
+        }
+
+        #endregion
+
+        #region FrameAddrSizeRatio
+
+        // 枠のサイズ変更
+        private static Size GetSizeRatio(FrameworkElement frameControl, Size groundSize, Vector shift)
+        {
             var oldSize = ViewHelper.GetControlActualSize(frameControl);
             if (!oldSize.IsValidValue()) return default;
 
-            var width = clip(oldSize.Width + shift.X, 0.0, groundSize.Width - currentPoint.X);
-            var height = clip(oldSize.Height + shift.Y, 0.0, groundSize.Height - currentPoint.Y);
+            var width = Math.Max(0, oldSize.Width + shift.X);
+            var height = Math.Max(0, oldSize.Height + shift.Y);
 
-            return new Rect(
-                currentPoint.X / groundSize.Width,
-                currentPoint.Y / groundSize.Height,
-                width / groundSize.Width,
-                height / groundSize.Height);
+            return new Size(width / groundSize.Width, height / groundSize.Height);
         }
 
         // Canvas上の位置を指定
-        private static Rect GetFrameAddrSizeFromAddrShift(FrameworkElement frameControl, Size groundSize, Vector shift)
+        private static Point GetPointRatio(FrameworkElement frameControl, Size groundSize, Vector shift)
         {
-            double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
-
-            var currentActualSize = ViewHelper.GetControlActualSize(frameControl);
-            if (!currentActualSize.IsValidValue()) return default;
-
             var oldPoint = new Point(Canvas.GetLeft(frameControl), Canvas.GetTop(frameControl));
             var newPoint = oldPoint + shift;
 
-            var left = clip(newPoint.X, 0.0, groundSize.Width - currentActualSize.Width);
-            var top = clip(newPoint.Y, 0.0, groundSize.Height - currentActualSize.Height);
-
-            return new Rect(
-                left / groundSize.Width,
-                top / groundSize.Height,
-                currentActualSize.Width / groundSize.Width,
-                currentActualSize.Height / groundSize.Height);
+            return new Point(newPoint.X / groundSize.Width, newPoint.Y / groundSize.Height);
         }
 
         #endregion
