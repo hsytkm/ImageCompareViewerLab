@@ -21,18 +21,18 @@ namespace ZoomThumb.Views.Behaviors
         private readonly UniqueId MyInstanceId = new UniqueId();
 
         // staticにより全インスタンスで枠位置のシフト量を共有する
-        private static readonly ReactivePropertySlim<InterlockedData<Vector>> InterlockedPointShiftRatio =
+        private static readonly ReactivePropertySlim<InterlockedData<Vector>> InterlockedPointVectorRatio =
             new ReactivePropertySlim<InterlockedData<Vector>>(mode: ReactivePropertyMode.None);
 
         private void PulishInterlockedPointShiftRatio(Vector vector) =>
-            InterlockedPointShiftRatio.Value = new InterlockedData<Vector>(MyInstanceId.Id, vector);
+            InterlockedPointVectorRatio.Value = new InterlockedData<Vector>(MyInstanceId.Id, vector);
 
         // staticにより全インスタンスで枠サイズを共有する
-        private static readonly ReactivePropertySlim<InterlockedData<Size>> InterlockedSizeChangeRatio =
+        private static readonly ReactivePropertySlim<InterlockedData<Size>> InterlockedNewSizeRatio =
             new ReactivePropertySlim<InterlockedData<Size>>(mode: ReactivePropertyMode.None);
 
         private void PulishInterlockedSizeChangeRatio(Size size) =>
-            InterlockedSizeChangeRatio.Value = new InterlockedData<Size>(MyInstanceId.Id, size);
+            InterlockedNewSizeRatio.Value = new InterlockedData<Size>(MyInstanceId.Id, size);
 
         #endregion
 
@@ -81,7 +81,7 @@ namespace ZoomThumb.Views.Behaviors
                 typeof(bool),
                 SelfType,
                 new FrameworkPropertyMetadata(
-                    default(bool),
+                    false,
                     FrameworkPropertyMetadataOptions.None));
 
         public bool IsFrameInterlock
@@ -114,81 +114,86 @@ namespace ZoomThumb.Views.Behaviors
                 .ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.DistinctUntilChanged)
                 .AddTo(CompositeDisposable);
 
-            var frameNewSizeRatio = new ReactivePropertySlim<Size>(DefaultSizeRatio).AddTo(CompositeDisposable);
-            var frameNewPointRatio = new ReactivePropertySlim<Point>(DefaultPointRatio).AddTo(CompositeDisposable);
-
             // マウスクリック移動による枠位置の更新
-            AssociatedObject.MouseLeftDragAsObservable(originControl: parentPanel, handled: true)
-                .CombineLatest(groundPanelSize, (mousePoint, groundSize) => (mousePoint, groundSize))
-                .Subscribe(x =>
-                {
-                    if (IsSizeChanging)
-                        frameNewSizeRatio.Value = GetSizeRatio(AssociatedObject, x.groundSize, x.mousePoint);
-                    else
-                        frameNewPointRatio.Value = GetPointRatio(AssociatedObject, x.groundSize, x.mousePoint);
-                })
-                .AddTo(CompositeDisposable);
+            var mouseDragPoint = AssociatedObject.MouseLeftDragPointAsObservable(originControl: parentPanel, handled: true);
 
             #region サイズ変更イベント
 
+            var frameNewSizeRatio = new ReactivePropertySlim<Size>(DefaultSizeRatio).AddTo(CompositeDisposable);
+
             // サイズ変更イベント
-            frameNewSizeRatio
-                .CombineLatest(groundPanelSize, (frameSizeRatio, groundSize) => (frameSizeRatio, groundSize))
+            mouseDragPoint
+                .Where(_ => IsSizeChanging)
+                .CombineLatest(groundPanelSize, (dragPoint, groundSize) => (dragPoint, groundSize))
                 .Subscribe(x =>
                 {
-                    // 他コントロールへの通知
-                    if (IsFrameInterlock) PulishInterlockedSizeChangeRatio(x.frameSizeRatio);
+                    // 枠現在位置とマウス現在位置の差分を新サイズにする
+                    var dragPointRatio = new Point(x.dragPoint.X / x.groundSize.Width, x.dragPoint.Y / x.groundSize.Height);
+                    var frameSizeRatio = GetNewSizeRatio(dragPointRatio, FrameRectRatio);
 
-                    // 自コントロールの位置
-                    UpdateFrameView(AssociatedObject, x.groundSize, x.frameSizeRatio);
+                    // 他コントロールへの通知
+                    if (IsFrameInterlock) PulishInterlockedSizeChangeRatio(frameSizeRatio);
+
+                    // 自コントロールの更新
+                    frameNewSizeRatio.Value = frameSizeRatio;
                 })
                 .AddTo(CompositeDisposable);
 
             // インスタンス間のサイズの共有
-            InterlockedSizeChangeRatio
+            InterlockedNewSizeRatio
                 .Where(x => x.PublisherId != MyInstanceId.Id)
                 .Select(x => x.Data)
-                .CombineLatest(groundPanelSize, (frameSizeRatio, groundSize) => (frameSizeRatio, groundSize))
-                .Subscribe(x =>
-                {
-                    UpdateFrameView(AssociatedObject, x.groundSize, x.frameSizeRatio);
-                })
+                .Subscribe(x => frameNewSizeRatio.Value = x)
+                .AddTo(CompositeDisposable);
+
+            // 自コントロールのサイズ
+            frameNewSizeRatio
+                .CombineLatest(groundPanelSize, (newSizeRatio, groundSize) => (newSizeRatio, groundSize))
+                .Subscribe(x => UpdateFrameView(x.groundSize, x.newSizeRatio))
                 .AddTo(CompositeDisposable);
 
             #endregion
 
             #region 位置変更イベント
 
+            var frameNewPointRatio = new ReactivePropertySlim<Point>(DefaultPointRatio).AddTo(CompositeDisposable);
+
+            //◆◆ シフトが変！ ◆◆
+
             // 位置変更イベント
-            frameNewPointRatio
-                .CombineLatest(groundPanelSize, (framePointRatio, groundSize) => (framePointRatio, groundSize))
+            mouseDragPoint
+                .Where(_ => !IsSizeChanging)
+                .Pairwise()
+                .Select(x => x.NewItem - x.OldItem)
+                .CombineLatest(groundPanelSize, (dragVector, groundSize) => (dragVector, groundSize))
                 .Subscribe(x =>
                 {
+                    // ドラッグ移動量から新位置を取得する
+                    var dragVectorRatio = new Vector(x.dragVector.X / x.groundSize.Width, x.dragVector.Y / x.groundSize.Height);
+                    var framePointRatio = GetNewPointRatio(dragVectorRatio, FrameRectRatio);
+
                     // 他コントロールへの通知
                     if (IsFrameInterlock)
                     {
-                        var pointVector = x.framePointRatio - FrameRectRatio.TopLeft;
-                        if (pointVector != new Vector(0, 0))
-                        {
-                            PulishInterlockedPointShiftRatio(pointVector);
-                        }
+                        PulishInterlockedPointShiftRatio(dragVectorRatio);
                     }
 
-                    // 自コントロールの位置
-                    UpdateFrameView(AssociatedObject, x.groundSize, x.framePointRatio);
+                    // 自コントロールの更新
+                    frameNewPointRatio.Value = framePointRatio;
                 })
                 .AddTo(CompositeDisposable);
 
             // インスタンス間のシフト量の共有
-            InterlockedPointShiftRatio
+            InterlockedPointVectorRatio
                 .Where(x => x.PublisherId != MyInstanceId.Id)
                 .Select(x => x.Data)
-                .CombineLatest(groundPanelSize, (shiftRatio, groundSize) => (shiftRatio, groundSize))
-                .Subscribe(x =>
-                {
-                    var newPointRatio = FrameRectRatio.TopLeft + x.shiftRatio;
-                    UpdateFrameView(AssociatedObject, x.groundSize, newPointRatio);
-                })
+                .Subscribe(x => frameNewPointRatio.Value = FrameRectRatio.TopLeft + x)
+                .AddTo(CompositeDisposable);
+
+            // 自コントロールの位置
+            frameNewPointRatio
+                .CombineLatest(groundPanelSize, (newPointRatio, groundSize) => (newPointRatio, groundSize))
+                .Subscribe(x => UpdateFrameView(x.groundSize, x.newPointRatio))
                 .AddTo(CompositeDisposable);
 
             #endregion
@@ -201,28 +206,60 @@ namespace ZoomThumb.Views.Behaviors
             CompositeDisposable.Dispose();
         }
 
-        #region UpdateFrameView
+        #region GetNewSize/Point
 
-        // サイズのみ変更
-        private void UpdateFrameView(FrameworkElement fe, Size groundSize, Size size) =>
-            UpdateFrameView(fe, groundSize, new Rect(FrameRectRatio.TopLeft, size));
-
-        // 位置のみ変更
-        private void UpdateFrameView(FrameworkElement fe, Size groundSize, Point point) =>
-            UpdateFrameView(fe, groundSize, new Rect(point, FrameRectRatio.Size));
-
-        private void UpdateFrameView(FrameworkElement fe, Size groundSize, Rect rectRatio)
+        // 枠の新サイズを取得
+        private static Size GetNewSizeRatio(Point dragPointRatio, Rect currentFrameRatio)
         {
             double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
 
-            var rect = rectRatio;
+            // 現在位置とドラッグ位置から新サイズを求める
+            var frameSizeRatio = new Size(Math.Max(0, dragPointRatio.X - currentFrameRatio.Left), Math.Max(0, dragPointRatio.Y - currentFrameRatio.Top));
+
+            frameSizeRatio.Width = clip(frameSizeRatio.Width, 0, 1 - currentFrameRatio.Left);
+            frameSizeRatio.Height = clip(frameSizeRatio.Height, 0, 1 - currentFrameRatio.Top);
+            return frameSizeRatio;
+        }
+
+        // 枠の新位置を取得
+        private static Point GetNewPointRatio(Vector dragVectorRatio, Rect currentFrameRatio)
+        {
+            double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
+
+            // 現在位置とドラッグ移動量から新位置を求める
+            var framePointRatio = currentFrameRatio.TopLeft + dragVectorRatio;
+
+            framePointRatio.X = clip(framePointRatio.X, 0, 1 - currentFrameRatio.Width);
+            framePointRatio.Y = clip(framePointRatio.Y, 0, 1 - currentFrameRatio.Height);
+            return framePointRatio;
+        }
+
+        #endregion
+
+        #region UpdateFrameView
+
+        // サイズのみ変更
+        private void UpdateFrameView(Size groundSize, Size sizeRatio) =>
+            UpdateFrameView(groundSize, FrameRectRatio.TopLeft, sizeRatio);
+
+        // 位置のみ変更
+        private void UpdateFrameView(Size groundSize, Point pointRatio) =>
+            UpdateFrameView(groundSize, pointRatio, FrameRectRatio.Size);
+
+        // サイズと位置の変更
+        private void UpdateFrameView(Size groundSize, Point pointRatio, Size sizeRatio)
+        {
+            double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);
+
+            var rect = new Rect(pointRatio, sizeRatio);
             rect.Scale(groundSize.Width, groundSize.Height);
 
             var width = clip(rect.Width, 0.0, groundSize.Width);
             var height = clip(rect.Height, 0.0, groundSize.Height);
-            var left = clip(rect.X, 0.0, groundSize.Width - width);
-            var top = clip(rect.Y, 0.0, groundSize.Height - height);
+            var left = clip(rect.Left, 0.0, groundSize.Width - width);
+            var top = clip(rect.Top, 0.0, groundSize.Height - height);
 
+            var fe = AssociatedObject;
             Canvas.SetLeft(fe, left);
             Canvas.SetTop(fe, top);
             fe.Width = width;
@@ -232,31 +269,6 @@ namespace ZoomThumb.Views.Behaviors
             FrameRectRatio = new Rect(
                 left / groundSize.Width, top / groundSize.Height,
                 width / groundSize.Width, height / groundSize.Height);
-        }
-
-        #endregion
-
-        #region FrameAddrSizeRatio
-
-        // 枠のサイズ変更
-        private static Size GetSizeRatio(FrameworkElement frameControl, Size groundSize, Vector shift)
-        {
-            var oldSize = ViewHelper.GetControlActualSize(frameControl);
-            if (!oldSize.IsValidValue()) return default;
-
-            var width = Math.Max(0, oldSize.Width + shift.X);
-            var height = Math.Max(0, oldSize.Height + shift.Y);
-
-            return new Size(width / groundSize.Width, height / groundSize.Height);
-        }
-
-        // Canvas上の位置を指定
-        private static Point GetPointRatio(FrameworkElement frameControl, Size groundSize, Vector shift)
-        {
-            var oldPoint = new Point(Canvas.GetLeft(frameControl), Canvas.GetTop(frameControl));
-            var newPoint = oldPoint + shift;
-
-            return new Point(newPoint.X / groundSize.Width, newPoint.Y / groundSize.Height);
         }
 
         #endregion

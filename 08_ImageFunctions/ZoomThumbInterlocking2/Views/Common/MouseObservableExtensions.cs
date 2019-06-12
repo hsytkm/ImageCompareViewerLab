@@ -60,12 +60,32 @@ namespace ZoomThumb.Views.Common
             control.MouseMoveAsObservable().Select(e => e.GetPosition((IInputElement)control));
 
         /// <summary>
-        /// マウスクリック中の移動量を流す
+        /// マウスドラッグ中の絶対座標を流す
         /// </summary>
         /// <param name="control">対象コントロール</param>
         /// <param name="originControl">マウス移動量の原点コントロール</param>
-        /// <returns>移動量</returns>
-        public static IObservable<Vector> MouseLeftDragAsObservable(this UIElement control, bool handled = false, IInputElement originControl = null)
+        /// <returns>絶対座標</returns>
+        public static IObservable<Point> MouseLeftDragPointAsObservable(this UIElement control, bool handled = false, IInputElement originControl = null)
+        {
+            if (originControl is null) originControl = control;
+
+            var mouseDown = control.MouseLeftButtonDownAsObservable(handled).ToUnit();
+            var mouseUp = control.MouseLeftButtonUpAsObservable(handled).ToUnit();
+
+            return control.MouseMoveAsObservable(handled)
+                .Select(e => e.GetPosition(originControl))
+                .SkipUntil(mouseDown)
+                .TakeUntil(mouseUp)
+                .Repeat();
+        }
+
+        /// <summary>
+        /// マウスドラッグ中の移動差分量を流す
+        /// </summary>
+        /// <param name="control">対象コントロール</param>
+        /// <param name="originControl">マウス移動量の原点コントロール</param>
+        /// <returns>移動差分量</returns>
+        public static IObservable<Vector> MouseLeftDragVectorAsObservable(this UIElement control, bool handled = false, IInputElement originControl = null)
         {
             if (originControl is null) originControl = control;
 
