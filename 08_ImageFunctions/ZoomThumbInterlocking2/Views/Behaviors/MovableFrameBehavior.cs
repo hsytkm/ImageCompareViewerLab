@@ -114,15 +114,16 @@ namespace ZoomThumb.Views.Behaviors
                 .ToReadOnlyReactivePropertySlim(mode: ReactivePropertyMode.DistinctUntilChanged)
                 .AddTo(CompositeDisposable);
 
-            // マウスクリック移動による枠位置の更新
-            var mouseDragPoint = AssociatedObject.MouseLeftDragPointAsObservable(originControl: parentPanel, handled: true);
+            // マウスクリック操作イベント(位置と移動量)
+            var mouseDragPointVector = AssociatedObject.MouseLeftDragPointVectorAsObservable(originControl: parentPanel, handled: true);
 
             #region サイズ変更イベント
 
+            // 自コントロールの新サイズ(割合)
             var frameNewSizeRatio = new ReactivePropertySlim<Size>(DefaultSizeRatio).AddTo(CompositeDisposable);
 
             // サイズ変更イベント
-            mouseDragPoint
+            mouseDragPointVector.Select(x => x.point)
                 .Where(_ => IsSizeChanging)
                 .CombineLatest(groundPanelSize, (dragPoint, groundSize) => (dragPoint, groundSize))
                 .Subscribe(x =>
@@ -156,15 +157,12 @@ namespace ZoomThumb.Views.Behaviors
 
             #region 位置変更イベント
 
+            // 自コントロールの新位置(割合)
             var frameNewPointRatio = new ReactivePropertySlim<Point>(DefaultPointRatio).AddTo(CompositeDisposable);
 
-            //◆◆ シフトが変！ ◆◆
-
             // 位置変更イベント
-            mouseDragPoint
+            mouseDragPointVector.Select(x => x.vector)
                 .Where(_ => !IsSizeChanging)
-                .Pairwise()
-                .Select(x => x.NewItem - x.OldItem)
                 .CombineLatest(groundPanelSize, (dragVector, groundSize) => (dragVector, groundSize))
                 .Subscribe(x =>
                 {

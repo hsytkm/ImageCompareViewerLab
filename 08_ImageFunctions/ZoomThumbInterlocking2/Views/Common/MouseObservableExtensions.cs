@@ -85,7 +85,29 @@ namespace ZoomThumb.Views.Common
         /// <param name="control">対象コントロール</param>
         /// <param name="originControl">マウス移動量の原点コントロール</param>
         /// <returns>移動差分量</returns>
-        public static IObservable<Vector> MouseLeftDragVectorAsObservable(this UIElement control, bool handled = false, IInputElement originControl = null)
+        //public static IObservable<Vector> MouseLeftDragVectorAsObservable(this UIElement control, bool handled = false, IInputElement originControl = null)
+        //{
+        //    if (originControl is null) originControl = control;
+
+        //    var mouseDown = control.MouseLeftButtonDownAsObservable(handled).ToUnit();
+        //    var mouseUp = control.MouseLeftButtonUpAsObservable(handled).ToUnit();
+
+        //    return control.MouseMoveAsObservable(handled)
+        //        .Select(e => e.GetPosition(originControl))
+        //        .Pairwise()     // クリック前からPairwiseしておく
+        //        .Select(x => x.NewItem - x.OldItem)
+        //        .SkipUntil(mouseDown)
+        //        .TakeUntil(mouseUp)
+        //        .Repeat();
+        //}
+
+        /// <summary>
+        /// マウスドラッグ中の絶対座標と移動差分量を流す
+        /// </summary>
+        /// <param name="control">対象コントロール</param>
+        /// <param name="originControl">マウス移動量の原点コントロール</param>
+        /// <returns>絶対座標と移動差分量</returns>
+        public static IObservable<(Point point, Vector vector)> MouseLeftDragPointVectorAsObservable(this UIElement control, bool handled = false, IInputElement originControl = null)
         {
             if (originControl is null) originControl = control;
 
@@ -94,7 +116,8 @@ namespace ZoomThumb.Views.Common
 
             return control.MouseMoveAsObservable(handled)
                 .Select(e => e.GetPosition(originControl))
-                .Pairwise().Select(x => x.NewItem - x.OldItem)
+                .Pairwise()     // クリック前からPairwiseしておく
+                .Select(x => (point: x.NewItem, vector: x.NewItem - x.OldItem))
                 .SkipUntil(mouseDown)
                 .TakeUntil(mouseUp)
                 .Repeat();

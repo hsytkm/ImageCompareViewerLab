@@ -5,6 +5,7 @@ using System.Windows.Data;
 
 namespace ZoomThumb.Views.Converters
 {
+    [ValueConversion(typeof(bool[]), typeof(Visibility))]
     public class BooleansToVisibilityConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
