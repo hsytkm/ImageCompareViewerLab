@@ -37,9 +37,12 @@
                 </i:Interaction.Behaviors>
             </Image>
 
-            <vc:ImageOverlapSamplingFrame FrameRectRatio="{Binding ImageOverlapSamplingFrameRectRatio, ElementName=root, Mode=OneWayToSource}"
-                                          GroundPanelSize="{Binding ImageControlSize, ElementName=root, Mode=OneWay}"
+            <!-- 画像上のサンプリング枠 -->
+            <vc:ImageOverlapSamplingFrame Width="{Binding ActualWidth, ElementName=MainImage, Mode=OneWay}"
+                                          Height="{Binding ActualHeight, ElementName=MainImage, Mode=OneWay}"
+                                          GroundPanelTopLeft="{Binding ContentViewRect.TopLeft, ElementName=root, Mode=OneWay}"
                                           IsFrameInterlock="{Binding IsViewerInterlock, ElementName=root, Mode=OneWay}"
+                                          FrameRectRatio="{Binding ImageOverlapSamplingFrameRectRatio, ElementName=root, Mode=OneWayToSource}"
                                           FrameBorderBrush="Cyan" >
                 <vc:ImageOverlapSamplingFrame.Style>
                     <Style TargetType="vc:ImageOverlapSamplingFrame">

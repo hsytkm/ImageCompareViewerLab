@@ -233,6 +233,23 @@ namespace ZoomThumb.Views.Controls
 
         #endregion
 
+        #region ContentViewRectProperty(OneWayToSource)
+
+        // ScrollContentの開始位置とサイズ(TopLeft:全体表示なら設定されて、拡大画面なら0になる)
+        private static readonly DependencyProperty ContentViewRectProperty =
+            DependencyProperty.Register(
+                nameof(ContentViewRect),
+                typeof(Rect),
+                SelfType);
+
+        public Rect ContentViewRect
+        {
+            get => (Rect)GetValue(ContentViewRectProperty);
+            set => SetValue(ContentViewRectProperty, value);
+        }
+
+        #endregion
+
         #region IsLoadImageProperty(OneWayToSource)
 
         // 画像の読み込み済みフラグ
@@ -289,26 +306,6 @@ namespace ZoomThumb.Views.Controls
         {
             get => (Point)GetValue(ImageCursorPointProperty);
             set => SetValue(ImageCursorPointProperty, value);
-        }
-
-        #endregion
-
-        #region ImageControlSizeProperty(OneWayToSource)
-
-        // View画像表示部のActualサイズ(画像重畳パネル用のサイズ通知)
-        private static readonly DependencyProperty ImageControlSizeProperty =
-            DependencyProperty.Register(
-                nameof(ImageControlSize),
-                typeof(Size),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    default(Size),
-                    FrameworkPropertyMetadataOptions.None));
-
-        public Size ImageControlSize
-        {
-            get => (Size)GetValue(ImageControlSizeProperty);
-            set => SetValue(ImageControlSizeProperty, value);
         }
 
         #endregion
@@ -420,7 +417,6 @@ namespace ZoomThumb.Views.Controls
                 MainImage.SizeChanged += (sender, e) =>
                 {
                     ImageViewActualSize.Value = e.NewSize; //=ActualSize
-                    ImageControlSize = e.NewSize;
                     MainImage_SizeChanged(sender, e);
                 };
                 MainImage.MouseMove += (sender, e) =>
@@ -454,6 +450,29 @@ namespace ZoomThumb.Views.Controls
                     };
                 }
             };
+
+            #endregion
+
+            #region ContentViewRect
+
+            // ScrollContentの開始位置とサイズ(TopLeft:全体表示なら設定されて、拡大画面なら0になる)
+            ScrollContentActualSize
+                .CombineLatest(ImageViewActualSize, (contentSize, imageSize) => (contentSize, imageSize))
+                .Subscribe(x =>
+                {
+                    double left = 0, top = 0;
+
+                    // 画像全体表示ならLeft/Topを計算
+                    if (x.contentSize.Width >= x.imageSize.Width && x.contentSize.Height >= x.imageSize.Height)
+                    {
+                        left = (x.contentSize.Width - x.imageSize.Width) / 2;
+                        top = (x.contentSize.Height - x.imageSize.Height) / 2;
+                    }
+
+                    double width = Math.Min(x.contentSize.Width, x.imageSize.Width);
+                    double height = Math.Min(x.contentSize.Height, x.imageSize.Height);
+                    ContentViewRect = new Rect(left, top, width, height);
+                });
 
             #endregion
 

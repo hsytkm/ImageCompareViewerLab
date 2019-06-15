@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using ZoomThumb.Views.Common;
 
 namespace ZoomThumb.Views.Controls
 {
@@ -13,23 +12,14 @@ namespace ZoomThumb.Views.Controls
     {
         private static readonly Type SelfType = typeof(ImageOverlapSamplingFrame);
 
-        #region FrameRectRatioProperty(TwoWay)
+        #region FrameRectRatioProperty(OneWayToSource)
 
-        // サンプリング枠の表示位置の割合
+        // Viewに表示されているサンプリング枠の位置割合
         private static readonly DependencyProperty FrameRectRatioProperty =
             DependencyProperty.Register(
                 nameof(FrameRectRatio),
                 typeof(Rect),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    default(Rect),
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    (d, e) =>
-                    {
-                        if (e.NewValue is Rect rect)
-                        {
-                        }
-                    }));
+                SelfType);
 
         public Rect FrameRectRatio
         {
@@ -39,51 +29,19 @@ namespace ZoomThumb.Views.Controls
 
         #endregion
 
-        #region FrameBorderBrushProperty(OneWay)
+        #region GroundPanelTopLeftProperty(OneWay)
 
-        // 枠色
-        private static readonly DependencyProperty FrameBorderBrushProperty =
+        // 下地パネルの開始位置(全体表示なら設定されて、拡大画面なら0になる)
+        private static readonly DependencyProperty GroundPanelTopLeftProperty =
             DependencyProperty.Register(
-                nameof(FrameBorderBrush),
-                typeof(Brush),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    default(Brush),
-                    FrameworkPropertyMetadataOptions.None));
+                nameof(GroundPanelTopLeft),
+                typeof(Point),
+                SelfType);
 
-        public Brush FrameBorderBrush
+        public Point GroundPanelTopLeft
         {
-            get => (Brush)GetValue(FrameBorderBrushProperty);
-            set => SetValue(FrameBorderBrushProperty, value);
-        }
-
-        #endregion
-
-        #region GroundPanelSizeProperty(OneWay)
-
-        // 下地パネルのサイズ
-        private static readonly DependencyProperty GroundPanelSizeProperty =
-            DependencyProperty.Register(
-                nameof(GroundPanelSize),
-                typeof(Size),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    default(Size),
-                    FrameworkPropertyMetadataOptions.None,
-                    (d, e) =>
-                    {
-                        if (ViewHelper.GetChildControl<Canvas>(d) is Canvas canvas
-                        && e.NewValue is Size newSize)
-                        {
-                            canvas.Width = newSize.Width;
-                            canvas.Height = newSize.Height;
-                        }
-                    }));
-
-        public Size GroundPanelSize
-        {
-            get => (Size)GetValue(GroundPanelSizeProperty);
-            set => SetValue(GroundPanelSizeProperty, value);
+            get => (Point)GetValue(GroundPanelTopLeftProperty);
+            set => SetValue(GroundPanelTopLeftProperty, value);
         }
 
         #endregion
@@ -104,6 +62,23 @@ namespace ZoomThumb.Views.Controls
         {
             get => (bool)GetValue(IsFrameInterlockProperty);
             set => SetValue(IsFrameInterlockProperty, value);
+        }
+
+        #endregion
+
+        #region FrameBorderBrushProperty(OneWay)
+
+        // サンプリング枠の色
+        private static readonly DependencyProperty FrameBorderBrushProperty =
+            DependencyProperty.Register(
+                nameof(FrameBorderBrush),
+                typeof(Brush),
+                SelfType);
+
+        public Brush FrameBorderBrush
+        {
+            get => (Brush)GetValue(FrameBorderBrushProperty);
+            set => SetValue(FrameBorderBrushProperty, value);
         }
 
         #endregion

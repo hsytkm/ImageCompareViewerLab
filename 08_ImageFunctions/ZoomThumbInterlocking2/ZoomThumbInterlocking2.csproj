@@ -128,6 +128,7 @@
       <DependentUpon>ScrollImageViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Converters\BooleansToVisibilityConverter.cs" />
+    <Compile Include="Views\Converters\PointToMarginConverter.cs" />
     <Compile Include="Views\ImageZoomMagnification.cs" />
     <Compile Include="ViewModels\ImageZoomPayload.cs" />
     <Compile Include="Views\ImageScrollControl.xaml.cs">

@@ -45,9 +45,9 @@ namespace ZoomThumb.Views.Behaviors
 
         private readonly MyCompositeDisposable CompositeDisposable = new MyCompositeDisposable();
 
-        #region FrameRectRatioProperty(TwoWay)
+        #region FrameRectRatioProperty(OneWayToSource)
 
-        // View枠の割合
+        // Viewに表示されているサンプリング枠の位置割合
         private static readonly DependencyProperty FrameRectRatioProperty =
             DependencyProperty.Register(
                 nameof(FrameRectRatio),
@@ -72,10 +72,7 @@ namespace ZoomThumb.Views.Behaviors
             DependencyProperty.Register(
                 nameof(IsFrameInterlock),
                 typeof(bool),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    false,
-                    FrameworkPropertyMetadataOptions.None));
+                SelfType);
 
         public bool IsFrameInterlock
         {

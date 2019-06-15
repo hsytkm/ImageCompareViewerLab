@@ -52,9 +52,13 @@
                               ImageOverlapSamplingFrameRect="{Binding SamplingFrameRect.Value, Mode=OneWayToSource}"
                               />
 
-        <!-- ScrollViewer上のサンプリング枠の残骸
+        <!-- ScrollViewer上のサンプリング枠
         <vc:ImageOverlapSamplingFrame Grid.Row="1"
-                                      FrameRectRatio="{Binding SamplingFrameRectRatio.Value, Mode=TwoWay}"
+                                      Width="{Binding ContentViewRect.Width, ElementName=MainScrollImageViewer, Mode=OneWay}"
+                                      Height="{Binding ContentViewRect.Height, ElementName=MainScrollImageViewer, Mode=OneWay}"
+                                      GroundPanelTopLeft="{Binding ContentViewRect.TopLeft, ElementName=MainScrollImageViewer, Mode=OneWay}"
+                                      IsFrameInterlock="{Binding IsImageViewerInterlock.Value, Mode=OneWay}"
+                                      FrameRectRatio="{Binding ImageOverlapSamplingFrameRectRatio, ElementName=MainScrollImageViewer, Mode=OneWayToSource}"
                                       FrameBorderBrush="Magenta" >
             <vc:ImageOverlapSamplingFrame.Style>
                 <Style TargetType="vc:ImageOverlapSamplingFrame">
@@ -71,7 +75,7 @@
                 </Style>
             </vc:ImageOverlapSamplingFrame.Style>
         </vc:ImageOverlapSamplingFrame>
-        -->
+         -->
 
         <vc:ReducedImageCanvas Grid.Row="1"
                                ScrollOffsetVectorRatioRequest="{Binding ScrollOffsetVectorRatio, ElementName=MainScrollImageViewer, Mode=OneWayToSource}" >

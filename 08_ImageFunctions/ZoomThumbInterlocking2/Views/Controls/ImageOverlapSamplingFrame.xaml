@@ -5,17 +5,26 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:vb="clr-namespace:ZoomThumb.Views.Behaviors"
+             xmlns:vcnv="clr-namespace:ZoomThumb.Views.Converters"
              x:Name="root"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top"
              mc:Ignorable="d" 
              d:DesignHeight="50" d:DesignWidth="50">
 
-    <Canvas x:Name="GroundCanvas"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center" >
-        <!--
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top" >
-        -->
+    <UserControl.Resources>
+        <vcnv:PointToMarginConverter x:Key="PointToMarginConverter" />
+    </UserControl.Resources>
+
+    <!--
+            Background="Red" Opacity="0.5"
+    -->
+    <Canvas HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Margin="{Binding GroundPanelTopLeft, ElementName=root, Converter={StaticResource PointToMarginConverter}, Mode=OneWay}"
+            Width="{Binding ActualWidth, ElementName=root, Mode=OneWay}"
+            Height="{Binding ActualHeight, ElementName=root, Mode=OneWay}" >
+
         <Border MinWidth="5"
                 MinHeight="5"
                 BorderBrush="{Binding FrameBorderBrush, ElementName=root, Mode=OneWay}"
