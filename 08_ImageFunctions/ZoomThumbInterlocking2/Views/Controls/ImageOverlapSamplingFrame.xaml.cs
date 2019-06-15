@@ -66,23 +66,6 @@ namespace ZoomThumb.Views.Controls
 
         #endregion
 
-        #region FrameBorderBrushProperty(OneWay)
-
-        // サンプリング枠の色
-        private static readonly DependencyProperty FrameBorderBrushProperty =
-            DependencyProperty.Register(
-                nameof(FrameBorderBrush),
-                typeof(Brush),
-                SelfType);
-
-        public Brush FrameBorderBrush
-        {
-            get => (Brush)GetValue(FrameBorderBrushProperty);
-            set => SetValue(FrameBorderBrushProperty, value);
-        }
-
-        #endregion
-
         public ImageOverlapSamplingFrame()
         {
             InitializeComponent();

@@ -1,5 +1,6 @@
 ﻿using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using Reactive.Bindings.Notifiers;
 using System;
 using System.Linq;
 using System.Reactive;
@@ -531,7 +532,7 @@ namespace ZoomThumb.Views.Controls
             #region SingleClickZoom
 
             // 一時ズームフラグ
-            var temporaryZoom = new ReactivePropertySlim<bool>(false, mode: ReactivePropertyMode.DistinctUntilChanged);
+            var temporaryZoom = new BooleanNotifier(false);
 
             // 長押しによる一時ズーム
             // Rx入門 (15) - スケジューラの利用 https://blog.xin9le.net/entry/2012/01/24/120722
@@ -543,12 +544,12 @@ namespace ZoomThumb.Views.Controls
                 //.Do(x => Console.WriteLine($" -> {Thread.CurrentThread.ManagedThreadId}"))
                 .Repeat()
                 .Where(_ => ImageZoomMag.Value.IsEntire)        // 全体表示なら流す(継続ズームを弾くため既にズームしてたら流さない)
-                .Subscribe(_ => temporaryZoom.Value = true);
+                .Subscribe(_ => temporaryZoom.TurnOn());
 
             // 一時ズーム解除
             ScrollContentMouseLeftUp
                 .Where(_ => temporaryZoom.Value)                // 一時ズームなら解除する(継続ズームは解除しない)
-                .Subscribe(_ => temporaryZoom.Value = false);
+                .Subscribe(_ => temporaryZoom.TurnOff());
 
             temporaryZoom.Subscribe(_ => SwitchClickZoomMag());
 
@@ -587,8 +588,7 @@ namespace ZoomThumb.Views.Controls
 
             // 標準スクロールバー操作による移動
             ImageScrollOffsetRatio
-                .CombineLatest(ScrollContentActualSize, ImageViewActualSize,
-                    (offset, sview, iview) => (offset, sview, iview))
+                .CombineLatest(ScrollContentActualSize, ImageViewActualSize, (offset, sview, iview) => (offset, sview, iview))
                 .Subscribe(x =>
                 {
                     double clip(double value, double min, double max) => (value <= min) ? min : ((value >= max) ? max : value);

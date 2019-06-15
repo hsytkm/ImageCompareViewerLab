@@ -27,7 +27,7 @@
 
         <Border MinWidth="5"
                 MinHeight="5"
-                BorderBrush="{Binding FrameBorderBrush, ElementName=root, Mode=OneWay}"
+                BorderBrush="{Binding BorderBrush, ElementName=root, Mode=OneWay}"
                 Background="Transparent"
                 BorderThickness="2" >
 
