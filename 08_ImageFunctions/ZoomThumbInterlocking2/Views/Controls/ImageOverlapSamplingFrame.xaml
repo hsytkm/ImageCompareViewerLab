@@ -24,8 +24,8 @@
 
             <i:Interaction.Behaviors>
                 <vb:MouseCaptureBehavior />
-                <vb:MovableFrameBehavior FrameRectRatio="{Binding FrameRectRatio, ElementName=root, Mode=TwoWay}"
-                                         IsFrameInterlock="{Binding IsFrameInterlock, ElementName=root, Mode=TwoWay}" />
+                <vb:MovableFrameBehavior FrameRectRatio="{Binding FrameRectRatio, ElementName=root, Mode=OneWayToSource}"
+                                         IsFrameInterlock="{Binding IsFrameInterlock, ElementName=root, Mode=OneWay}" />
             </i:Interaction.Behaviors>
         </Border>
 

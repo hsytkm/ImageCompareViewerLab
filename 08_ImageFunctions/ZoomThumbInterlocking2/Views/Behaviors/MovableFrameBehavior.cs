@@ -54,15 +54,8 @@ namespace ZoomThumb.Views.Behaviors
                 typeof(Rect),
                 SelfType,
                 new FrameworkPropertyMetadata(
-                    default(Rect),
-                    FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
-                    (d, e) =>
-                    {
-                        if (d is MovableFrameBehavior behavior && e.NewValue is Rect rectRatio)
-                        {
-                            //behavior.FrameAddrSizeRatio.Value = rectRatio;
-                        }
-                    }));
+                    new Rect(DefaultPointRatio, DefaultSizeRatio),
+                    FrameworkPropertyMetadataOptions.None));
 
         public Rect FrameRectRatio
         {
@@ -123,13 +116,13 @@ namespace ZoomThumb.Views.Behaviors
             var frameNewSizeRatio = new ReactivePropertySlim<Size>(DefaultSizeRatio).AddTo(CompositeDisposable);
 
             // サイズ変更イベント
-            mouseDragPointVector.Select(x => x.point)
+            mouseDragPointVector
                 .Where(_ => IsSizeChanging)
-                .CombineLatest(groundPanelSize, (dragPoint, groundSize) => (dragPoint, groundSize))
-                .Subscribe(x =>
+                .Select(x => x.point)
+                .Subscribe(p =>
                 {
                     // 枠現在位置とマウス現在位置の差分を新サイズにする
-                    var dragPointRatio = new Point(x.dragPoint.X / x.groundSize.Width, x.dragPoint.Y / x.groundSize.Height);
+                    var dragPointRatio = new Point(p.X / groundPanelSize.Value.Width, p.Y / groundPanelSize.Value.Height);
                     var frameSizeRatio = GetNewSizeRatio(dragPointRatio, FrameRectRatio);
 
                     // 他コントロールへの通知
@@ -161,13 +154,13 @@ namespace ZoomThumb.Views.Behaviors
             var frameNewPointRatio = new ReactivePropertySlim<Point>(DefaultPointRatio).AddTo(CompositeDisposable);
 
             // 位置変更イベント
-            mouseDragPointVector.Select(x => x.vector)
+            mouseDragPointVector
                 .Where(_ => !IsSizeChanging)
-                .CombineLatest(groundPanelSize, (dragVector, groundSize) => (dragVector, groundSize))
-                .Subscribe(x =>
+                .Select(x => x.vector)
+                .Subscribe(v =>
                 {
                     // ドラッグ移動量から新位置を取得する
-                    var dragVectorRatio = new Vector(x.dragVector.X / x.groundSize.Width, x.dragVector.Y / x.groundSize.Height);
+                    var dragVectorRatio = new Vector(v.X / groundPanelSize.Value.Width, v.Y / groundPanelSize.Value.Height);
                     var framePointRatio = GetNewPointRatio(dragVectorRatio, FrameRectRatio);
 
                     // 他コントロールへの通知
@@ -265,8 +258,10 @@ namespace ZoomThumb.Views.Behaviors
 
             // プロパティの更新
             FrameRectRatio = new Rect(
-                left / groundSize.Width, top / groundSize.Height,
-                width / groundSize.Width, height / groundSize.Height);
+                left / groundSize.Width,
+                top / groundSize.Height,
+                width / groundSize.Width,
+                height / groundSize.Height);
         }
 
         #endregion
