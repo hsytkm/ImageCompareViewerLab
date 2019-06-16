@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace VirtualizationListItems.Views
 {
@@ -11,17 +10,6 @@ namespace VirtualizationListItems.Views
         public ThumbnailList()
         {
             InitializeComponent();
-            
-            //scroller.ScrollChanged += (object sender, ScrollChangedEventArgs e) =>
-            //{
-            //    var rect = new Rect(
-            //        scroller.HorizontalOffset,
-            //        scroller.VerticalOffset,
-            //        scroller.ViewportWidth,
-            //        scroller.ViewportHeight);
-            //    canvas.SetViewport(rect);
-            //};
         }
-
     }
 }

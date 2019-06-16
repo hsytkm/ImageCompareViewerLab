@@ -1,4 +1,6 @@
-﻿using Prism.Mvvm;
+﻿using Prism.Ioc;
+using Prism.Mvvm;
+using Prism.Regions;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -15,8 +17,6 @@ namespace VirtualizationListItems.ViewModels
 {
     class ThumbnailListViewModel : BindableBase
     {
-        private readonly ImageSources ImageSources = ImageSources.Instance;
-
         public ReadOnlyObservableCollection<ThubnailVModel> Thumbnails { get; }
 
         public ReactiveProperty<ThubnailVModel> SelectedItem { get; } =
@@ -26,16 +26,12 @@ namespace VirtualizationListItems.ViewModels
         public ReactiveProperty<(double CenterRatio, double ViewportRatio)> ScrollChangedHorizontal { get; } =
             new ReactiveProperty<(double CenterRatio, double ViewportRatio)>(mode: ReactivePropertyMode.None);
 
-        public ReactiveProperty<Unit> ThumbnailSelectionChanged { get; } =
-            new ReactiveProperty<Unit>(mode: ReactivePropertyMode.None);
-
-        public ReadOnlyReactiveProperty<string> SelectedPath { get; }
-        public ReadOnlyReactiveProperty<string> LoadStatus { get; }
-
-        public ThumbnailListViewModel()
+        public ThumbnailListViewModel(IContainerExtension container, IRegionManager regionManager)
         {
+            var imageSources = container.Resolve<ImageSources>();
+
             // ObservableCollectionとReadOnlyObservableCollectionの同期☆
-            var source = ImageSources.Sources;
+            var source = imageSources.Sources;
 
             var proxy = new ObservableCollection<ThubnailVModel>();
 
@@ -68,24 +64,15 @@ namespace VirtualizationListItems.ViewModels
             // Clear()なら以下が来るけど、PropertyChanged()の解除ができないので使用しない
             //collectionChanged.Where(e => e.Action == NotifyCollectionChangedAction.Reset)
             
-            // 選択PATHのデバッグ表示
-            SelectedPath = SelectedItem.Select(x => x?.FilePath).ToReadOnlyReactiveProperty();
-
             // VM→M通知(nullになったらnullを通知する。後で変化エッジを付けるため)
-            SelectedItem.Subscribe(x => ImageSources.SelectedImagePath = x?.FilePath);
+            SelectedItem.Subscribe(x => imageSources.SelectedImagePath = x?.FilePath);
 
             // M→VM通知
-            ImageSources.ObserveProperty(x => x.SelectedImagePath)
+            imageSources.ObserveProperty(x => x.SelectedImagePath)
                 .Subscribe(x => SelectedItem.Value = Thumbnails.FirstOrDefault(y => x == y.FilePath));
 
             ScrollChangedHorizontal
-                .CombineLatest(ThumbnailSelectionChanged, (x, y) => x)
-                //.Where(x => !(Double.IsNaN(x.CenterRatio) || Double.IsNaN(x.ViewportRatio)))
-                .Subscribe(x => ImageSources.UpdateThumbnail(x.CenterRatio, x.ViewportRatio));
-
-            ScrollChangedHorizontal.Subscribe(x => ImageSources.UpdateThumbnail(x.CenterRatio, x.ViewportRatio));
-
-            LoadStatus = ImageSources.ObserveProperty(x => x.LoadStatus).ToReadOnlyReactiveProperty();
+                .Subscribe(x => imageSources.UpdateThumbnail(x.CenterRatio, x.ViewportRatio));
         }
 
         /// <summary>

@@ -3,7 +3,7 @@ using System.Windows.Interactivity;
 
 namespace VirtualizationListItems.Views
 {
-    public class ListBoxSelectionBehavior : Behavior<ListBox>
+    class ListBoxSelectionBehavior : Behavior<ListBox>
     {
         protected override void OnAttached()
         {
@@ -22,10 +22,10 @@ namespace VirtualizationListItems.Views
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void AssociatedObject_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private static void AssociatedObject_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (sender is ListBox lb)
-                lb.ScrollIntoView(lb.SelectedItem);
+            if (!(sender is ListBox listBox)) return;
+            listBox.ScrollIntoView(listBox.SelectedItem);
         }
 
     }

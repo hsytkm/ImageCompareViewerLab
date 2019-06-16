@@ -10,9 +10,6 @@ namespace VirtualizationListItems.Models
 {
     class ImageSources : BindableBase
     {
-        // Singleton
-        public static ImageSources Instance { get; } = new ImageSources();
-
         private const string DirPath = @"C:\data";
 
         public ObservableCollection<ImageSource> Sources = new ObservableCollection<ImageSource>();
@@ -24,7 +21,7 @@ namespace VirtualizationListItems.Models
             set => SetProperty(ref _SelectedImagePath, value);
         }
 
-        private ImageSources() { }
+        public ImageSources() { }
 
         public void Initialize(string dirPath = DirPath)
         {
@@ -62,6 +59,7 @@ namespace VirtualizationListItems.Models
             return images.OrderBy(f => f);
         }
 
+        // 表示候補画像の解放と読み出し
         public void UpdateThumbnail(double centerRatio, double viewportRatio)
         {
             if (centerRatio == 0) throw new ArgumentException(nameof(centerRatio));

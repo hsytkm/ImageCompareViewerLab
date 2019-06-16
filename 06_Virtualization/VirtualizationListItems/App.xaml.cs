@@ -1,6 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Unity;
 using System.Windows;
+using VirtualizationListItems.Models;
 using VirtualizationListItems.Views;
 
 namespace VirtualizationListItems
@@ -17,7 +18,8 @@ namespace VirtualizationListItems
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.RegisterSingleton<ImageSources>();
         }
+
     }
 }

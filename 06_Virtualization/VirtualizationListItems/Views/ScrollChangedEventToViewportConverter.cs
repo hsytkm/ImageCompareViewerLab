@@ -26,9 +26,7 @@ namespace VirtualizationListItems.Views
         private static double CenterRatio(double length, double viewport, double offset)
         {
             if (length == 0) return 0;
-
-            double d = (offset + (viewport / 2)) / length;
-            return Math.Max(0, Math.Min(1, d));
+            return ClipRatio((offset + (viewport / 2)) / length);
         }
 
         /// <summary>
@@ -37,9 +35,11 @@ namespace VirtualizationListItems.Views
         private static double ViewportRatio(double length, double viewport)
         {
             if (length == 0) return 0;
-
-            double d  = viewport / length;
-            return Math.Max(0, Math.Min(1, d));
+            return ClipRatio(viewport / length);
         }
+
+        private static double ClipRatio(double value, double min = 0, double max = 1) =>
+            (value <= min) ? min : ((value >= max) ? max : value);
+
     }
 }

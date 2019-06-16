@@ -6,7 +6,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        xmlns:v="clr-namespace:VirtualizationListItems.Views"
         mc:Ignorable="d"
         Title="VirtualizationListItems"
         Height="200" Width="400" >
@@ -17,5 +16,10 @@
                 Command="{Binding ReadImagesCommand, Mode=OneTime}" />
 
         <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+
+        <TextBlock Text="{Binding LoadStatus.Value, Mode=OneWay}"
+                   FontSize="6" />
+        
+        <TextBlock Text="{Binding SelectedPath.Value, Mode=OneWay}" />
     </StackPanel>
 </Window>
