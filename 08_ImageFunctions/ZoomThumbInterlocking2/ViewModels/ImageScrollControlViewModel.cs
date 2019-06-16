@@ -17,15 +17,18 @@ namespace ZoomThumb.ViewModels
         // 主画像
         public ReadOnlyReactiveProperty<BitmapSource> ImageSource { get; }
 
-        // 各画像の表示エリアを連動させるかフラグ(FALSE=連動しない)
+        // 各画像の表示エリアを連動させるかフラグ(false=連動しない)
         public ReadOnlyReactiveProperty<bool> IsImageViewerInterlock { get; }
 
-        // 縮小画像の表示可能フラグ(FALSE=表示禁止)
+        // 縮小画像の表示可能フラグ(false=表示禁止)
         public ReadOnlyReactiveProperty<bool> CanVisibleReducedImage { get; }
 
-        // 画像上のサンプリング枠の表示フラグ(FALSE=表示しない)
-        public ReadOnlyReactiveProperty<bool> IsVisibleImageSamplingFrame { get; }
-        
+        // サンプリング枠のレイヤー(true=画像上, false=スクロール上)
+        public ReadOnlyReactiveProperty<bool> IsSamplingFrameOnImage { get; }
+
+        // サンプリング枠のレイヤー(false=画像上, true=スクロール上)
+        public ReadOnlyReactiveProperty<bool> IsSamplingFrameOnScrollContent { get; }
+
         // ズーム倍率の管理(TwoWay)
         public ReactiveProperty<ImageZoomPayload> ImageZoomPayload { get; } =
             new ReactiveProperty<ImageZoomPayload>(mode: ReactivePropertyMode.DistinctUntilChanged);
@@ -53,7 +56,22 @@ namespace ZoomThumb.ViewModels
 
             IsImageViewerInterlock = viewSettings.ObserveProperty(x => x.IsImageViewerInterlock).ToReadOnlyReactiveProperty();
             CanVisibleReducedImage = viewSettings.ObserveProperty(x => x.CanVisibleReducedImage).ToReadOnlyReactiveProperty();
-            IsVisibleImageSamplingFrame = viewSettings.ObserveProperty(x => x.IsVisibleImageOverlapSamplingFrame).ToReadOnlyReactiveProperty();
+
+            IsSamplingFrameOnImage = new[]
+                {
+                    viewSettings.ObserveProperty(x => x.IsVisibleImageOverlapSamplingFrame),
+                    viewSettings.ObserveProperty(x => x.IsSamplingFrameOnImage)
+                }
+                .CombineLatestValuesAreAllTrue()
+                .ToReadOnlyReactiveProperty();
+
+            IsSamplingFrameOnScrollContent = new[]
+                {
+                    viewSettings.ObserveProperty(x => x.IsVisibleImageOverlapSamplingFrame),
+                    viewSettings.ObserveProperty(x => x.IsSamplingFrameOnImage).Inverse()
+                }
+                .CombineLatestValuesAreAllTrue()
+                .ToReadOnlyReactiveProperty();
 
             // 画像管理クラスのインデックスを取得
             int index = mainImages.GetImageIndex();

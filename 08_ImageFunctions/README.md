@@ -15,14 +15,10 @@
 
 	尾上さんのお言葉「View内で完結するロジックは、積極的にコードビハインドを使いましょう」
 
-## ZoomThumbInterlocking
-
-	ZoomThumbCodeBehind2をベースに、左右画像で表示位置を連動させる。
-	結構がんばったけど、コードがめちゃくちゃ（特にxaml階層）なので捨てる。
-
 ## ZoomThumbInterlocking2
 
-	ZoomThumbInterlockingを作り直し。
+	ZoomThumbCodeBehind2をベースに、左右画像で表示位置を連動させた。
+	
 
 ## 参考にさせて頂いたページ
 

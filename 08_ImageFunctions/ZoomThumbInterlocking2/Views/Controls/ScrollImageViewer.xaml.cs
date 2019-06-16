@@ -169,10 +169,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(BitmapSource),
                 typeof(BitmapSource),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    default(BitmapSource),
-                    FrameworkPropertyMetadataOptions.None));
+                SelfType);
 
         public BitmapSource BitmapSource
         {
@@ -221,10 +218,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(IsViewerInterlock),
                 typeof(bool),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    default(bool),
-                    FrameworkPropertyMetadataOptions.None));
+                SelfType);
 
         public bool IsViewerInterlock
         {
@@ -258,10 +252,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(IsLoadImage),
                 typeof(bool),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    false,
-                    FrameworkPropertyMetadataOptions.None));
+                SelfType);
 
         public bool IsLoadImage
         {
@@ -278,10 +269,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(IsVisibleReducedImage),
                 typeof(bool),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    false,
-                    FrameworkPropertyMetadataOptions.None));
+                SelfType);
 
         public bool IsVisibleReducedImage
         {
@@ -298,10 +286,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(ImageCursorPoint),
                 typeof(Point),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    default(Point),
-                    FrameworkPropertyMetadataOptions.None));
+                SelfType);
 
         public Point ImageCursorPoint
         {
@@ -318,10 +303,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(IsVisibleImageSamplingFrame),
                 typeof(bool),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    default(bool),
-                    FrameworkPropertyMetadataOptions.None));
+                SelfType);
 
         public bool IsVisibleImageSamplingFrame
         {
@@ -338,10 +320,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(ImageOverlapSamplingFrameRect),
                 typeof(Rect),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    default(Rect),
-                    FrameworkPropertyMetadataOptions.None));
+                SelfType);
 
         public Rect ImageOverlapSamplingFrameRect
         {

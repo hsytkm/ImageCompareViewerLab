@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace ZoomThumb.Views.Controls
 {
@@ -53,10 +52,7 @@ namespace ZoomThumb.Views.Controls
             DependencyProperty.Register(
                 nameof(IsFrameInterlock),
                 typeof(bool),
-                SelfType,
-                new FrameworkPropertyMetadata(
-                    default(bool),
-                    FrameworkPropertyMetadataOptions.None));
+                SelfType);
 
         public bool IsFrameInterlock
         {

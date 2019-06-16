@@ -9,10 +9,10 @@ namespace ZoomThumb.Views.Common
     public static class MouseObservableExtensions
     {
 
-        public static IObservable<MouseEventArgs> MouseLeaveAsObservable(this UIElement control)
+        public static IObservable<MouseEventArgs> MouseLeaveAsObservable(this UIElement control, bool handled = false)
             => Observable.FromEvent<MouseEventHandler, MouseEventArgs>
             (
-                handler => (sender, e) => handler(e),
+                handler => (sender, e) => { e.Handled = handled; handler(e); },
                 handler => control.MouseLeave += handler,
                 handler => control.MouseLeave -= handler
             );
@@ -56,8 +56,8 @@ namespace ZoomThumb.Views.Common
             );
 
         // 指定コントロール上のマウスポインタの絶対座標を取得
-        public static IObservable<Point> MouseMovePointAsObservable(this UIElement control) =>
-            control.MouseMoveAsObservable().Select(e => e.GetPosition((IInputElement)control));
+        public static IObservable<Point> MouseMovePointAsObservable(this UIElement control, bool handled = false) =>
+            control.MouseMoveAsObservable(handled).Select(e => e.GetPosition((IInputElement)control));
 
         /// <summary>
         /// マウスドラッグ中の絶対座標を流す
