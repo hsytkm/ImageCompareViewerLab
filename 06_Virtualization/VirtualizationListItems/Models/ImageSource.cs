@@ -27,13 +27,13 @@ namespace VirtualizationListItems.Models
             FilePath = path;
         }
 
-        public void LoadThmbnail()
+        public void LoadThumbnail()
         {
             if (Thumbnail == null)
                 Thumbnail = FilePath.LoadThumbnail(ThumbnailWidth);
         }
 
-        public void UnloadThmbnail()
+        public void UnloadThumbnail()
         {
             Thumbnail = null;
         }

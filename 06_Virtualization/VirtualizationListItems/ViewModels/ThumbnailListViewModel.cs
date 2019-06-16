@@ -5,10 +5,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Windows.Media.Imaging;
 using VirtualizationListItems.Models;
@@ -29,67 +26,46 @@ namespace VirtualizationListItems.ViewModels
         public ThumbnailListViewModel(IContainerExtension container, IRegionManager regionManager)
         {
             var imageSources = container.Resolve<ImageSources>();
+            var modelImageSources = imageSources.Sources;
 
-            // ObservableCollectionとReadOnlyObservableCollectionの同期☆
-            var source = imageSources.Sources;
+            // Mの画像リストをVM用に変換
+            Thumbnails = modelImageSources.ToReadOnlyReactiveCollection(m => new ThubnailVModel(m));
 
-            var proxy = new ObservableCollection<ThubnailVModel>();
-
-#if false   // いらん気がする。いつ呼ばれる？
-            foreach (var v in source.Select((item, index) => (item, index)))
-            {
-                v.item.PropertyChanged += ThumbnailPropertyChanged;
-                proxy.Insert(v.index, new ThubnailVModel(v.item));
-            }
-#endif
-
-            Thumbnails = new ReadOnlyObservableCollection<ThubnailVModel>(proxy);
-
-            var collectionChanged = source.CollectionChangedAsObservable();
-            collectionChanged.Where(e => e.Action == NotifyCollectionChangedAction.Add)
-                .Select(e => new { Index = e.NewStartingIndex, Value = e.NewItems.Cast<ImageSource>().First() })
-                .Subscribe(v =>
+            // Mの画像更新をVMに通知(解放時のnullも通知される)
+            modelImageSources
+                .ObserveElementProperty(m => m.Thumbnail)
+                .Subscribe(m =>
                 {
-                    v.Value.PropertyChanged += ThumbnailPropertyChanged;
-                    proxy.Insert(v.Index, new ThubnailVModel(v.Value));
-                });
-            collectionChanged.Where(e => e.Action == NotifyCollectionChangedAction.Remove)
-                .Select(e => new { Index = e.OldStartingIndex, Value = e.OldItems.Cast<ImageSource>().First() })
-                .Subscribe(v =>
-                {
-                    v.Value.PropertyChanged -= ThumbnailPropertyChanged;
-                    proxy.RemoveAt(v.Index);
+                    //Console.WriteLine($"{x.Instance} {x.Property} {x.Value}");
+                    var vmItem = Thumbnails.FirstOrDefault(vm => vm.FilePath == m.Instance.FilePath);
+                    if (vmItem != null) vmItem.Image = m.Value;
                 });
 
-            // Clear()なら以下が来るけど、PropertyChanged()の解除ができないので使用しない
-            //collectionChanged.Where(e => e.Action == NotifyCollectionChangedAction.Reset)
-            
             // VM→M通知(nullになったらnullを通知する。後で変化エッジを付けるため)
-            SelectedItem.Subscribe(x => imageSources.SelectedImagePath = x?.FilePath);
+            SelectedItem
+                .Select(vm => vm?.FilePath)
+                .Subscribe(x => imageSources.SelectedImagePath = x);
 
             // M→VM通知
-            imageSources.ObserveProperty(x => x.SelectedImagePath)
-                .Subscribe(x => SelectedItem.Value = Thumbnails.FirstOrDefault(y => x == y.FilePath));
+            imageSources
+                .ObserveProperty(x => x.SelectedImagePath)
+                .ObserveOnDispatcher()  // コレがないとThumbnails更新直後に値を取れない
+                .Select(m => Thumbnails.FirstOrDefault(vm => vm.FilePath == m))
+                .Subscribe(x => SelectedItem.Value = x);
 
+            // VM⇔Mの通知を以下に置き換えたいけど、ObserveOnDispatcher() が分からない…
+            //SelectedItem = imageSources
+            //    .ToReactivePropertyAsSynchronized(x => x.SelectedImagePath,
+            //        // M->VM
+            //        convert: m => Thumbnails.FirstOrDefault(vm => vm.FilePath == m),
+            //        // VM->M
+            //        convertBack: vm => imageSources.SelectedImagePath = vm?.FilePath);
+
+            // スクロール操作時の画像読出/解放
             ScrollChangedHorizontal
                 .Subscribe(x => imageSources.UpdateThumbnail(x.CenterRatio, x.ViewportRatio));
         }
 
-        /// <summary>
-        /// Modelサムネイル画像変化イベント(Modelの値が変化したら、ViewModelに値を反映)
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ThumbnailPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (!(sender is ImageSource imageSource)) return;
-
-            if (e.PropertyName == nameof(imageSource.Thumbnail))
-            {
-                var vModel = Thumbnails.FirstOrDefault(x => x.FilePath == imageSource.FilePath);
-                if (vModel != null) vModel.Image = imageSource.Thumbnail;
-            }
-        }
     }
 
     class ThubnailVModel : BindableBase
@@ -105,9 +81,9 @@ namespace VirtualizationListItems.ViewModels
 
         public ThubnailVModel(ImageSource source)
         {
-            Image = source.Thumbnail;
-            FilePath = source.FilePath;
-            Filename = source.Filename;
+            Image = source?.Thumbnail;
+            FilePath = source?.FilePath;
+            Filename = source?.Filename;
         }
     }
 

@@ -9,9 +9,9 @@ namespace VirtualizationListItems.Views
     /// <summary>
     /// ScrollChangedイベント
     /// </summary>
-    public class ScrollChangedEventToViewportConverter : ReactiveConverter<dynamic, (double, double)>
+    public class ScrollChangedEventToViewportConverter : ReactiveConverter<dynamic, (double CenterRatio, double ViewportRatio)>
     {
-        protected override IObservable<(double, double)> OnConvert(IObservable<dynamic> source)
+        protected override IObservable<(double CenterRatio, double ViewportRatio)> OnConvert(IObservable<dynamic> source)
         {
             return source
                 .Cast<ScrollChangedEventArgs>()

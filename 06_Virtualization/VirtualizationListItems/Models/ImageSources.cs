@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -12,7 +11,7 @@ namespace VirtualizationListItems.Models
     {
         private const string DirPath = @"C:\data";
 
-        public ObservableCollection<ImageSource> Sources = new ObservableCollection<ImageSource>();
+        public ObservableCollection<ImageSource> Sources { get; } = new ObservableCollection<ImageSource>();
 
         private string _SelectedImagePath;
         public string SelectedImagePath
@@ -87,7 +86,7 @@ namespace VirtualizationListItems.Models
             foreach (var source in unloads)
             {
                 //Debug.WriteLine($"Thumbnail Update() Unload: {source.FilePath}");
-                source.UnloadThmbnail();
+                source.UnloadThumbnail();
             }
 
             // 読込みリスト(表示範囲の未読込みを対象)
@@ -97,7 +96,7 @@ namespace VirtualizationListItems.Models
             foreach (var source in loads)
             {
                 //Debug.WriteLine($"Thumbnail Update() Load: {source.FilePath}");
-                source.LoadThmbnail();
+                source.LoadThumbnail();
             }
 
             // 読み込み状況の表示テスト
