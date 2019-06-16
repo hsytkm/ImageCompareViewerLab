@@ -24,14 +24,10 @@ namespace VirtualizationListItems.Models
 
         public void Initialize(string dirPath = DirPath)
         {
-            // 全削除(ClearだとEventListenerの解除できないので1つずつ削除)
-            while (Sources.Any())
-            {
-                Sources.RemoveAt(0);
-            }
+            Sources.Clear();
 
             // ImageSourceのコンストラクタ内ではサムネイルを読み込まない
-            foreach (var path in GetImages(dirPath))
+            foreach (var path in GetImagePaths(dirPath))
             {
                 Sources.Add(new ImageSource(path));
             }
@@ -39,11 +35,11 @@ namespace VirtualizationListItems.Models
             // とりあえず先頭画像を選択しとく
             if (Sources.Any())
             {
-                SelectedImagePath = Sources[0].FilePath;
+                SelectedImagePath = Sources.First().FilePath;
             }
         }
 
-        private static IEnumerable<string> GetImages(string directoryPath)
+        private static IEnumerable<string> GetImagePaths(string directoryPath)
         {
             var pat = ".jpg";
             var images = new List<string>();

@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
 
         <Border metro:MetroWindow.IsCaptionBar="True"
-                Background="{DynamicResource ActiveBackgroundBrushKey}" >
+                Background="{DynamicResource SemiactiveBackgroundBrushKey}" >
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

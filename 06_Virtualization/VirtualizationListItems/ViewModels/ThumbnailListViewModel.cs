@@ -17,8 +17,7 @@ namespace VirtualizationListItems.ViewModels
     {
         public ReadOnlyObservableCollection<ThubnailVModel> Thumbnails { get; }
 
-        public ReactiveProperty<ThubnailVModel> SelectedItem { get; } =
-            new ReactiveProperty<ThubnailVModel>(mode: ReactivePropertyMode.DistinctUntilChanged);
+        public ReactiveProperty<ThubnailVModel> SelectedItem { get; }
 
         // スクロール変化時
         public ReactiveProperty<(double CenterRatio, double ViewportRatio)> ScrollChangedHorizontal { get; } =

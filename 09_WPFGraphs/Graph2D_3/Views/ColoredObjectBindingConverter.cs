@@ -5,6 +5,7 @@ using System.Windows.Data;
 
 namespace Graph2D.Views
 {
+    [ValueConversion(typeof(ColoredObject[,]), typeof(IReadOnlyList<ColoredObjectRow>))]
     class ColoredObjectBindingConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
