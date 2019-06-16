@@ -6,6 +6,7 @@ using Reactive.Bindings.Extensions;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows.Media.Imaging;
 using VirtualizationListItems.Models;
@@ -28,8 +29,9 @@ namespace VirtualizationListItems.ViewModels
             var imageSources = container.Resolve<ImageSources>();
             var modelImageSources = imageSources.Sources;
 
-            // Mの画像リストをVM用に変換
-            Thumbnails = modelImageSources.ToReadOnlyReactiveCollection(m => new ThubnailVModel(m));
+            // Mの画像リストをVM用に変換(schedulerがないと意図通りに動作しないけど理解できていない…)
+            Thumbnails = modelImageSources
+                .ToReadOnlyReactiveCollection(m => new ThubnailVModel(m), scheduler: Scheduler.CurrentThread);
 
             // Mの画像更新をVMに通知(解放時のnullも通知される)
             modelImageSources
@@ -41,6 +43,7 @@ namespace VirtualizationListItems.ViewModels
                     if (vmItem != null) vmItem.Image = m.Value;
                 });
 
+#if false
             // VM→M通知(nullになったらnullを通知する。後で変化エッジを付けるため)
             SelectedItem
                 .Select(vm => vm?.FilePath)
@@ -49,17 +52,17 @@ namespace VirtualizationListItems.ViewModels
             // M→VM通知
             imageSources
                 .ObserveProperty(x => x.SelectedImagePath)
-                .ObserveOnDispatcher()  // コレがないとThumbnails更新直後に値を取れない
                 .Select(m => Thumbnails.FirstOrDefault(vm => vm.FilePath == m))
                 .Subscribe(x => SelectedItem.Value = x);
-
-            // VM⇔Mの通知を以下に置き換えたいけど、ObserveOnDispatcher() が分からない…
-            //SelectedItem = imageSources
-            //    .ToReactivePropertyAsSynchronized(x => x.SelectedImagePath,
-            //        // M->VM
-            //        convert: m => Thumbnails.FirstOrDefault(vm => vm.FilePath == m),
-            //        // VM->M
-            //        convertBack: vm => imageSources.SelectedImagePath = vm?.FilePath);
+#else
+            // VM⇔Mの通知を以下に置き換えた(Thumbnailsのscheduler指定がポイント)
+            SelectedItem = imageSources
+                .ToReactivePropertyAsSynchronized(x => x.SelectedImagePath,
+                    // M->VM
+                    convert: m => Thumbnails.FirstOrDefault(vm => vm.FilePath == m),
+                    // VM->M
+                    convertBack: vm => imageSources.SelectedImagePath = vm?.FilePath);
+#endif
 
             // スクロール操作時の画像読出/解放
             ScrollChangedHorizontal
