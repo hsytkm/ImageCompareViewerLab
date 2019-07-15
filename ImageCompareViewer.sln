@@ -94,6 +94,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Graph2D_3", "09_WPFGraphs\G
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoomThumbInterlocking2", "08_ImageFunctions\ZoomThumbInterlocking2\ZoomThumbInterlocking2.csproj", "{A13499C1-298E-42BD-8211-4814904B5AE3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10_ImageMeta", "10_ImageMeta", "{53528954-37BC-4330-AC9A-588BB94BB521}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageMetaExtractor", "10_ImageMeta\ImageMetaExtractor\ImageMetaExtractor.csproj", "{0ED4FF37-3F46-45F8-9E4E-BDDE29F22B26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageMetaExtractorTester", "10_ImageMeta\ImageMetaExtractorTester\ImageMetaExtractorTester.csproj", "{B4D7D261-D78A-4161-90DA-25567E6D710A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -174,6 +180,14 @@ Global
 		{A13499C1-298E-42BD-8211-4814904B5AE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A13499C1-298E-42BD-8211-4814904B5AE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A13499C1-298E-42BD-8211-4814904B5AE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ED4FF37-3F46-45F8-9E4E-BDDE29F22B26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ED4FF37-3F46-45F8-9E4E-BDDE29F22B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ED4FF37-3F46-45F8-9E4E-BDDE29F22B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ED4FF37-3F46-45F8-9E4E-BDDE29F22B26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4D7D261-D78A-4161-90DA-25567E6D710A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4D7D261-D78A-4161-90DA-25567E6D710A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4D7D261-D78A-4161-90DA-25567E6D710A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4D7D261-D78A-4161-90DA-25567E6D710A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -198,6 +212,8 @@ Global
 		{E630E4F1-A758-4F53-AACD-B872D01D719E} = {24128E26-29A6-455F-8C4D-8417D44BF0E3}
 		{A53BFB57-D476-4DA4-A495-1A698790502E} = {24128E26-29A6-455F-8C4D-8417D44BF0E3}
 		{A13499C1-298E-42BD-8211-4814904B5AE3} = {EE2D4033-3CAB-4458-9EB2-E0C62C22E8B3}
+		{0ED4FF37-3F46-45F8-9E4E-BDDE29F22B26} = {53528954-37BC-4330-AC9A-588BB94BB521}
+		{B4D7D261-D78A-4161-90DA-25567E6D710A} = {53528954-37BC-4330-AC9A-588BB94BB521}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A747267B-7393-4543-A070-7F5EC5AA9AB6}
