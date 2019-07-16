@@ -3,21 +3,27 @@ using System;
 
 namespace ImageMetaExtractor.Reader
 {
-    class TiffMeta : ImageMetaExtractorBase
+    class GifMeta : ImageMetaExtractorBase
     {
-        private static readonly string TagName = ExifProperties.MainTagName;
+        private const string TagName = "GIF Header";
+
+        private enum META_TAG_ID : int
+        {
+            IMAGE_WIDTH = 0x0002,
+            IMAGE_HEIGHT = 0x0003,
+        };
 
         // 何度も取得するのでコンストラクタで用意する
         private readonly int _width;
         private readonly int _height;
 
-        public TiffMeta(string imagePath) : base(imagePath)
+        public GifMeta(string imagePath) : base(imagePath)
         {
             var directory = GetDirectory(TagName);
             if (directory != null)
             {
-                _width = (int)directory.GetTagValue<uint>((int)ExifProperties.EXIF_MAIN_ID.IMAGE_WIDTH);
-                _height = (int)directory.GetTagValue<uint>((int)ExifProperties.EXIF_MAIN_ID.IMAGE_HEIGHT);
+                _width = directory.GetTagValue<UInt16>((int)META_TAG_ID.IMAGE_WIDTH);
+                _height = directory.GetTagValue<UInt16>((int)META_TAG_ID.IMAGE_HEIGHT);
             }
         }
 

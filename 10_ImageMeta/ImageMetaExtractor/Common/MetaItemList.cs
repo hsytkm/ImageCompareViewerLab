@@ -9,7 +9,7 @@ namespace ImageMetaExtractor.Common
     /// <summary>
     /// File/ExifなどMetaItemをまとめたリスト
     /// </summary>
-    class MetaItemList : ICollection<MetaItem>
+    class MetaItemList : IList<MetaItem>
     {
         private readonly IList<MetaItem> _metaItems;
 
@@ -32,11 +32,28 @@ namespace ImageMetaExtractor.Common
             return sb.ToString();
         }
 
-        #region ICollection<T>
+        #region IList<T>
 
         public int Count => _metaItems.Count;
 
         public bool IsReadOnly => _metaItems.IsReadOnly;
+
+        public MetaItem this[int index] { get => _metaItems[index]; set => _metaItems[index] = value; }
+
+        public int IndexOf(MetaItem item)
+        {
+            return _metaItems.IndexOf(item);
+        }
+
+        public void Insert(int index, MetaItem item)
+        {
+            _metaItems.Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            _metaItems.RemoveAt(index);
+        }
 
         public void Add(MetaItem item)
         {

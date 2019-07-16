@@ -14,6 +14,7 @@ namespace ImageMetaExtractorTester
             //imagePath = @"C:\data\ext\Image1.png";
             //imagePath = @"C:\data\ext\Image1.tif";
             //imagePath = @"C:\data\ext\Image1.BMP";
+            //imagePath = @"C:\data\ext\test.JPG";   //Exifなし
 
             var me = new MetaExtractor(imagePath);
 

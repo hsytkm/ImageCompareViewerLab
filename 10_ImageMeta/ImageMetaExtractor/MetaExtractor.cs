@@ -8,18 +8,16 @@ namespace ImageMetaExtractor
 {
     public class MetaExtractor
     {
-
-
         public MetaExtractor(string imagePath)
         {
             var imageMeta = ReaderFactory.GetInstance(imagePath);
             if (imageMeta is null) return;
 
-            //File
+            // File
             var fileMetaList = imageMeta.GetFileMetaItemList();
             Console.WriteLine(fileMetaList);
 
-            //Exif
+            // Exif/Makernote
             if (imageMeta.HasExifMeta)
             {
                 var exifMetaListGroup = imageMeta.GetExifMetaListGroup();
@@ -28,8 +26,6 @@ namespace ImageMetaExtractor
                     Console.WriteLine(metaList);
                 }
             }
-
-            //Makernote
 
         }
 

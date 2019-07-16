@@ -16,8 +16,6 @@ namespace ImageMetaExtractor.Reader
         public int Height => GetImageHeight();
 
         public bool HasExifMeta => GetHasExifMeta();
-        public bool HasMakernote => GetHasMakernote();
-        public bool HasPrivateMeta => GetHasPrivateMeta();
 
         public ImageMetaBase(string imagePath)
         {
@@ -29,8 +27,6 @@ namespace ImageMetaExtractor.Reader
         internal abstract int GetImageHeight();
 
         internal virtual bool GetHasExifMeta() => false;
-        internal virtual bool GetHasMakernote() => false;
-        internal virtual bool GetHasPrivateMeta() => false;
 
         /// <summary>
         /// "File"リストの読み出し

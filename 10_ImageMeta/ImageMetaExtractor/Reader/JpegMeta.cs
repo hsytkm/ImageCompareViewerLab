@@ -3,7 +3,7 @@ using System;
 
 namespace ImageMetaExtractor.Reader
 {
-    class JpegMeta : ImageMetaExtractorExifBase
+    class JpegMeta : ImageMetaExtractorBase
     {
         private const string TagName = "JPEG";
 

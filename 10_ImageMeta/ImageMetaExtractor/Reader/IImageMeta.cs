@@ -13,8 +13,6 @@ namespace ImageMetaExtractor.Reader
         int Height { get; }
 
         bool HasExifMeta { get; }
-        bool HasMakernote { get; }
-        bool HasPrivateMeta { get; }
 
         /// <summary>
         /// Fileリストの読み出し

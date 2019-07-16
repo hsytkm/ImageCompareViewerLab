@@ -26,6 +26,8 @@ namespace ImageMetaExtractor.Reader
                     return new TiffMeta(imagePath);
 
                 case ".gif":
+                    return new GifMeta(imagePath);
+
                 case ".rw2":
                     return null;
             }
