@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ImageMetaExtractor.Common
+namespace ImageMetaExtractor
 {
     public static class ExposureApexAv
     {

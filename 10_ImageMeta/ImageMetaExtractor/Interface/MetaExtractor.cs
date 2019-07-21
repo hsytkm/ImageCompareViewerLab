@@ -1,16 +1,16 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using Metadata = MetadataExtractor; // System.IOとDirectoryが被るので別名を付ける
 using ImageMetaExtractor.Reader;
 
 namespace ImageMetaExtractor
 {
     public class MetaExtractor
     {
+        public IImageMeta ImageMeta { get; }
+
         public MetaExtractor(string imagePath)
         {
             var imageMeta = ReaderFactory.GetInstance(imagePath);
+            ImageMeta = imageMeta;
             if (imageMeta is null) return;
 
             // File

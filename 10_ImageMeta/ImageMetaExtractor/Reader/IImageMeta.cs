@@ -6,7 +6,7 @@ namespace ImageMetaExtractor.Reader
     /// <summary>
     /// 画像メタ情報のインターフェース
     /// </summary>
-    interface IImageMeta
+    public interface IImageMeta
     {
         string ImagePath { get; }
         int Width { get; }

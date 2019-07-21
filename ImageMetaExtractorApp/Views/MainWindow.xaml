@@ -8,10 +8,41 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
         Title="ImageMetaExtractor"
-        Height="300" Width="300">
+        Height="300" Width="500">
 
     <Grid>
-        <TextBlock Text="Test" />
+
+        <ListView ItemsSource="{Binding ImageMetasSource, Mode=OneWay}" >
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="ID"
+                                    Width="50" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Id, StringFormat={}0x{0:x4}, Mode=OneTime}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Tag"
+                                    Width="140" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Key, Mode=OneTime}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Data"
+                                    Width="200" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value, Mode=OneTime}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
     </Grid>
     
 </Window>

@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace ImageMetaExtractor.Common
+namespace ImageMetaExtractor
 {
     /// <summary>
     /// File/ExifなどMetaItemをまとめたリスト
     /// </summary>
-    class MetaItemList : IList<MetaItem>
+    public class MetaItemList : IList<MetaItem>
     {
         private readonly IList<MetaItem> _metaItems;
 

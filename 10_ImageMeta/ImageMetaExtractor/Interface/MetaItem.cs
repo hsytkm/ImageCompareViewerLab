@@ -1,9 +1,9 @@
-﻿namespace ImageMetaExtractor.Common
+﻿namespace ImageMetaExtractor
 {
     /// <summary>
     /// メタ情報
     /// </summary>
-    struct MetaItem
+    public struct MetaItem
     {
         public readonly int Id;
         public readonly string Key;
