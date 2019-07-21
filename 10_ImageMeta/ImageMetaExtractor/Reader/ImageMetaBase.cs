@@ -12,20 +12,46 @@ namespace ImageMetaExtractor.Reader
     abstract class ImageMetaBase : IImageMeta
     {
         public string ImagePath { get; }
-        public int Width => GetImageWidth();
-        public int Height => GetImageHeight();
 
-        public bool HasExifMeta => GetHasExifMeta();
+        private int? _width;
+        public int Width
+        {
+            get
+            {
+                if (!_width.HasValue) _width = GetImageWidth();
+                return _width.Value;
+            }
+        }
+
+        private int? _height;
+        public int Height
+        {
+            get
+            {
+                if (!_height.HasValue) _height = GetImageHeight();
+                return _height.Value;
+            }
+        }
+
+        private bool? _hasExifMeta;
+        public bool HasExifMeta
+        {
+            get
+            {
+                if (!_hasExifMeta.HasValue) _hasExifMeta = GetHasExifMeta();
+                return _hasExifMeta.Value;
+            }
+        }
 
         public ImageMetaBase(string imagePath)
         {
             if (!File.Exists(imagePath)) return;
             ImagePath = imagePath;
         }
-        
+
+        // 派生クラスで実装される
         internal abstract int GetImageWidth();
         internal abstract int GetImageHeight();
-
         internal virtual bool GetHasExifMeta() => false;
 
         /// <summary>
