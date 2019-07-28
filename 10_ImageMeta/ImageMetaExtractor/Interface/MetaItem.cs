@@ -18,6 +18,9 @@
             Value = value;
             Content = content;
             Comment = comment;
+
+            // Commentの設定が未実装なので何か入れとく
+            if (string.IsNullOrWhiteSpace(Comment)) Comment = ToString();
         }
 
         public MetaItem(int id, object content, string comment = null)

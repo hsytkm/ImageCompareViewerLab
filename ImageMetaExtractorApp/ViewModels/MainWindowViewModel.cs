@@ -1,5 +1,8 @@
 ﻿using ImageMetaExtractorApp.Models;
+using ImageMetaExtractorApp.Views;
+using Prism.Commands;
 using Prism.Mvvm;
+using Prism.Regions;
 using Reactive.Bindings;
 using System;
 using System.Collections.ObjectModel;
@@ -9,22 +12,32 @@ namespace ImageMetaExtractorApp.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
-        private const string ImageSource = @"C:\data\ext\Image1.JPG";
-        private static ImageMetas ImageMetas { get; } = new ImageMetas(ImageSource);
+        private const string ImageSource1 = @"C:\data\ext\Image1.JPG";
 
-        /// <summary>
-        /// 1画像のメタ情報
-        /// </summary>
-        public ReadOnlyObservableCollection<MetaItem> ImageMetasSource { get; }
+        private readonly IRegionManager _regionManager;
 
-        public MainWindowViewModel()
+        public DelegateCommand AddTabCommand { get; }
+
+        public MainWindowViewModel(IRegionManager regionManager)
         {
-            var metaItemList = ImageMetas.MetaItemLists[0];
+            _regionManager = regionManager;
+            AddTabCommand = new DelegateCommand(AddTab);
+        }
 
-            //var a = metaItemList.Select(x => new MetaItem(x));
-            //ImageMetasSource = metaItemList.ToReadOnlyReactiveCollection<MetaItem>(x => new MetaItemVM(x));
-
-            ImageMetasSource = metaItemList.ToReadOnlyReactiveCollection(x => x);
+        public void AddTab()
+        {
+            var imageMetas = new ImageMetas(ImageSource1);
+            foreach (var metaItemGroup in imageMetas.MetaItemGroups)
+            {
+                if (metaItemGroup != null)
+                {
+                    var parameters = new NavigationParameters
+                    {
+                        { MetaTabDetailViewModel.MetaItemGroupKey, metaItemGroup }
+                    };
+                    _regionManager.RequestNavigate("MetaTabDetailsRegion", nameof(MetaTabDetail), parameters);
+                }
+            }
         }
 
     }
