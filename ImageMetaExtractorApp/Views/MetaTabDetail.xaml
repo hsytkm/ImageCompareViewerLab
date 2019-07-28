@@ -2,6 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:r="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.NET46"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -12,12 +14,21 @@
         <Style x:Key="lineGridStyle"
                TargetType="{x:Type ListViewItem}">
             <Setter Property="ToolTip"
-                    Value="{Binding Comment, Mode=OneTime}" />
+                    Value="{Binding IsMarking, Mode=OneWay}" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsMarking}" Value="true">
+                    <Setter Property="Background" Value="SkyBlue"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsMarking}" Value="false">
+                    <Setter Property="Background" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </UserControl.Resources>
 
     <ListView ItemContainerStyle="{StaticResource lineGridStyle}"
-              ItemsSource="{Binding MetaItemGroup.Items, Mode=OneWay}" >
+              ItemsSource="{Binding MetaItemGroup.Items, Mode=OneWay}"
+              SelectedItem="{Binding SelectedItem.Value, Mode=OneWayToSource}" >
         <ListView.View>
             <GridView>
                 <GridViewColumn Header="ID"

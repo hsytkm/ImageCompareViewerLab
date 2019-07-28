@@ -1,6 +1,10 @@
 ﻿using ImageMetaExtractorApp.Models;
 using Prism.Mvvm;
 using Prism.Regions;
+using Reactive.Bindings;
+using System;
+using System.Reactive;
+using System.Reactive.Linq;
 
 namespace ImageMetaExtractorApp.ViewModels
 {
@@ -17,7 +21,14 @@ namespace ImageMetaExtractorApp.ViewModels
         }
         private MetaItemGroup _MetaItemGroup;
 
-        public MetaTabDetailViewModel() { }
+        // View選択中の項目(OneWayToSource)
+        public ReactiveProperty<MetaItem> SelectedItem { get; } = new ReactiveProperty<MetaItem>();
+
+        public MetaTabDetailViewModel()
+        {
+            // ◆SelectedItemで強調表示を切り替えてるが、同じアイテム選択で変化しないので修正したい
+            SelectedItem.Where(x => x != null).Subscribe(x => x.SwitchMarking());
+        }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
         {

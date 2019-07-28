@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Meta = ImageMetaExtractor;
@@ -49,12 +50,19 @@ namespace ImageMetaExtractorApp.Models
     /// <summary>
     /// 1つのメタ情報(F値、焦点距離など)
     /// </summary>
-    class MetaItem
+    class MetaItem : BindableBase
     {
         public int Id { get; }
         public string Key { get; }
         public string Value { get; }
         public string Comment { get; }
+
+        public bool IsMarking
+        {
+            get => _IsMarking;
+            private set => SetProperty(ref _IsMarking, value);
+        }
+        private bool _IsMarking;
 
         public MetaItem(Meta.MetaItem item)
         {
@@ -62,6 +70,10 @@ namespace ImageMetaExtractorApp.Models
             Key = item.Key;
             Value = item.Value;
             Comment = item.Comment;
+            IsMarking = false;
         }
+
+        public void SwitchMarking() => IsMarking = !IsMarking;
+
     }
 }
