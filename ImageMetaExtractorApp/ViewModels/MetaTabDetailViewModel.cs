@@ -21,12 +21,13 @@ namespace ImageMetaExtractorApp.ViewModels
         }
         private MetaItemGroup _MetaItemGroup;
 
-        // View選択中の項目(OneWayToSource)
-        public ReactiveProperty<MetaItem> SelectedItem { get; } = new ReactiveProperty<MetaItem>();
+        // View選択項目(同項目の選択に反応させるためDistinctUntilChangedｗ指定しない)
+        public ReactiveProperty<MetaItem> SelectedItem { get; } =
+            new ReactiveProperty<MetaItem>(mode: ReactivePropertyMode.None);
 
         public MetaTabDetailViewModel()
         {
-            // ◆SelectedItemで強調表示を切り替えてるが、同じアイテム選択で変化しないので修正したい
+            // カラム選択で色付け
             SelectedItem.Where(x => x != null).Subscribe(x => x.SwitchMarking());
         }
 

@@ -25,11 +25,22 @@ namespace ImageMetaExtractorApp.ViewModels
         public DelegateCommand AddTab1Command { get; }
         public DelegateCommand AddTab2Command { get; }
 
+#if false
+        // xaml
+        SelectedItem="{Binding TabControlSelectedItem.Value, Mode=OneWayToSource}"
+
         // 選択中のタブ要素(View)
         public ReactiveProperty<object> TabControlSelectedItem { get; } = new ReactiveProperty<object>();
 
-        // 選択中のタブ名
-        private string _SelectedTabTitle;
+        // タブの選択更新時にタブ名を取得する
+        TabControlSelectedItem
+            .Select(x => (x as ContentControl)?.DataContext)
+            .Select(x => (x as MetaTabDetailViewModel)?.MetaItemGroup?.Name)
+            .Where(x => x != null)
+            .Subscribe(x => _SelectedTabTitle = x);
+#endif
+        // Viewで選択中のタブ名(OneWayToSource)
+        public string TabControlSelectedTitle { get; set; }
 
         public MainWindowViewModel(IRegionManager regionManager)
         {
@@ -40,13 +51,6 @@ namespace ImageMetaExtractorApp.ViewModels
 
             AddTab1Command = new DelegateCommand(AddTab1);
             AddTab2Command = new DelegateCommand(AddTab2);
-
-            // タブの選択更新時にタブ名を取得する
-            TabControlSelectedItem
-                .Select(x => (x as ContentControl)?.DataContext)
-                .Select(x => (x as MetaTabDetailViewModel)?.MetaItemGroup?.Name)
-                .Where(x => x != null)
-                .Subscribe(x => _SelectedTabTitle = x);
         }
 
         public void AddTab1() => AddTab(ImageMetas1);
@@ -55,7 +59,7 @@ namespace ImageMetaExtractorApp.ViewModels
         private void AddTab(ImageMetas imageMetas)
         {
             // Region追加時に選択が更新されてしまうので先にバフっとく
-            var resumeTabTitle = _SelectedTabTitle;
+            var resumeTabTitle = TabControlSelectedTitle;
             var regionName = MetaTabDetailsRegionName;
 
             foreach (var metaItemGroup in imageMetas.MetaItemGroups.Where(x => x != null))
@@ -73,8 +77,6 @@ namespace ImageMetaExtractorApp.ViewModels
         private void ActivateRegion(string regionName, string tabTitle)
         {
             var views = _regionManager.Regions[regionName].Views;
-            if (!views.Any()) return;
-
             var target = views.FirstOrDefault(x => GetTabTitle(x) == tabTitle);
             if (target != null)
                 _regionManager.Regions[regionName].Activate(target);

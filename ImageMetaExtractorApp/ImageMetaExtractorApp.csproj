@@ -108,6 +108,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ViewModels\MetaTabDetailViewModel.cs" />
+    <Compile Include="Views\EventToSelectedValueConverter.cs" />
     <Compile Include="Views\MetaTabDetail.xaml.cs">
       <DependentUpon>MetaTabDetail.xaml</DependentUpon>
     </Compile>

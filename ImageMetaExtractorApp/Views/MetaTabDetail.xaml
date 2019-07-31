@@ -6,6 +6,7 @@
              xmlns:r="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.NET46"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:v="clr-namespace:ImageMetaExtractorApp.Views"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800" >
@@ -27,8 +28,17 @@
     </UserControl.Resources>
 
     <ListView ItemContainerStyle="{StaticResource lineGridStyle}"
-              ItemsSource="{Binding MetaItemGroup.Items, Mode=OneWay}"
-              SelectedItem="{Binding SelectedItem.Value, Mode=OneWayToSource}" >
+              ItemsSource="{Binding MetaItemGroup.Items, Mode=OneWay}" >
+
+        <!-- クリックしたメタ情報クラス通知(色付けする) -->
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseLeftButtonUp">
+                <r:EventToReactiveProperty ReactiveProperty="{Binding SelectedItem, Mode=OneTime}" >
+                    <v:EventToSelectedValueConverter />
+                </r:EventToReactiveProperty>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+
         <ListView.View>
             <GridView>
                 <GridViewColumn Header="ID"

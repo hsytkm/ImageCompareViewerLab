@@ -75,5 +75,7 @@ namespace ImageMetaExtractorApp.Models
 
         public void SwitchMarking() => IsMarking = !IsMarking;
 
+        public override string ToString() =>
+            $"MetaItem: Id={Id}, Key={Key}, Value={Value}";
     }
 }

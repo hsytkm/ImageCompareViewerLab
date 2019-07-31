@@ -32,9 +32,10 @@
         </Grid>
 
         <TabControl Grid.Row="1"
-                    prism:RegionManager.RegionName="MetaTabDetailsRegion"
                     TabStripPlacement="Left" 
-                    SelectedItem="{Binding TabControlSelectedItem.Value, Mode=TwoWay}" >
+                    prism:RegionManager.RegionName="MetaTabDetailsRegion"
+                    SelectedValuePath="DataContext.MetaItemGroup.Name"
+                    SelectedValue="{Binding TabControlSelectedTitle, Mode=OneWayToSource}" >
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Header" Value="{Binding DataContext.MetaItemGroup.Name}" />
