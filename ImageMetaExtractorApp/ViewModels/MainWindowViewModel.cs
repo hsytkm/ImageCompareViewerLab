@@ -17,8 +17,7 @@ namespace ImageMetaExtractorApp.ViewModels
         private const string ImageSource1 = @"C:\data\Image1.JPG";
         private const string ImageSource2 = @"C:\data\Image2.JPG";
 
-        private readonly ImageMetas ImageMetas1;
-        private readonly ImageMetas ImageMetas2;
+        private readonly ImageMetas ImageMetas = new ImageMetas();
 
         private readonly IRegionManager _regionManager;
 
@@ -46,23 +45,29 @@ namespace ImageMetaExtractorApp.ViewModels
         {
             _regionManager = regionManager;
 
-            ImageMetas1 = new ImageMetas(ImageSource1);
-            ImageMetas2 = new ImageMetas(ImageSource2);
-
             AddTab1Command = new DelegateCommand(AddTab1);
             AddTab2Command = new DelegateCommand(AddTab2);
         }
 
-        public void AddTab1() => AddTab(ImageMetas1);
-        public void AddTab2() => AddTab(ImageMetas2);
+        public void AddTab1()
+        {
+            ImageMetas.Load(ImageSource1);
+            AddTab();
+        }
 
-        private void AddTab(ImageMetas imageMetas)
+        public void AddTab2()
+        {
+            ImageMetas.Load(ImageSource2);
+            AddTab();
+        }
+
+        private void AddTab()
         {
             // Region追加時に選択が更新されてしまうので先にバフっとく
             var resumeTabTitle = TabControlSelectedTitle;
             var regionName = MetaTabDetailsRegionName;
 
-            foreach (var metaItemGroup in imageMetas.MetaItemGroups.Where(x => x != null))
+            foreach (var metaItemGroup in ImageMetas.MetaItemGroups.Where(x => x != null))
             {
                 var parameters = new NavigationParameters
                 {

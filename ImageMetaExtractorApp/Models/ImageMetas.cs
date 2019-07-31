@@ -9,10 +9,11 @@ namespace ImageMetaExtractorApp.Models
     class ImageMetas
     {
         // メタ情報リストのリスト(Exif/Mnoteなどがまとめられている)
-        //public ObservableCollection<MetaItemGroup> MetaItemGroups2 { get; }
-        public IEnumerable<MetaItemGroup> MetaItemGroups { get; }
+        public IList<MetaItemGroup> MetaItemGroups { get; private set; }
 
-        public ImageMetas(string imagePath)
+        public ImageMetas() { }
+
+        public void Load(string imagePath)
         {
             if (string.IsNullOrWhiteSpace(imagePath)) throw new ArgumentNullException();
 
@@ -26,7 +27,31 @@ namespace ImageMetaExtractorApp.Models
             libMetaLists.AddRange(imageMeta.GetExifMetaListGroup());
 
             // ViewModel用の型ListのList
-            MetaItemGroups = libMetaLists.Select(x => new MetaItemGroup(x));
+            var newGroups = libMetaLists.Select(x => new MetaItemGroup(x)).ToList();
+            var oldGroups = MetaItemGroups;
+
+            CopyMarking(destGroups: newGroups, srcGroups: oldGroups);
+            MetaItemGroups = newGroups;
+        }
+
+        // マーキングをコピーする
+        private void CopyMarking(IList<MetaItemGroup> destGroups, IList<MetaItemGroup> srcGroups)
+        {
+            if (destGroups == null || srcGroups == null) return;
+            foreach (var srcGroup in srcGroups)
+            {
+                var srcMarks = srcGroup.Items.Where(x => x.IsMarking);
+                if (!srcMarks.Any()) break;     // マークなし
+
+                var destGroup = destGroups.FirstOrDefault(x => x.Name == srcGroup.Name);
+                if (destGroup == null) break;   // 同一の名前なし(EXIFとか)
+
+                foreach (var srcItem in srcMarks)
+                {
+                    var destItem = destGroup.Items.FirstOrDefault(x => x.Id == srcItem.Id);
+                    destItem?.Marking(); 
+                }
+            }
         }
     }
 
@@ -73,7 +98,9 @@ namespace ImageMetaExtractorApp.Models
             IsMarking = false;
         }
 
-        public void SwitchMarking() => IsMarking = !IsMarking;
+        public void Marking() => IsMarking = true;
+
+        public void SwitchMark() => IsMarking = !IsMarking;
 
         public override string ToString() =>
             $"MetaItem: Id={Id}, Key={Key}, Value={Value}";
