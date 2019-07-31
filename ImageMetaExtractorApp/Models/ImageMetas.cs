@@ -32,24 +32,28 @@ namespace ImageMetaExtractorApp.Models
 
             CopyMarking(destGroups: newGroups, srcGroups: oldGroups);
             MetaItemGroups = newGroups;
-        }
+       }
+
+        // 全マークをクリアする
+        public void ClearAllMarking() =>
+            (MetaItemGroups as List<MetaItemGroup>)?.ForEach(x => x.ClearAllMarking());
 
         // マーキングをコピーする
         private void CopyMarking(IList<MetaItemGroup> destGroups, IList<MetaItemGroup> srcGroups)
         {
-            if (destGroups == null || srcGroups == null) return;
+            if (destGroups is null || srcGroups is null) return;
             foreach (var srcGroup in srcGroups)
             {
                 var srcMarks = srcGroup.Items.Where(x => x.IsMarking);
-                if (!srcMarks.Any()) break;     // マークなし
+                if (!srcMarks.Any()) continue;      // マークなし
 
                 var destGroup = destGroups.FirstOrDefault(x => x.Name == srcGroup.Name);
-                if (destGroup == null) break;   // 同一の名前なし(EXIFとか)
+                if (destGroup == null) continue;    // 同一の名前なし(EXIFとか)
 
                 foreach (var srcItem in srcMarks)
                 {
                     var destItem = destGroup.Items.FirstOrDefault(x => x.Id == srcItem.Id);
-                    destItem?.Marking(); 
+                    destItem?.AddMarking(); 
                 }
             }
         }
@@ -65,11 +69,15 @@ namespace ImageMetaExtractorApp.Models
 
         public MetaItemGroup(Meta.MetaItemList metaItems)
         {
-            if (metaItems == null) throw new ArgumentNullException();
+            if (metaItems is null) throw new ArgumentNullException();
 
             Name = metaItems.Name;
             Items = metaItems.Select(x => new MetaItem(x)).ToList();
         }
+
+        // 全マークをクリアする
+        public void ClearAllMarking() =>
+            (Items as List<MetaItem>).ForEach(x => x.ClearMarking());
     }
 
     /// <summary>
@@ -98,7 +106,8 @@ namespace ImageMetaExtractorApp.Models
             IsMarking = false;
         }
 
-        public void Marking() => IsMarking = true;
+        public void AddMarking() => IsMarking = true;
+        public void ClearMarking() => IsMarking = false;
 
         public void SwitchMark() => IsMarking = !IsMarking;
 

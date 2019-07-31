@@ -15,6 +15,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <Grid>
@@ -29,6 +30,16 @@
             <Button Grid.Column="1"
                     Content="AddTab2"
                     Command="{Binding AddTab2Command, Mode=OneTime}" />
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Content="ClearAllMarks"
+                    Command="{Binding ClearAllMarksCommand, Mode=OneTime}" />
         </Grid>
 
         <TabControl Grid.Row="1"

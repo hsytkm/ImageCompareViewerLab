@@ -23,7 +23,8 @@ namespace ImageMetaExtractorApp.ViewModels
 
         public DelegateCommand AddTab1Command { get; }
         public DelegateCommand AddTab2Command { get; }
-
+        public DelegateCommand ClearAllMarksCommand { get; }
+        
 #if false
         // xaml
         SelectedItem="{Binding TabControlSelectedItem.Value, Mode=OneWayToSource}"
@@ -47,15 +48,18 @@ namespace ImageMetaExtractorApp.ViewModels
 
             AddTab1Command = new DelegateCommand(AddTab1);
             AddTab2Command = new DelegateCommand(AddTab2);
+            ClearAllMarksCommand = new DelegateCommand(ClearAllMarks);
         }
 
-        public void AddTab1()
+        private void ClearAllMarks() => ImageMetas.ClearAllMarking();
+
+        private void AddTab1()
         {
             ImageMetas.Load(ImageSource1);
             AddTab();
         }
 
-        public void AddTab2()
+        private void AddTab2()
         {
             ImageMetas.Load(ImageSource2);
             AddTab();
