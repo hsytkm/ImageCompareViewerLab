@@ -1,4 +1,5 @@
-﻿using ImageMetaExtractorApp.Views;
+﻿using ImageMetaExtractorApp.Models;
+using ImageMetaExtractorApp.Views;
 using Prism.Ioc;
 using Prism.Unity;
 using System.Windows;
@@ -18,6 +19,7 @@ namespace ImageMetaExtractorApp
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<MetaTabDetail>();
+            containerRegistry.RegisterSingleton<ModelMaster>();
         }
     }
 }   

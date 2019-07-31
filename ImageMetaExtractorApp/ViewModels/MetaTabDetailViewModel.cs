@@ -28,7 +28,7 @@ namespace ImageMetaExtractorApp.ViewModels
         public MetaTabDetailViewModel()
         {
             // カラム選択で色付け
-            SelectedItem.Where(x => x != null).Subscribe(x => x.SwitchMark());
+            SelectedItem.Subscribe(x => x?.SwitchMark());
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)

@@ -42,17 +42,8 @@
                     Command="{Binding ClearAllMarksCommand, Mode=OneTime}" />
         </Grid>
 
-        <TabControl Grid.Row="1"
-                    TabStripPlacement="Left" 
-                    prism:RegionManager.RegionName="MetaTabDetailsRegion"
-                    SelectedValuePath="DataContext.MetaItemGroup.Name"
-                    SelectedValue="{Binding TabControlSelectedTitle, Mode=OneWayToSource}" >
-            <TabControl.Resources>
-                <Style TargetType="TabItem">
-                    <Setter Property="Header" Value="{Binding DataContext.MetaItemGroup.Name}" />
-                </Style>
-            </TabControl.Resources>
-        </TabControl>
+        <ContentControl Grid.Row="1"
+                        prism:RegionManager.RegionName="MetaTabControlRegion" />
     </Grid>
 
 </Window>

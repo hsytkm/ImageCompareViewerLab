@@ -11,9 +11,20 @@ namespace ImageMetaExtractorApp.Models
         // メタ情報リストのリスト(Exif/Mnoteなどがまとめられている)
         public IList<MetaItemGroup> MetaItemGroups { get; private set; }
 
-        public ImageMetas() { }
+        public ImageMetas(IList<MetaItemGroup> metaItemGroups = null)
+        {
+            MetaItemGroups = metaItemGroups;
+        }
 
-        public void Load(string imagePath)
+        public static ImageMetas GetInstance(string imagePath, IList<MetaItemGroup> oldGroups = null)
+        {
+            var newGroups = GetMetaItemGroups(imagePath);
+            if (oldGroups != null)
+                CopyMarking(destGroups: newGroups, srcGroups: oldGroups);
+            return new ImageMetas(newGroups);
+        }
+
+        private static IList<MetaItemGroup> GetMetaItemGroups(string imagePath)
         {
             if (string.IsNullOrWhiteSpace(imagePath)) throw new ArgumentNullException();
 
@@ -27,19 +38,15 @@ namespace ImageMetaExtractorApp.Models
             libMetaLists.AddRange(imageMeta.GetExifMetaListGroup());
 
             // ViewModel用の型ListのList
-            var newGroups = libMetaLists.Select(x => new MetaItemGroup(x)).ToList();
-            var oldGroups = MetaItemGroups;
-
-            CopyMarking(destGroups: newGroups, srcGroups: oldGroups);
-            MetaItemGroups = newGroups;
-       }
+            return libMetaLists.Select(x => new MetaItemGroup(x)).ToList();
+        }
 
         // 全マークをクリアする
         public void ClearAllMarking() =>
             (MetaItemGroups as List<MetaItemGroup>)?.ForEach(x => x.ClearAllMarking());
 
         // マーキングをコピーする
-        private void CopyMarking(IList<MetaItemGroup> destGroups, IList<MetaItemGroup> srcGroups)
+        private static void CopyMarking(IList<MetaItemGroup> destGroups, IList<MetaItemGroup> srcGroups)
         {
             if (destGroups is null || srcGroups is null) return;
             foreach (var srcGroup in srcGroups)
@@ -48,7 +55,7 @@ namespace ImageMetaExtractorApp.Models
                 if (!srcMarks.Any()) continue;      // マークなし
 
                 var destGroup = destGroups.FirstOrDefault(x => x.Name == srcGroup.Name);
-                if (destGroup == null) continue;    // 同一の名前なし(EXIFとか)
+                if (destGroup is null) continue;    // 同一の名前なし(EXIFとか)
 
                 foreach (var srcItem in srcMarks)
                 {

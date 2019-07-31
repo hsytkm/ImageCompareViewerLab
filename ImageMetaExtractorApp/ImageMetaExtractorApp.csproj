@@ -107,8 +107,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\ModelMaster.cs" />
+    <Compile Include="ViewModels\MetaTabControlViewModel.cs" />
     <Compile Include="ViewModels\MetaTabDetailViewModel.cs" />
     <Compile Include="Views\EventToSelectedValueConverter.cs" />
+    <Compile Include="Views\MetaTabControl.xaml.cs">
+      <DependentUpon>MetaTabControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MetaTabDetail.xaml.cs">
       <DependentUpon>MetaTabDetail.xaml</DependentUpon>
     </Compile>
@@ -126,6 +131,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\MetaTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MetaTabDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
