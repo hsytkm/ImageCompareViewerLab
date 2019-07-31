@@ -13,6 +13,7 @@ namespace ImageMetaExtractor
             ImageMeta = imageMeta;
             if (imageMeta is null) return;
 
+#if false
             // File
             var fileMetaList = imageMeta.GetFileMetaItemList();
             Console.WriteLine(fileMetaList);
@@ -26,7 +27,7 @@ namespace ImageMetaExtractor
                     Console.WriteLine(metaList);
                 }
             }
-
+#endif
         }
 
     }

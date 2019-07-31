@@ -11,14 +11,25 @@
         Title="ImageMetaExtractor"
         Height="300" Width="500">
 
-    <Grid>
+    <Grid Margin="0,10,0,0" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Button Content="AddTab"
-                Command="{Binding AddTabCommand, Mode=OneTime}" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Content="AddTab1"
+                    Command="{Binding AddTab1Command, Mode=OneTime}" />
+
+            <Button Grid.Column="1"
+                    Content="AddTab2"
+                    Command="{Binding AddTab2Command, Mode=OneTime}" />
+        </Grid>
 
         <TabControl Grid.Row="1"
                     prism:RegionManager.RegionName="MetaTabDetailsRegion"
