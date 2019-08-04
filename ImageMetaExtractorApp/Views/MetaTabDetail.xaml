@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:r="clr-namespace:Reactive.Bindings.Interactivity;assembly=ReactiveProperty.NET46"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:prism="http://prismlibrary.com/"
              xmlns:v="clr-namespace:ImageMetaExtractorApp.Views"
@@ -25,6 +26,9 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
+
+        <v:BooleanToIntParameterConverter x:Key="BooleanToIntParameterConverter" />
+        <sys:Int32 x:Key="GridViewColumnUnitWidth">50</sys:Int32>
     </UserControl.Resources>
 
     <ListView ItemContainerStyle="{StaticResource lineGridStyle}"
@@ -41,6 +45,18 @@
 
         <ListView.View>
             <GridView>
+                <!-- ◆カラム幅をxamlで管理したくてDataTriggerを試したけど、分からなかったのでConverter作った。大仰でイマイチ -->
+                <GridViewColumn Header="Unit"
+                                Width="{Binding IsShowGridViewColumnUnit, Mode=OneWay,
+                                                Converter={StaticResource BooleanToIntParameterConverter},
+                                                ConverterParameter={StaticResource GridViewColumnUnitWidth}}" >
+                    <GridViewColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Unit, Mode=OneTime}"/>
+                        </DataTemplate>
+                    </GridViewColumn.CellTemplate>
+                </GridViewColumn>
+                
                 <GridViewColumn Header="ID"
                                 Width="50" >
                     <GridViewColumn.CellTemplate>
@@ -49,6 +65,7 @@
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
+                
                 <GridViewColumn Header="Tag"
                                 Width="140" >
                     <GridViewColumn.CellTemplate>
@@ -57,6 +74,7 @@
                         </DataTemplate>
                     </GridViewColumn.CellTemplate>
                 </GridViewColumn>
+                
                 <GridViewColumn Header="Data"
                                 Width="200" >
                     <GridViewColumn.CellTemplate>

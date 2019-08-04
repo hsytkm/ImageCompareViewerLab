@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace ImageMetaExtractorApp.Models
 {
+    /// <summary>
+    /// メタ情報(お気に入り機能付き)
+    /// </summary>
     class ImageMetasFav : ImageMetas
     {
         // お気に入りタブ名
@@ -32,7 +35,7 @@ namespace ImageMetaExtractorApp.Models
         public void AddFavMetaItem(MetaItemGroup metaItemGroup)
         {
             // お気に入りから外れたアイテムのみ削除
-            ClearFavMetaItemGroup(metaItemGroup);
+            ClearFavMetaItemGroup();
 
             // フィールドのお気に入りリストを更新
             var favItems = metaItemGroup.Items
@@ -45,15 +48,15 @@ namespace ImageMetaExtractorApp.Models
         }
 
         // 対象グループのお気に入りから外れたアイテムのみ削除する
-        private void ClearFavMetaItemGroup(MetaItemGroup metaItemGroup)
+        // お気に入りタブで解除された場合も解除する
+        private void ClearFavMetaItemGroup()
         {
             // foreachのソースIEnumerableをforeach内で削除したらException出るので一旦リスト化
             var removeItems = new List<FavMetaItem>();
             foreach (var favItem in FavMetaItems)
             {
-                var sourceItem = MetaItemGroups.FirstOrDefault(x => x.Name == favItem.Group)?.Items
-                    .FirstOrDefault(x => x.Id == favItem.Id);
-                if (sourceItem != null && !sourceItem.IsMarking)
+                var srcItem = GetSourceMetaItem(favItem);
+                if (srcItem != null && !srcItem.IsMarking)
                     removeItems.Add(favItem);
             }
 
@@ -61,7 +64,7 @@ namespace ImageMetaExtractorApp.Models
                 FavMetaItems.Remove(item);
         }
 
-        // お気に入りリストを反映する
+        // お気に入りリストをViewに反映する
         private void UpdateFavMetaItemGroup()
         {
             // お気に入りを追加する対象グループ
@@ -72,16 +75,20 @@ namespace ImageMetaExtractorApp.Models
             // 対象グループで新たにお気に入りされたアイテムのみ追加する
             foreach (var favItem in FavMetaItems)
             {
-                var itemGroup = MetaItemGroups.FirstOrDefault(x => x.Name == favItem.Group);
-                if (itemGroup is null) continue;
-
-                var item = itemGroup.Items.FirstOrDefault(x => x.Id == favItem.Id);
-                if (item is null) continue;
-
-                if (!favGroupItems.Contains(item))
-                    favGroupItems.Add(item);
+                var srcItem = GetSourceMetaItem(favItem);
+                if (srcItem != null && !favGroupItems.Contains(srcItem))
+                    favGroupItems.Add(srcItem);
             }
         }
+
+        // お気に入りメタのソースメタを検索して取得する
+        private MetaItem GetSourceMetaItem(FavMetaItem favItem) =>
+            MetaItemGroups.FirstOrDefault(x => x.Name == favItem.Group)?.Items
+                .FirstOrDefault(x => x.Id == favItem.Id);
+
+        // お気に入りグループ判定
+        public static bool IsFavGroup(MetaItemGroup group) =>
+            group.Name == FavGroupName;
 
     }
 

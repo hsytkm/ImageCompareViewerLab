@@ -5,6 +5,9 @@ using Meta = ImageMetaExtractor;
 
 namespace ImageMetaExtractorApp.Models
 {
+    /// <summary>
+    /// メタ情報(お気に入り機能付きのクラスを使用するこちにしたので抽象化した)
+    /// </summary>
     abstract class ImageMetas
     {
         // 初期表示するタブ名(指定したくなければnullにする)

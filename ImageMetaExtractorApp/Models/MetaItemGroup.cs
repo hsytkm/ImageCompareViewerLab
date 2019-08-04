@@ -1,6 +1,5 @@
 ﻿using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Meta = ImageMetaExtractor;
@@ -28,7 +27,7 @@ namespace ImageMetaExtractorApp.Models
             if (metaItems is null) throw new ArgumentNullException(nameof(metaItems));
 
             Name = metaItems.Name;
-            Items = new ObservableCollection<MetaItem>(metaItems.Select(x => new MetaItem(x)));
+            Items = new ObservableCollection<MetaItem>(metaItems.Select(x => new MetaItem(Name, x)));
         }
 
         // 全マークをクリアする
@@ -43,6 +42,7 @@ namespace ImageMetaExtractorApp.Models
     /// </summary>
     class MetaItem : BindableBase
     {
+        public string Unit { get; }     // 所属名(Fileとか)
         public int Id { get; }
         public string Key { get; }
         public string Value { get; }
@@ -55,8 +55,9 @@ namespace ImageMetaExtractorApp.Models
         }
         private bool _IsMarking;
 
-        public MetaItem(Meta.MetaItem item)
+        public MetaItem(string unit, Meta.MetaItem item)
         {
+            Unit = unit;
             Id = item.Id;
             Key = item.Key;
             Value = item.Value;
@@ -66,7 +67,10 @@ namespace ImageMetaExtractorApp.Models
 
         // 他社のメーカーノートを区別するためKeyも比較する
         public bool IsSameMeta(MetaItem item)
-            => Id == item.Id && Key == item.Key;
+        {
+            if (item is null) throw new ArgumentNullException(nameof(item));
+            return Id == item.Id && Key == item.Key;
+        }
 
         public void AddMarking() => IsMarking = true;
         public void ClearMarking() => IsMarking = false;

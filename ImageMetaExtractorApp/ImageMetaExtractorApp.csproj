@@ -112,6 +112,7 @@
     <Compile Include="Models\ModelMaster.cs" />
     <Compile Include="ViewModels\MetaTabControlViewModel.cs" />
     <Compile Include="ViewModels\MetaTabDetailViewModel.cs" />
+    <Compile Include="Views\BooleanToIntParameterConverter.cs" />
     <Compile Include="Views\EventToSelectedValueConverter.cs" />
     <Compile Include="Views\MetaTabControl.xaml.cs">
       <DependentUpon>MetaTabControl.xaml</DependentUpon>

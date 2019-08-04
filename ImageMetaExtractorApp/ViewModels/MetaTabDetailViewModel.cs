@@ -5,7 +5,6 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Reactive.Bindings;
 using System;
-using System.Reactive;
 using System.Reactive.Linq;
 
 namespace ImageMetaExtractorApp.ViewModels
@@ -27,7 +26,16 @@ namespace ImageMetaExtractorApp.ViewModels
         // お気に入り用
         private ImageMetasFav _ImageMetas;
 
-        // View選択項目(同項目の選択に反応させるためDistinctUntilChangedｗ指定しない)
+        // GridViewColumnのUnit表示フラグ(お気に入りタブだけ表示させたいので切り替える)
+        public bool IsShowGridViewColumnUnit
+        {
+            get => _IsShowGridViewColumnUnit;
+            private set => SetProperty(ref _IsShowGridViewColumnUnit, value);
+        }
+        private bool _IsShowGridViewColumnUnit;
+        
+
+        // View選択項目(同項目の選択に反応させるためDistinctUntilChangedを指定しない)
         public ReactiveProperty<MetaItem> SelectedItem { get; } =
             new ReactiveProperty<MetaItem>(mode: ReactivePropertyMode.None);
 
@@ -51,7 +59,13 @@ namespace ImageMetaExtractorApp.ViewModels
         public void OnNavigatedTo(NavigationContext navigationContext)
         {
             if (navigationContext.Parameters[MetaItemGroupKey] is MetaItemGroup group)
+            {
                 MetaItemGroup = group;
+
+                // お気に入りタブなら所属名のカラムに幅を設ける(デフォで表示する)
+                if (ImageMetasFav.IsFavGroup(MetaItemGroup))
+                    IsShowGridViewColumnUnit = true;
+            }
 
             if (navigationContext.Parameters[ImageMetasKey] is ImageMetasFav imageMetas)
                 _ImageMetas = imageMetas;
