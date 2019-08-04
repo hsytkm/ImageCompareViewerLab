@@ -64,6 +64,10 @@ namespace ImageMetaExtractorApp.Models
             IsMarking = false;
         }
 
+        // 他社のメーカーノートを区別するためKeyも比較する
+        public bool IsSameMeta(MetaItem item)
+            => Id == item.Id && Key == item.Key;
+
         public void AddMarking() => IsMarking = true;
         public void ClearMarking() => IsMarking = false;
         public void SwitchMark() => IsMarking = !IsMarking;

@@ -8,8 +8,13 @@ namespace ImageMetaExtractorApp.ViewModels
 {
     class MainWindowViewModel : BindableBase
     {
-        private const string ImageSource1 = @"C:\data\Image1.JPG";
-        private const string ImageSource2 = @"C:\data\Image2.JPG";
+        private readonly static string[] ImageSource = new string[]
+        {
+            @"C:\data\Image1.JPG",
+            @"C:\data\Image2.JPG",
+            @"C:\data\maker\_Canon.JPG",
+            @"C:\data\maker\_Nikon.JPG",
+        };
 
         private readonly IRegionManager _regionManager;
         private readonly ModelMaster _modelMaster;
@@ -28,8 +33,8 @@ namespace ImageMetaExtractorApp.ViewModels
             ClearAllMarksCommand = new DelegateCommand(ClearAllMarks);
         }
 
-        private void AddTab1() => _modelMaster.UpdateImage(ImageSource1);
-        private void AddTab2() => _modelMaster.UpdateImage(ImageSource2);
+        private void AddTab1() => _modelMaster.UpdateImage(ImageSource[2]);
+        private void AddTab2() => _modelMaster.UpdateImage(ImageSource[0]);
         private void ClearAllMarks() => _modelMaster.ClearAllMarks();
     }
 }

@@ -60,7 +60,7 @@ namespace ImageMetaExtractorApp.Models
 
                 foreach (var srcItem in srcMarks)
                 {
-                    var destItem = destGroup.Items.FirstOrDefault(x => x.Id == srcItem.Id);
+                    var destItem = destGroup.Items.FirstOrDefault(x => srcItem.IsSameMeta(x));
                     destItem?.AddMarking();
                 }
             }
