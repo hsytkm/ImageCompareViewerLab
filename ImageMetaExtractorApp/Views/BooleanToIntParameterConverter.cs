@@ -5,7 +5,7 @@ using System.Windows.Data;
 namespace ImageMetaExtractorApp.Views
 {
     [ValueConversion(typeof(bool), typeof(int))]
-    public class BooleanToIntParameterConverter : IValueConverter
+    class BooleanToIntParameterConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

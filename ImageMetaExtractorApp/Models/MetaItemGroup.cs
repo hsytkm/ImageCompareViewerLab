@@ -72,11 +72,12 @@ namespace ImageMetaExtractorApp.Models
             return Id == item.Id && Key == item.Key;
         }
 
-        public void AddMarking() => IsMarking = true;
+        public void SetMarking() => IsMarking = true;
         public void ClearMarking() => IsMarking = false;
         public void SwitchMark() => IsMarking = !IsMarking;
 
         public override string ToString() =>
-            $"{nameof(MetaItem)}: Id={Id}, Key={Key}, Value={Value}";
+            $"{nameof(MetaItem)}: Unit={Unit}, Id={Id}, Key={Key}, Value={Value}," +
+            $"Comment={Comment}, IsMarking={IsMarking}";
     }
 }

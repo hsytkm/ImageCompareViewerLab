@@ -83,12 +83,12 @@ namespace ImageMetaExtractorApp.Models
 
         // お気に入りメタのソースメタを検索して取得する
         private MetaItem GetSourceMetaItem(FavMetaItem favItem) =>
-            MetaItemGroups.FirstOrDefault(x => x.Name == favItem.Group)?.Items
+            MetaItemGroups.FirstOrDefault(x => x.Name == favItem.Unit)?.Items
                 .FirstOrDefault(x => x.Id == favItem.Id);
 
         // お気に入りグループ判定
         public static bool IsFavGroup(MetaItemGroup group) =>
-            group.Name == FavGroupName;
+            group?.Name == FavGroupName;
 
     }
 
@@ -97,13 +97,13 @@ namespace ImageMetaExtractorApp.Models
     /// </summary>
     class FavMetaItem
     {
-        public string Group { get; }
+        public string Unit { get; }
         public int Id { get; }
         public string Key { get; }
 
-        private FavMetaItem(string group, int id, string key)
+        private FavMetaItem(string unit, int id, string key)
         {
-            Group = group;
+            Unit = unit;
             Id = id;
             Key = key;
         }
@@ -112,6 +112,6 @@ namespace ImageMetaExtractorApp.Models
             : this(group, item.Id, item.Key) { }
 
         public override string ToString() =>
-            $"{nameof(FavMetaItem)}: Group={Group}, Id ={Id}, Key={Key}";
+            $"{nameof(FavMetaItem)}: Unit={Unit}, Id ={Id}, Key={Key}";
     }
 }

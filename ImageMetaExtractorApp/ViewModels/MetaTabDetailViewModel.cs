@@ -23,7 +23,7 @@ namespace ImageMetaExtractorApp.ViewModels
         }
         private MetaItemGroup _MetaItemGroup;
 
-        // お気に入り用
+        // お気に入り用メタ情報クラス
         private ImageMetasFav _ImageMetas;
 
         // GridViewColumnのUnit表示フラグ(お気に入りタブだけ表示させたいので切り替える)
@@ -63,8 +63,7 @@ namespace ImageMetaExtractorApp.ViewModels
                 MetaItemGroup = group;
 
                 // お気に入りタブなら所属名のカラムに幅を設ける(デフォで表示する)
-                if (ImageMetasFav.IsFavGroup(MetaItemGroup))
-                    IsShowGridViewColumnUnit = true;
+                IsShowGridViewColumnUnit = ImageMetasFav.IsFavGroup(group);
             }
 
             if (navigationContext.Parameters[ImageMetasKey] is ImageMetasFav imageMetas)

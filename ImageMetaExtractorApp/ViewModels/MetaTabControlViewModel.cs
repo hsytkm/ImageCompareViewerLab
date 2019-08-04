@@ -92,9 +92,8 @@ namespace ImageMetaExtractorApp.ViewModels
         // クラスからタブ名を取得
         private static string GetTabTitle(object obj)
         {
-            if (obj is ContentControl cc)
-                if (cc.DataContext is MetaTabDetailViewModel vm)
-                    return vm.MetaItemGroup?.Name;
+            if ((obj as ContentControl)?.DataContext is MetaTabDetailViewModel vm)
+                return vm.MetaItemGroup?.Name;
             return null;
         }
 
