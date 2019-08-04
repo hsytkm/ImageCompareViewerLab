@@ -40,10 +40,10 @@ namespace ImageMetaExtractorApp.ViewModels
             _regionManager = regionManager;
             _modelMaster = container.Resolve<ModelMaster>();
 
-            _modelMaster.ObserveProperty(x => x.ImageMetas)
-                .Subscribe(x => AddTab(x));
+            _modelMaster.ObserveProperty(x => x.ImageMetas).Subscribe(x => AddTab(x));
         }
 
+        // メタ情報クラスからView用のTabを読み出し
         private void AddTab(ImageMetas imageMetas)
         {
             if (imageMetas is null) return;
@@ -64,6 +64,7 @@ namespace ImageMetaExtractorApp.ViewModels
             ActivateRegion(regionName, resumeTabTitle);
         }
 
+        // 引数リージョンのタブ名を表示する
         private void ActivateRegion(string regionName, string tabTitle)
         {
             var views = _regionManager.Regions[regionName].Views;
@@ -74,6 +75,7 @@ namespace ImageMetaExtractorApp.ViewModels
                 ActivateRegion(regionName, index: 0);  // ヒットしなければ先頭にする
         }
 
+        // 引数リージョンの番号を表示する
         private void ActivateRegion(string regionName, int index)
         {
             var views = _regionManager.Regions[regionName].Views;
@@ -87,6 +89,7 @@ namespace ImageMetaExtractorApp.ViewModels
             _regionManager.Regions[regionName].Activate(target);
         }
 
+        // クラスからタブ名を取得
         private static string GetTabTitle(object obj)
         {
             if (obj is ContentControl cc)

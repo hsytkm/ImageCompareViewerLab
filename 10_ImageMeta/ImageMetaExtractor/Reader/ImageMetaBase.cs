@@ -55,6 +55,17 @@ namespace ImageMetaExtractor.Reader
         internal virtual bool GetHasExifMeta() => false;
 
         /// <summary>
+        /// 全リストの読み出し
+        /// </summary>
+        /// <returns></returns>
+        public IList<MetaItemList> GetAllMetaListGroup()
+        {
+            var list = new List<MetaItemList>() { GetFileMetaItemList() };
+            list.AddRange(GetExifMetaListGroup());
+            return list;
+        }
+
+        /// <summary>
         /// "File"リストの読み出し
         /// </summary>
         /// <returns></returns>

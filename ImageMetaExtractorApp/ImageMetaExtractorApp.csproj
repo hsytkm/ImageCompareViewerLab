@@ -107,6 +107,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\MetaItemGroup.cs" />
     <Compile Include="Models\ModelMaster.cs" />
     <Compile Include="ViewModels\MetaTabControlViewModel.cs" />
     <Compile Include="ViewModels\MetaTabDetailViewModel.cs" />

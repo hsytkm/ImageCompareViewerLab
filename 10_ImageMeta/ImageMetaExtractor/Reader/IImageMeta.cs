@@ -15,6 +15,12 @@ namespace ImageMetaExtractor.Reader
         bool HasExifMeta { get; }
 
         /// <summary>
+        /// 全リストの読み出し
+        /// </summary>
+        /// <returns></returns>
+        IList<MetaItemList> GetAllMetaListGroup();
+
+        /// <summary>
         /// Fileリストの読み出し
         /// </summary>
         /// <returns></returns>

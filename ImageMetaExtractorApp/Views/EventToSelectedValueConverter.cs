@@ -6,6 +6,7 @@ using System.Windows.Controls.Primitives;
 
 namespace ImageMetaExtractorApp.Views
 {
+    // SelectorのSelectedItemを返す
     class EventToSelectedValueConverter : ReactiveConverter<dynamic, object>
     {
         protected override IObservable<object> OnConvert(IObservable<dynamic> source)

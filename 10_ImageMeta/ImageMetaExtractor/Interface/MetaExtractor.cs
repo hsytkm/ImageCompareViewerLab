@@ -11,9 +11,10 @@ namespace ImageMetaExtractor
         {
             var imageMeta = ReaderFactory.GetInstance(imagePath);
             ImageMeta = imageMeta;
-            if (imageMeta is null) return;
 
 #if false
+            if (imageMeta is null) return;
+
             // File
             var fileMetaList = imageMeta.GetFileMetaItemList();
             Console.WriteLine(fileMetaList);

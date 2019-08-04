@@ -1,5 +1,4 @@
-﻿using Prism.Mvvm;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Meta = ImageMetaExtractor;
@@ -11,39 +10,33 @@ namespace ImageMetaExtractorApp.Models
         // メタ情報リストのリスト(Exif/Mnoteなどがまとめられている)
         public IList<MetaItemGroup> MetaItemGroups { get; private set; }
 
-        public ImageMetas(IList<MetaItemGroup> metaItemGroups = null)
+        private ImageMetas(IList<MetaItemGroup> metaItemGroups)
         {
             MetaItemGroups = metaItemGroups;
         }
 
+        // インスタンス作成(引数がnullでなければマークを引き継ぐ)
         public static ImageMetas GetInstance(string imagePath, IList<MetaItemGroup> oldGroups = null)
         {
-            var newGroups = GetMetaItemGroups(imagePath);
+            var newGroups = GetMetaItemGroupsFromFile(imagePath);
             if (oldGroups != null)
                 CopyMarking(destGroups: newGroups, srcGroups: oldGroups);
             return new ImageMetas(newGroups);
         }
 
-        private static IList<MetaItemGroup> GetMetaItemGroups(string imagePath)
+        // ファイルPATHからメタ情報リストを読み出し
+        private static IList<MetaItemGroup> GetMetaItemGroupsFromFile(string imagePath)
         {
-            if (string.IsNullOrWhiteSpace(imagePath)) throw new ArgumentNullException();
+            if (string.IsNullOrWhiteSpace(imagePath)) throw new ArgumentNullException(nameof(imagePath));
 
             var imageMeta = new Meta.MetaExtractor(imagePath).ImageMeta;
 
-            // ライブラリ型のList
-            var libMetaLists = new List<Meta.MetaItemList>()
-            {
-                imageMeta.GetFileMetaItemList()
-            };
-            libMetaLists.AddRange(imageMeta.GetExifMetaListGroup());
+            // ライブラリの型List
+            var libMetaLists = imageMeta.GetAllMetaListGroup();
 
-            // ViewModel用の型ListのList
+            // ViewModelの型List
             return libMetaLists.Select(x => new MetaItemGroup(x)).ToList();
         }
-
-        // 全マークをクリアする
-        public void ClearAllMarking() =>
-            (MetaItemGroups as List<MetaItemGroup>)?.ForEach(x => x.ClearAllMarking());
 
         // マーキングをコピーする
         private static void CopyMarking(IList<MetaItemGroup> destGroups, IList<MetaItemGroup> srcGroups)
@@ -64,61 +57,10 @@ namespace ImageMetaExtractorApp.Models
                 }
             }
         }
-    }
-
-    /// <summary>
-    /// メタ情報(EXIF, MNoteなど)
-    /// </summary>
-    class MetaItemGroup
-    {
-        public string Name { get; }
-        public IList<MetaItem> Items { get; }
-
-        public MetaItemGroup(Meta.MetaItemList metaItems)
-        {
-            if (metaItems is null) throw new ArgumentNullException();
-
-            Name = metaItems.Name;
-            Items = metaItems.Select(x => new MetaItem(x)).ToList();
-        }
 
         // 全マークをクリアする
         public void ClearAllMarking() =>
-            (Items as List<MetaItem>).ForEach(x => x.ClearMarking());
-    }
+            (MetaItemGroups as List<MetaItemGroup>)?.ForEach(x => x.ClearAllMarking());
 
-    /// <summary>
-    /// 1つのメタ情報(F値、焦点距離など)
-    /// </summary>
-    class MetaItem : BindableBase
-    {
-        public int Id { get; }
-        public string Key { get; }
-        public string Value { get; }
-        public string Comment { get; }
-
-        public bool IsMarking
-        {
-            get => _IsMarking;
-            private set => SetProperty(ref _IsMarking, value);
-        }
-        private bool _IsMarking;
-
-        public MetaItem(Meta.MetaItem item)
-        {
-            Id = item.Id;
-            Key = item.Key;
-            Value = item.Value;
-            Comment = item.Comment;
-            IsMarking = false;
-        }
-
-        public void AddMarking() => IsMarking = true;
-        public void ClearMarking() => IsMarking = false;
-
-        public void SwitchMark() => IsMarking = !IsMarking;
-
-        public override string ToString() =>
-            $"MetaItem: Id={Id}, Key={Key}, Value={Value}";
     }
 }
