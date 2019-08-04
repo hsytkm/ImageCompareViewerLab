@@ -5,23 +5,31 @@ using Meta = ImageMetaExtractor;
 
 namespace ImageMetaExtractorApp.Models
 {
-    class ImageMetas
+    abstract class ImageMetas
     {
+        // 初期表示するタブ名(指定したくなければnullにする)
+        public readonly static string InitViewGroupName = "File";
+
         // メタ情報リストのリスト(Exif/Mnoteなどがまとめられている)
         public IList<MetaItemGroup> MetaItemGroups { get; private set; }
 
-        private ImageMetas(IList<MetaItemGroup> metaItemGroups)
+        internal ImageMetas() { }
+
+        internal ImageMetas(IList<MetaItemGroup> metaItemGroups)
         {
             MetaItemGroups = metaItemGroups;
         }
 
-        // インスタンス作成(引数がnullでなければマークを引き継ぐ)
-        public static ImageMetas GetInstance(string imagePath, IList<MetaItemGroup> oldGroups = null)
+        // ライブラリを使ってメタ情報リストを読み出し(引数がnullでなければマークを引き継ぐ)
+        internal static IList<MetaItemGroup> GetMetaItemGroupList(string imagePath, IList<MetaItemGroup> oldGroups = null)
         {
             var newGroups = GetMetaItemGroupsFromFile(imagePath);
+
+            // マーキングのコピー
             if (oldGroups != null)
                 CopyMarking(destGroups: newGroups, srcGroups: oldGroups);
-            return new ImageMetas(newGroups);
+
+            return newGroups;
         }
 
         // ファイルPATHからメタ情報リストを読み出し
@@ -53,7 +61,7 @@ namespace ImageMetaExtractorApp.Models
                 foreach (var srcItem in srcMarks)
                 {
                     var destItem = destGroup.Items.FirstOrDefault(x => x.Id == srcItem.Id);
-                    destItem?.AddMarking(); 
+                    destItem?.AddMarking();
                 }
             }
         }

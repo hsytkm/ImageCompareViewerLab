@@ -40,13 +40,13 @@ namespace ImageMetaExtractorApp.ViewModels
             _regionManager = regionManager;
             _modelMaster = container.Resolve<ModelMaster>();
 
-            _modelMaster.ObserveProperty(x => x.ImageMetas).Subscribe(x => AddTab(x));
+            _modelMaster.ObserveProperty(x => x.ImageMetas).Where(x => x != null).Subscribe(x => AddTab(x));
         }
 
         // メタ情報クラスからView用のTabを読み出し
-        private void AddTab(ImageMetas imageMetas)
+        private void AddTab(ImageMetasFav imageMetas)
         {
-            if (imageMetas is null) return;
+            if (imageMetas is null) throw new ArgumentNullException(nameof(imageMetas));
 
             // Region追加時に選択が更新されてしまうので先にバフっとく
             var resumeTabTitle = TabControlSelectedTitle;
@@ -54,19 +54,19 @@ namespace ImageMetaExtractorApp.ViewModels
 
             foreach (var metaItemGroup in imageMetas.MetaItemGroups.Where(x => x != null))
             {
-                var parameters = new NavigationParameters
-                {
-                    { MetaTabDetailViewModel.MetaItemGroupKey, metaItemGroup }
-                };
+                var parameters = MetaTabDetailViewModel.GetNavigationParameters(metaItemGroup, imageMetas);
                 _regionManager.RequestNavigate(regionName, nameof(MetaTabDetail), parameters);
             }
-            // 読み込み後の表示位置を指定
+            // 画像の読み込み後の表示位置を指定(画像切り替え時用)
             ActivateRegion(regionName, resumeTabTitle);
         }
 
         // 引数リージョンのタブ名を表示する
         private void ActivateRegion(string regionName, string tabTitle)
         {
+            // 指定がなければModelの要望を採用する
+            if (tabTitle is null) tabTitle = ImageMetas.InitViewGroupName;
+
             var views = _regionManager.Regions[regionName].Views;
             var target = views.FirstOrDefault(x => GetTabTitle(x) == tabTitle);
             if (target != null)

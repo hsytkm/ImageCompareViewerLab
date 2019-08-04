@@ -1,6 +1,7 @@
 ﻿using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Meta = ImageMetaExtractor;
 
@@ -12,19 +13,29 @@ namespace ImageMetaExtractorApp.Models
     class MetaItemGroup
     {
         public string Name { get; }
-        public IList<MetaItem> Items { get; }
+        public ObservableCollection<MetaItem> Items { get; }
+
+        public MetaItemGroup(string name)
+        {
+            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
+
+            Name = name;
+            Items = new ObservableCollection<MetaItem>();
+        }
 
         public MetaItemGroup(Meta.MetaItemList metaItems)
         {
             if (metaItems is null) throw new ArgumentNullException(nameof(metaItems));
 
             Name = metaItems.Name;
-            Items = metaItems.Select(x => new MetaItem(x)).ToList();
+            Items = new ObservableCollection<MetaItem>(metaItems.Select(x => new MetaItem(x)));
         }
 
         // 全マークをクリアする
-        public void ClearAllMarking() =>
-            (Items as List<MetaItem>).ForEach(x => x.ClearMarking());
+        public void ClearAllMarking()
+        {
+            foreach (var item in Items) item.ClearMarking();
+        }
     }
 
     /// <summary>
@@ -58,6 +69,6 @@ namespace ImageMetaExtractorApp.Models
         public void SwitchMark() => IsMarking = !IsMarking;
 
         public override string ToString() =>
-            $"MetaItem: Id={Id}, Key={Key}, Value={Value}";
+            $"{nameof(MetaItem)}: Id={Id}, Key={Key}, Value={Value}";
     }
 }
