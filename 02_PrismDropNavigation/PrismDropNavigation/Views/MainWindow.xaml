@@ -9,13 +9,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         mc:Ignorable="d"
         Title="PrismDropNavigation"
-        Height="250" Width="400">
-
-    <Window.Resources>
-        <Style TargetType="TabItem">
-            <Setter Property="Header" Value="{Binding DataContext.Title, Mode=OneTime}" />
-        </Style>
-    </Window.Resources>
+        Height="250" Width="550">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
@@ -32,7 +26,9 @@
         </Grid.RowDefinitions>
 
         <TextBlock Margin="0,3" TextWrapping="Wrap" >
-            Updateボタンがクリックされると、カンマで区切られた文字列の数に応じたタブに切り替えます。(最大2つ)
+            <Run Text="Updateボタンがクリックされると、カンマで区切られた文字列の数に応じたタブに切り替えます。(最大3つ)" />
+            <LineBreak />
+            <Run Text="TabItem毎にViewクラスを用意したくないけど、2019/8時点のスキルでは共通クラス化できなかった…" />
         </TextBlock>
 
         <Grid Grid.Row="1" Margin="0,3" >
@@ -40,7 +36,9 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
+            
             <TextBox Text="{Binding Text, Mode=TwoWay}" />
+            
             <Button Grid.Column="1" Content="Update"
                     Command="{Binding UpdateCommand}"
                     CommandParameter="{Binding Path=Text, Mode=OneWay}"/>
@@ -61,6 +59,12 @@
         -->
 
         <TabControl Grid.Row="3"
-                    prism:RegionManager.RegionName="TabContentRegion" />
+                    prism:RegionManager.RegionName="TabContentRegion" >
+            <TabControl.Resources>
+                <Style TargetType="TabItem">
+                    <Setter Property="Header" Value="{Binding DataContext.Title, Mode=OneTime}" />
+                </Style>
+            </TabControl.Resources>
+        </TabControl>
     </Grid>
 </Window>

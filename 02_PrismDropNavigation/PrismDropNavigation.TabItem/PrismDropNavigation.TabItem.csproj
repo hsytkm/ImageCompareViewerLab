@@ -63,11 +63,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="ViewModels\ITabItemViewModel.cs" />
+    <Compile Include="ViewModels\TabItemTripleViewModel.cs" />
+    <Compile Include="ViewModels\TabItemViewModelBase.cs" />
     <Compile Include="ViewModels\TabItemDoubleViewModel.cs" />
     <Compile Include="ViewModels\TabItemSingleViewModel.cs" />
     <Compile Include="Views\TabItemDouble.xaml.cs">
       <DependentUpon>TabItemDouble.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TabItemTriple.xaml.cs">
+      <DependentUpon>TabItemTriple.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\TabItemSingle.xaml.cs">
       <DependentUpon>TabItemSingle.xaml</DependentUpon>
@@ -85,6 +89,10 @@
   <ItemGroup />
   <ItemGroup>
     <Page Include="Views\TabItemDouble.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\TabItemTriple.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

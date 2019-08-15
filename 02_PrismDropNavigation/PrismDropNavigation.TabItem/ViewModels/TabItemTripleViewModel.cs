@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace PrismDropNavigation.TabItem.ViewModels
 {
-    public class TabItemSingleViewModel : TabItemViewModelBase
+    public class TabItemTripleViewModel : TabItemViewModelBase
     {
-        public TabItemSingleViewModel() : base()
+        public TabItemTripleViewModel() : base()
         {
-            Message = nameof(TabItemSingleViewModel);
+            Message = nameof(TabItemTripleViewModel);
         }
     }
 }
