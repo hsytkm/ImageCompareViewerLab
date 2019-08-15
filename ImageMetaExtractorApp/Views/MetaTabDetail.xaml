@@ -31,60 +31,82 @@
         <sys:Int32 x:Key="GridViewColumnUnitWidth">50</sys:Int32>
     </UserControl.Resources>
 
-    <ListView ItemContainerStyle="{StaticResource lineGridStyle}"
-              ItemsSource="{Binding MetaItemGroup.Items, Mode=OneWay}" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <!-- クリックしたメタ情報クラス通知(色付けする) -->
-        <i:Interaction.Triggers>
-            <i:EventTrigger EventName="MouseLeftButtonUp">
-                <r:EventToReactiveProperty ReactiveProperty="{Binding SelectedItem, Mode=OneTime}" >
-                    <v:EventToSelectedValueConverter />
-                </r:EventToReactiveProperty>
-            </i:EventTrigger>
-        </i:Interaction.Triggers>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
 
-        <ListView.View>
-            <GridView>
-                <!-- ◆カラム幅をxamlで管理したくてDataTriggerを試したけど、分からなかったのでConverter作った。大仰でイマイチ -->
-                <GridViewColumn Header="Unit"
-                                Width="{Binding IsShowGridViewColumnUnit, Mode=OneWay,
-                                                Converter={StaticResource BooleanToIntParameterConverter},
-                                                ConverterParameter={StaticResource GridViewColumnUnitWidth}}" >
-                    <GridViewColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Unit, Mode=OneTime}"/>
-                        </DataTemplate>
-                    </GridViewColumn.CellTemplate>
-                </GridViewColumn>
+            <TextBox VerticalContentAlignment="Center"
+                     Text="{Binding FilterPattern.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+            <Button Grid.Column="1"
+                    Content="Clear"
+                    Command="{Binding ClearFilterPatternCommand, Mode=OneTime}" />
+        </Grid>
+
+        <ListView Grid.Row="1"
+                  ItemContainerStyle="{StaticResource lineGridStyle}"
+                  ItemsSource="{Binding MetaItemGroup.Items, Mode=OneWay}" >
+
+            <!-- クリックしたメタ情報クラス通知(色付けする) -->
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonUp">
+                    <r:EventToReactiveProperty ReactiveProperty="{Binding SelectedItem, Mode=OneTime}" >
+                        <v:EventToSelectedValueConverter />
+                    </r:EventToReactiveProperty>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
+            <ListView.View>
+                <GridView>
+                    <!-- ◆カラム幅をxamlで管理したくてDataTriggerを試したけど、分からなかったのでConverter作った。大仰でイマイチ -->
+                    <GridViewColumn Header="Unit"
+                                    Width="{Binding IsShowGridViewColumnUnit, Mode=OneWay,
+                                                    Converter={StaticResource BooleanToIntParameterConverter},
+                                                    ConverterParameter={StaticResource GridViewColumnUnitWidth}}" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Unit, Mode=OneTime}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 
-                <GridViewColumn Header="ID"
-                                Width="50" >
-                    <GridViewColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Id, StringFormat={}0x{0:x4}, Mode=OneTime}"/>
-                        </DataTemplate>
-                    </GridViewColumn.CellTemplate>
-                </GridViewColumn>
+                    <GridViewColumn Header="ID"
+                                    Width="50" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Id, StringFormat={}0x{0:x4}, Mode=OneTime}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 
-                <GridViewColumn Header="Tag"
-                                Width="140" >
-                    <GridViewColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Key, Mode=OneTime}"/>
-                        </DataTemplate>
-                    </GridViewColumn.CellTemplate>
-                </GridViewColumn>
+                    <GridViewColumn Header="Tag"
+                                    Width="140" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Key, Mode=OneTime}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
                 
-                <GridViewColumn Header="Data"
-                                Width="200" >
-                    <GridViewColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Value, Mode=OneTime}"/>
-                        </DataTemplate>
-                    </GridViewColumn.CellTemplate>
-                </GridViewColumn>
-            </GridView>
-        </ListView.View>
-    </ListView>
+                    <GridViewColumn Header="Data"
+                                    Width="200" >
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value, Mode=OneTime}"/>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
 
 </UserControl>

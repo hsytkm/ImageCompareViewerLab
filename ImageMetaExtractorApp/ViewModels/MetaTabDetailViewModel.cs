@@ -1,11 +1,13 @@
 ﻿using ImageMetaExtractorApp.Models;
 using Prism;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using Reactive.Bindings;
 using System;
 using System.Reactive.Linq;
+using System.Windows.Data;
 
 namespace ImageMetaExtractorApp.ViewModels
 {
@@ -33,11 +35,16 @@ namespace ImageMetaExtractorApp.ViewModels
             private set => SetProperty(ref _IsShowGridViewColumnUnit, value);
         }
         private bool _IsShowGridViewColumnUnit;
-        
 
         // View選択項目(同項目の選択に反応させるためDistinctUntilChangedを指定しない)
         public ReactiveProperty<MetaItem> SelectedItem { get; } =
             new ReactiveProperty<MetaItem>(mode: ReactivePropertyMode.None);
+
+        // MetaItemのフィルタ文字列
+        public ReactiveProperty<string> FilterPattern { get; } = new ReactiveProperty<string>();
+
+        // MetaItemのフィルタ文字列の削除コマンド
+        public DelegateCommand ClearFilterPatternCommand { get; }
 
         public MetaTabDetailViewModel()
         {
@@ -45,6 +52,30 @@ namespace ImageMetaExtractorApp.ViewModels
             SelectedItem.Subscribe(x => x?.SwitchMark());
 
             IsActiveChanged += ViewIsActiveChanged;
+
+            // MetaItemのフィルタリング
+            FilterPattern.Subscribe(pat => FilterMetaItems(pat));
+
+            // MetaItemのフィルタ文字列の削除
+            ClearFilterPatternCommand = new DelegateCommand(() => FilterPattern.Value = "");
+
+        }
+
+        // MetaItemのフィルタリング https://blog.okazuki.jp/entry/2014/10/29/220236
+        private void FilterMetaItems(string pattern)
+        {
+            var itemsSource = MetaItemGroup?.Items;
+            if (itemsSource is null) return;
+
+            var collectionView = CollectionViewSource.GetDefaultView(itemsSource);
+            if (string.IsNullOrEmpty(pattern))
+            {
+                collectionView.Filter = x => true;
+            }
+            else
+            {
+                collectionView.Filter = x => (x as MetaItem).Key.Contains(pattern);
+            }
         }
 
         #region INavigationAware

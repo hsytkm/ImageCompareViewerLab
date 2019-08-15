@@ -39,13 +39,13 @@
       <HintPath>..\packages\CommonServiceLocator.2.0.4\lib\net46\CommonServiceLocator.dll</HintPath>
     </Reference>
     <Reference Include="MetroRadiance, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MetroRadiance.2.3.0\lib\net46\MetroRadiance.dll</HintPath>
+      <HintPath>..\..\packages\MetroRadiance.2.3.0\lib\net46\MetroRadiance.dll</HintPath>
     </Reference>
     <Reference Include="MetroRadiance.Chrome, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MetroRadiance.Chrome.2.2.0\lib\net46\MetroRadiance.Chrome.dll</HintPath>
+      <HintPath>..\..\packages\MetroRadiance.Chrome.2.2.0\lib\net46\MetroRadiance.Chrome.dll</HintPath>
     </Reference>
     <Reference Include="MetroRadiance.Core, Version=2.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MetroRadiance.Core.2.4.0\lib\net46\MetroRadiance.Core.dll</HintPath>
+      <HintPath>..\..\packages\MetroRadiance.Core.2.4.0\lib\net46\MetroRadiance.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Prism, Version=7.2.0.1367, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
