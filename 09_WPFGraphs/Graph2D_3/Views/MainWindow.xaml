@@ -17,8 +17,8 @@
     <StackPanel>
         <Button Margin="0,10"
                 Height="30"
-                Content="Reflash"
-                Command="{Binding ReflashDataCommand, Mode=OneTime}" />
+                Content="Reflesh"
+                Command="{Binding RefleshDataCommand, Mode=OneTime}" />
 
         <v:MyDataGrid SnapsToDevicePixels="True" 
                       IsReadOnly="True"

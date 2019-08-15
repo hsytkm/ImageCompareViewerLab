@@ -21,11 +21,11 @@ namespace Graph2D.ViewModels
             private set => SetProperty(ref _Array2d, value);
         }
 
-        public DelegateCommand ReflashDataCommand { get; }
+        public DelegateCommand RefleshDataCommand { get; }
 
         public MainWindowViewModel()
         {
-            ReflashDataCommand = new DelegateCommand(() => Array2d = GetSortedData());
+            RefleshDataCommand = new DelegateCommand(() => Array2d = GetSortedData());
         }
 
         private static ColoredObject[,] GetSortedData()

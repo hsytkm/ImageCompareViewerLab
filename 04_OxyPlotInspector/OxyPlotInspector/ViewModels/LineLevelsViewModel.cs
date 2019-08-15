@@ -5,6 +5,7 @@ using OxyPlotInspector.Models;
 using Prism.Mvvm;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
+using System;
 using System.Reactive.Linq;
 
 namespace OxyPlotInspector.ViewModels
@@ -13,61 +14,10 @@ namespace OxyPlotInspector.ViewModels
     {
         private readonly ImageLineLevels LineLevels = ModelMaster.Instance.LineLevels;
 
-        #region RGB Channels
-
-        private bool _IsVisibleRch = true;
-        public bool IsVisibleRch
-        {
-            get => _IsVisibleRch;
-            set
-            {
-                if (SetProperty(ref _IsVisibleRch, value))
-                    UpdateSeriesVisible(0, value);
-            }
-        }
-
-        private bool _IsVisibleGch = true;
-        public bool IsVisibleGch
-        {
-            get => _IsVisibleGch;
-            set
-            {
-                if (SetProperty(ref _IsVisibleGch, value))
-                    UpdateSeriesVisible(1, value);
-            }
-        }
-
-        private bool _IsVisibleBch = true;
-        public bool IsVisibleBch
-        {
-            get => _IsVisibleBch;
-            set
-            {
-                if (SetProperty(ref _IsVisibleBch, value))
-                    UpdateSeriesVisible(2, value);
-            }
-        }
-
-        // 線の表示を切り替える
-        private void UpdateSeriesVisible(int index, bool isVisible)
-        {
-            var pm = OxyLineLevels.Value;
-            int seriesCount = pm?.Series.Count ?? 0;
-            if (pm != null && seriesCount > index)
-            {
-                pm.Series[index].IsVisible = isVisible;
-                pm.InvalidatePlot(true);   // View更新
-            }
-        }
-
-        #endregion
-
-        private ReactiveProperty<PlotModel> _OxyLineLevels;
-        public ReactiveProperty<PlotModel> OxyLineLevels
-        {
-            get => _OxyLineLevels;
-            private set => SetProperty(ref _OxyLineLevels, value);
-        }
+        public ReadOnlyReactiveProperty<PlotModel> OxyLineLevels { get; }
+        public ReactiveProperty<bool> IsVisibleRch { get; } = new ReactiveProperty<bool>(initialValue: true);
+        public ReactiveProperty<bool> IsVisibleGch { get; } = new ReactiveProperty<bool>(initialValue: true);
+        public ReactiveProperty<bool> IsVisibleBch { get; } = new ReactiveProperty<bool>(initialValue: true);
 
         public LineLevelsViewModel()
         {
@@ -77,7 +27,19 @@ namespace OxyPlotInspector.ViewModels
             OxyLineLevels = LineLevels
                 .ObserveProperty(x => x.RgbLevelLine)
                 .Select(x => GetPlotModelSkelton(x))
-                .ToReactiveProperty();
+                .ToReadOnlyReactiveProperty();
+
+            IsVisibleRch
+                .CombineLatest(OxyLineLevels, (isVisible, line) => (isVisible, line))
+                .Subscribe(x => UpdateSeriesVisible(x.line, x.isVisible, 1));
+
+            IsVisibleGch
+                .CombineLatest(OxyLineLevels, (isVisible, line) => (isVisible, line))
+                .Subscribe(x => UpdateSeriesVisible(x.line, x.isVisible, 2));
+
+            IsVisibleBch
+                .CombineLatest(OxyLineLevels, (isVisible, line) => (isVisible, line))
+                .Subscribe(x => UpdateSeriesVisible(x.line, x.isVisible, 0));
         }
 
         private PlotModel GetPlotModelSkelton((byte R, byte G, byte B)[] rgb)
@@ -132,6 +94,18 @@ namespace OxyPlotInspector.ViewModels
 
             return pm;
         }
+
+        // 線の表示を切り替える
+        private static void UpdateSeriesVisible(PlotModel pm, bool isVisible, int index)
+        {
+            if (pm is null) return;
+            if (index < pm.Series.Count)
+            {
+                pm.Series[index].IsVisible = isVisible;
+                pm.InvalidatePlot(true);   // View更新
+            }
+        }
+
 
     }
 }

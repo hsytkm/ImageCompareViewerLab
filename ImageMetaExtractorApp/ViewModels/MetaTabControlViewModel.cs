@@ -52,6 +52,10 @@ namespace ImageMetaExtractorApp.ViewModels
             var resumeTabTitle = TabControlSelectedTitle;
             var regionName = MetaTabDetailsRegionName;
 
+            // 登録済みRegionViewの削除(◆消した方が良さげだが動作未確認なので無効化)
+            //if (_regionManager.Regions.ContainsRegionWithName(regionName))
+            //    _regionManager.Regions[regionName].RemoveAll();
+
             foreach (var metaItemGroup in imageMetas.MetaItemGroups.Where(x => x != null))
             {
                 var parameters = MetaTabDetailViewModel.GetNavigationParameters(metaItemGroup, imageMetas);

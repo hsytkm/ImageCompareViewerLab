@@ -19,12 +19,12 @@
                     Margin="10,5">
             <CheckBox Margin="0,0,10,0"
                       Content="Rch"
-                      IsChecked="{Binding IsVisibleRch, Mode=TwoWay}" />
+                      IsChecked="{Binding IsVisibleRch.Value, Mode=TwoWay}" />
             <CheckBox Margin="0,0,10,0"
                       Content="Gch"
-                      IsChecked="{Binding IsVisibleGch, Mode=TwoWay}" />
+                      IsChecked="{Binding IsVisibleGch.Value, Mode=TwoWay}" />
             <CheckBox Content="Bch"
-                      IsChecked="{Binding IsVisibleBch, Mode=TwoWay}" />
+                      IsChecked="{Binding IsVisibleBch.Value, Mode=TwoWay}" />
         </StackPanel>
         
         <oxy:PlotView Grid.Row="1"
