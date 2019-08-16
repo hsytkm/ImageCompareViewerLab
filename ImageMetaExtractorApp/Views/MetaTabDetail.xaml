@@ -53,7 +53,7 @@
 
         <ListView Grid.Row="1"
                   ItemContainerStyle="{StaticResource lineGridStyle}"
-                  ItemsSource="{Binding MetaItemGroup.Items, Mode=OneWay}" >
+                  ItemsSource="{Binding MetaItemGroup.Value.Items, Mode=OneWay}" >
 
             <!-- クリックしたメタ情報クラス通知(色付けする) -->
             <i:Interaction.Triggers>
@@ -68,7 +68,7 @@
                 <GridView>
                     <!-- ◆カラム幅をxamlで管理したくてDataTriggerを試したけど、分からなかったのでConverter作った。大仰でイマイチ -->
                     <GridViewColumn Header="Unit"
-                                    Width="{Binding IsShowGridViewColumnUnit, Mode=OneWay,
+                                    Width="{Binding IsShowGridViewColumn.Value, Mode=OneWay,
                                                     Converter={StaticResource BooleanToIntParameterConverter},
                                                     ConverterParameter={StaticResource GridViewColumnUnitWidth}}" >
                         <GridViewColumn.CellTemplate>

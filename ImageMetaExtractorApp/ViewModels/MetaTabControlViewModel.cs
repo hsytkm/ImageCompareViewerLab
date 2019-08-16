@@ -97,7 +97,7 @@ namespace ImageMetaExtractorApp.ViewModels
         private static string GetTabTitle(object obj)
         {
             if ((obj as ContentControl)?.DataContext is MetaTabDetailViewModel vm)
-                return vm.MetaItemGroup?.Name;
+                return vm.TabName.Value;
             return null;
         }
 

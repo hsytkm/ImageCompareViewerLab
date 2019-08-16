@@ -5,7 +5,13 @@ using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using Reactive.Bindings;
+using Reactive.Bindings.Extensions;
+using Reactive.Bindings.Notifiers;
 using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Data;
 
@@ -18,27 +24,17 @@ namespace ImageMetaExtractorApp.ViewModels
         private static readonly string ImageMetasKey = nameof(ImageMetasKey);
 
         // メタ情報をまとめたクラス(Exif, MNoteなど)
-        public MetaItemGroup MetaItemGroup
-        {
-            get => _MetaItemGroup;
-            private set => SetProperty(ref _MetaItemGroup, value);
-        }
-        private MetaItemGroup _MetaItemGroup;
+        public ReactiveProperty<MetaItemGroup> MetaItemGroup { get; } =
+            new ReactiveProperty<MetaItemGroup>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
         // お気に入り用メタ情報クラス
-        private ImageMetasFav _ImageMetas;
+        private ImageMetasFav _imageMetas;
+
+        // タブ名
+        public ReadOnlyReactiveProperty<string> TabName { get; }
 
         // GridViewColumnのUnit表示フラグ(お気に入りタブだけ表示させたいので切り替える)
-        public bool IsShowGridViewColumnUnit
-        {
-            get => _IsShowGridViewColumnUnit;
-            private set => SetProperty(ref _IsShowGridViewColumnUnit, value);
-        }
-        private bool _IsShowGridViewColumnUnit;
-
-        // View選択項目(同項目の選択に反応させるためDistinctUntilChangedを指定しない)
-        public ReactiveProperty<MetaItem> SelectedItem { get; } =
-            new ReactiveProperty<MetaItem>(mode: ReactivePropertyMode.None);
+        public BooleanNotifier IsShowGridViewColumn { get; } = new BooleanNotifier();
 
         // MetaItemのフィルタ文字列
         public ReactiveProperty<string> FilterPattern { get; } = new ReactiveProperty<string>();
@@ -46,28 +42,37 @@ namespace ImageMetaExtractorApp.ViewModels
         // MetaItemのフィルタ文字列の削除コマンド
         public DelegateCommand ClearFilterPatternCommand { get; }
 
+        // View選択項目(同項目の選択に反応させるためDistinctUntilChangedを指定しない)
+        public ReactiveProperty<MetaItem> SelectedItem { get; } =
+            new ReactiveProperty<MetaItem>(mode: ReactivePropertyMode.None);
+
         public MetaTabDetailViewModel()
         {
-            // カラム選択で色付け
-            SelectedItem.Subscribe(x => x?.SwitchMark());
+            // タブ名
+            TabName = MetaItemGroup
+                .Select(x => x.Name)
+                .ToReadOnlyReactiveProperty();
 
-            IsActiveChanged += ViewIsActiveChanged;
-
-            // MetaItemのフィルタリング
-            FilterPattern.Subscribe(pat => FilterMetaItems(pat));
+            // MetaItemの文字列フィルタリング
+            MetaItemGroup
+                .CombineLatest(FilterPattern, (MetaGroup, Pattern) => (MetaGroup, Pattern))
+                .Subscribe(x => FilterMetaItems(x.MetaGroup.Items, x.Pattern));
 
             // MetaItemのフィルタ文字列の削除
             ClearFilterPatternCommand = new DelegateCommand(() => FilterPattern.Value = "");
 
+            // カラム選択で色付け
+            SelectedItem.Subscribe(x => x?.SwitchMark());
+
+            IsActiveChanged += ViewIsActiveChanged;
         }
 
         // MetaItemのフィルタリング https://blog.okazuki.jp/entry/2014/10/29/220236
-        private void FilterMetaItems(string pattern)
+        private static void FilterMetaItems(ObservableCollection<MetaItem> collection, string pattern)
         {
-            var itemsSource = MetaItemGroup?.Items;
-            if (itemsSource is null) return;
+            if (collection is null) return;
 
-            var collectionView = CollectionViewSource.GetDefaultView(itemsSource);
+            var collectionView = CollectionViewSource.GetDefaultView(collection);
             if (string.IsNullOrEmpty(pattern))
             {
                 collectionView.Filter = x => true;
@@ -91,26 +96,25 @@ namespace ImageMetaExtractorApp.ViewModels
         {
             if (navigationContext.Parameters[MetaItemGroupKey] is MetaItemGroup group)
             {
-                MetaItemGroup = group;
+                MetaItemGroup.Value = group;
 
                 // お気に入りタブなら所属名のカラムに幅を設ける(デフォで表示する)
-                IsShowGridViewColumnUnit = ImageMetasFav.IsFavGroup(group);
+                if (ImageMetasFav.IsFavGroup(group)) IsShowGridViewColumn.TurnOn();
             }
 
             if (navigationContext.Parameters[ImageMetasKey] is ImageMetasFav imageMetas)
-                _ImageMetas = imageMetas;
+                _imageMetas = imageMetas;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
+            var fieldGroup = MetaItemGroup.Value;
             if (navigationContext.Parameters[MetaItemGroupKey] is MetaItemGroup group)
-                return MetaItemGroup != null && MetaItemGroup.Name == group.Name;
+                return fieldGroup != null && fieldGroup.Name == group.Name;
             return true;
         }
 
-        public void OnNavigatedFrom(NavigationContext navigationContext)
-        {
-        }
+        public void OnNavigatedFrom(NavigationContext navigationContext) { }
 
         #endregion
 
@@ -133,14 +137,13 @@ namespace ImageMetaExtractorApp.ViewModels
         private void ViewIsActiveChanged(object sender, EventArgs e)
         {
             if (!(e is DataEventArgs<bool> e2)) return;
-            if (e2.Value)
+
+            var metaItemGroup = MetaItemGroup.Value;
+            //Debug.WriteLine($"ViewIsActiveChanged({e2}) : {metaItemGroup.Name}");
+
+            if (!e2.Value)
             {
-                //Console.WriteLine($"Active : {MetaItemGroup?.Name}");
-            }
-            else
-            {
-                //Console.WriteLine($"Inactive : {MetaItemGroup?.Name}");
-                _ImageMetas.AddFavMetaItem(MetaItemGroup);
+                _imageMetas.AddFavMetaItem(metaItemGroup);
             }
         }
 
