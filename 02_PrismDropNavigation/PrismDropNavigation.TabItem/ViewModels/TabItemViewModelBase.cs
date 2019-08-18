@@ -10,8 +10,8 @@ namespace PrismDropNavigation.TabItem.ViewModels
 {
     public class TabItemViewModelBase : BindableBase, IActiveAware, INavigationAware
     {
-        public int Index { get; private set; }
-        public string Title { get; private set; }
+        public int Index { get; }
+        public string Title { get; }
 
         private string _message;
         public string Message
@@ -20,19 +20,16 @@ namespace PrismDropNavigation.TabItem.ViewModels
             internal set => SetProperty(ref _message, value);
         }
 
-        public TabItemViewModelBase()
+        public TabItemViewModelBase(int index)
         {
+            Index = index;
+            Title = $"Title{index}";
+
             IsActiveChanged += (sender, e) =>
             {
                 if (e is DataEventArgs<bool> e2)
                     Console.WriteLine($"{Title}-IsActive: {e2.Value}");
             };
-        }
-
-        public void SetIndex(int index)
-        {
-            Index = index;
-            Title = $"Title{index}";
         }
 
         #region IActiveAware

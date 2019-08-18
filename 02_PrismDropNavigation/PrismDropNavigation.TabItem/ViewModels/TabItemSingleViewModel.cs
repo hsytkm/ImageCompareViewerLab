@@ -13,7 +13,7 @@ namespace PrismDropNavigation.TabItem.ViewModels
 {
     public class TabItemSingleViewModel : TabItemViewModelBase
     {
-        public TabItemSingleViewModel() : base()
+        public TabItemSingleViewModel() : base(1)
         {
             Message = nameof(TabItemSingleViewModel);
         }

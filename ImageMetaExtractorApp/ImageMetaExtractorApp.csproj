@@ -41,6 +41,9 @@
     <Reference Include="MetadataExtractor, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MetadataExtractor.2.1.0\lib\net45\MetadataExtractor.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.0.1\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
     <Reference Include="Prism, Version=7.2.0.1367, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Core.7.2.0.1367\lib\net45\Prism.dll</HintPath>
     </Reference>
@@ -51,10 +54,10 @@
       <HintPath>..\packages\Prism.Wpf.7.2.0.1367\lib\net45\Prism.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveProperty, Version=5.5.0.0, Culture=neutral, PublicKeyToken=910d1732782c71cb, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveProperty.5.6.0\lib\net461\ReactiveProperty.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.6.0.3\lib\net461\ReactiveProperty.dll</HintPath>
     </Reference>
     <Reference Include="ReactiveProperty.NET46, Version=5.5.0.0, Culture=neutral, PublicKeyToken=3d1fed915120cbde, processorArchitecture=MSIL">
-      <HintPath>..\packages\ReactiveProperty.5.6.0\lib\net461\ReactiveProperty.NET46.dll</HintPath>
+      <HintPath>..\packages\ReactiveProperty.6.0.3\lib\net461\ReactiveProperty.NET46.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

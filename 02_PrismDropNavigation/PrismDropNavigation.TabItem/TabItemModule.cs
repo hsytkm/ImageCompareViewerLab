@@ -1,11 +1,9 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
-using PrismDropNavigation.TabItem.ViewModels;
 using PrismDropNavigation.TabItem.Views;
 using System;
 using System.Collections.Generic;
-using System.Windows;
 
 namespace PrismDropNavigation.TabItem
 {
@@ -23,13 +21,9 @@ namespace PrismDropNavigation.TabItem
             var regionManager = containerProvider.Resolve<IRegionManager>();
             var region = regionManager.Regions["TabContentRegion"];
 
-            for (int i = 0; i < TabItemTypes.Count; i++)
+            foreach (var type in TabItemTypes)
             {
-                var tab = containerProvider.Resolve(TabItemTypes[i]);
-                if (tab is FrameworkElement fe)
-                {
-                    (fe.DataContext as TabItemViewModelBase).SetIndex(i + 1);
-                }
+                var tab = containerProvider.Resolve(type);
                 region.Add(tab);
             }
 
