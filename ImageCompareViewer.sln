@@ -100,7 +100,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageMetaExtractor", "10_Im
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageMetaExtractorTester", "10_ImageMeta\ImageMetaExtractorTester\ImageMetaExtractorTester.csproj", "{B4D7D261-D78A-4161-90DA-25567E6D710A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageMetaExtractorApp", "ImageMetaExtractorApp\ImageMetaExtractorApp.csproj", "{DADDCF78-77DA-4C49-B19B-0D82A531DF71}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageMetaExtractorApp", "10_ImageMeta\ImageMetaExtractorApp\ImageMetaExtractorApp.csproj", "{DADDCF78-77DA-4C49-B19B-0D82A531DF71}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
