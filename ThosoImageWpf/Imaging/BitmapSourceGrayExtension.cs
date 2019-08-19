@@ -14,7 +14,7 @@ namespace ThosoImage.Wpf.Imaging
         /// <returns></returns>
         public static BitmapSource ToGrayBitmapSource(this BitmapSource image, int ch)
         {
-            if (image is null) throw new ArgumentNullException();
+            if (image is null) throw new ArgumentNullException(nameof(image));
             if (ch < 0 || 2 < ch) throw new ArgumentException($"Channel Error:{ch}");
 
             int height = image.PixelHeight;

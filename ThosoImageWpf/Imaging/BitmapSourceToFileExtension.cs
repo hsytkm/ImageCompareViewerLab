@@ -16,8 +16,8 @@ namespace ThosoImage.Wpf.Imaging
         /// <param name="filePath">保存PATH</param>
         public static void SaveToFile(this BitmapSource bitmap, string filePath, int qualityLevel = DefaultQualityLevel)
         {
-            if (bitmap is null) throw new ArgumentNullException();
-            if (filePath is null) throw new ArgumentNullException();
+            if (bitmap is null) throw new ArgumentNullException(nameof(bitmap));
+            if (filePath is null) throw new ArgumentNullException(filePath);
 
             if (qualityLevel < 1) qualityLevel = 1;
             else if (qualityLevel > 100) qualityLevel = 100;

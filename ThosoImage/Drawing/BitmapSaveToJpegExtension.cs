@@ -30,8 +30,8 @@ namespace ThosoImage.Drawing
         /// <param name="quality">品質(0~100)</param>
         public static void SaveQualityJpeg(this Image image, string savePath, long quality)
         {
-            if (image is null) throw new ArgumentNullException();
-            if (savePath is null) throw new ArgumentNullException();
+            if (image is null) throw new ArgumentNullException(nameof(image));
+            if (savePath is null) throw new ArgumentNullException(nameof(savePath));
 
             if (quality < 0) quality = 0;
             else if (quality > 100) quality = 100;

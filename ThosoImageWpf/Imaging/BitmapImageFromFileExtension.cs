@@ -11,12 +11,9 @@ namespace ThosoImage.Wpf.Imaging
         /// ファイルからBitmapImageを元画像のサイズ読み出す
         /// </summary>
         /// <param name="imagePath">ファイルPATH</param>
-        /// <param name="isCanGC">メモリ不足時のGC実行可否</param>
         /// <returns>BitmapImage</returns>
-        public static BitmapImage ToBitmapImage(this string imagePath, bool isCanGC = true)
-        {
-            return ToBitmapImage(imagePath, null, null, isCanGC);
-        }
+        public static BitmapImage ToBitmapImage(this string imagePath) => 
+            ToBitmapImage(imagePath, null, null);
 
         /// <summary>
         /// ファイルからBitmapImageを指定サイズで読み出す
@@ -28,8 +25,8 @@ namespace ThosoImage.Wpf.Imaging
         /// <returns>BitmapImage</returns>
         public static BitmapImage ToBitmapImage(this string imagePath, int? width, int? height, bool isCanGC = true)
         {
-            if (imagePath is null) throw new ArgumentNullException();
-            if (!File.Exists(imagePath)) throw new FileNotFoundException();
+            if (imagePath is null) throw new ArgumentNullException(nameof(imagePath));
+            if (!File.Exists(imagePath)) throw new FileNotFoundException(imagePath);
 
             var bi = new BitmapImage();
             try
@@ -58,7 +55,7 @@ namespace ThosoImage.Wpf.Imaging
                     GC.Collect();                           // アクセス不可能なオブジェクトを除去
                     GC.WaitForPendingFinalizers();          // ファイナライゼーションが終わるまでスレッド待機
                     GC.Collect();                           // ファイナライズされたばかりのオブジェクトに関連するメモリを開放
-                    bi = ToBitmapImage(imagePath, false);   // GC禁止でコール
+                    bi = ToBitmapImage(imagePath, width, height, false);    // GC禁止で再コール
                 }
             }
             finally

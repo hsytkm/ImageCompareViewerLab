@@ -16,7 +16,7 @@ namespace ThosoImage.Wpf.Drawing
         /// <returns>BitmapImage</returns>
         public static BitmapImage ToBitmapImage(this Bitmap bitmap)
         {
-            if (bitmap is null) throw new ArgumentNullException();
+            if (bitmap is null) throw new ArgumentNullException(nameof(bitmap));
 
             var image = new BitmapImage();
             using (var ms = new MemoryStream())
@@ -40,7 +40,7 @@ namespace ThosoImage.Wpf.Drawing
         /// <returns>BitmapSource</returns>
         public static BitmapSource ToBitmapSource1(this Bitmap bitmap)
         {
-            if (bitmap is null) throw new ArgumentNullException();
+            if (bitmap is null) throw new ArgumentNullException(nameof(bitmap));
 
             using (var ms = new MemoryStream())
             {
@@ -66,7 +66,7 @@ namespace ThosoImage.Wpf.Drawing
         /// <returns>BitmapSource</returns>
         public static BitmapSource ToBitmapSource2(this Bitmap bitmap)
         {
-            if (bitmap is null) throw new ArgumentNullException();
+            if (bitmap is null) throw new ArgumentNullException(nameof(bitmap));
 
             var hBitmap = bitmap.GetHbitmap();
 

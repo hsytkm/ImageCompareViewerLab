@@ -36,7 +36,7 @@ namespace ThosoImage.Drawing
         /// <param name="thickness">重畳する図形の太さ</param>
         public static Bitmap GetRectangleOverlapBitmap(this Bitmap source, Rectangle rect, Color color, double thickness)
         {
-            if (source is null) throw new ArgumentNullException();
+            if (source is null) throw new ArgumentNullException(nameof(source));
             var canvas = new Bitmap(source.Width, source.Height);
 
             using (var g = Graphics.FromImage(canvas))

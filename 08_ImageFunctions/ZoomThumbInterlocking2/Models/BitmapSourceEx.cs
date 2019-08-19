@@ -13,7 +13,7 @@ namespace ZoomThumb.Models
         /// <returns></returns>
         public static BitmapImage ToBitmapImage(this string imagePath)
         {
-            if (!File.Exists(imagePath)) throw new FileNotFoundException();
+            if (!File.Exists(imagePath)) throw new FileNotFoundException(imagePath);
 
             var bi = new BitmapImage();
             using (var fs = File.Open(imagePath, FileMode.Open, FileAccess.Read, FileShare.Read))
