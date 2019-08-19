@@ -21,7 +21,7 @@
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <StackPanel IsItemsHost="True"
-                                    Background="{DynamicResource InactiveBorderBrushKey}" />
+                                    Background="{StaticResource InactiveBorderBrushKey}" />
                         <Border Grid.Column="1" >
                             <ContentPresenter x:Name="PART_SelectedContentHost"
                                               ContentSource="SelectedContent" />

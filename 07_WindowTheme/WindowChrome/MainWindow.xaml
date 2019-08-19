@@ -6,18 +6,19 @@
         xmlns:v="clr-namespace:WindowChrome"
         mc:Ignorable="d"
         Title="WindowChrome"
-        Height="240" Width="320"
+        Height="300"
+        Width="500"
         Background="{StaticResource ContentOutlineBackgroundKey}"
         Foreground="{StaticResource ForegroundBrushKey}"
         UseLayoutRounding="True"
         FontFamily="Segoe UI"
         TextOptions.TextFormattingMode="Display"
-        SizeToContent="WidthAndHeight"
         AllowsTransparency="True"
         MinHeight="50" 
         MinWidth="120"
         WindowStyle="None" >
     <!-- 
+        SizeToContent="WidthAndHeight"
         Icon="small.ico"
     -->
 
@@ -27,6 +28,7 @@
                 <ResourceDictionary Source="Styles/CustomCaptionStyle.xaml"/>
                 <ResourceDictionary Source="Styles/ResizeGripStyle.xaml"/>
                 <ResourceDictionary Source="Styles/MainTabStyle.xaml"/>
+                <ResourceDictionary Source="Styles/MenuItemStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- Converter
@@ -60,7 +62,7 @@
 
     <Border BorderBrush="{StaticResource AccentActiveBrushKey}"
             BorderThickness="1" >
-        
+
         <Grid Margin="{Binding WindowState,
                                Converter={StaticResource RootGridMarginConverterKey},
                                RelativeSource={RelativeSource AncestorType={x:Type Window}}}" >
@@ -97,6 +99,7 @@
                 <!-- 左からアイコン、タイトル、コマンドボタン -->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
@@ -105,9 +108,9 @@
                 <Image Grid.Column="0"
                         Margin="5"
                         Source="{Binding Icon, ElementName=MainWindow1}"/>
-                    -->
+                -->
 
-                <!-- ウィンドウタイトルを表示します -->
+                <!-- ウィンドウタイトルを表示します
                 <TextBlock Grid.Column="1"
                            x:Name="CaptionTitle"
                            Margin="5,0,0,0"
@@ -132,12 +135,53 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
+                -->
+
+                <TextBlock Grid.Column="0"
+                           x:Name="CaptionTitle"
+                           Margin="5,0,0,0"
+                           FontSize="24"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           Text="●" >
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsActive, Mode=OneWay,
+                                                               RelativeSource={RelativeSource FindAncestor,
+                                                               AncestorType={x:Type v:MainWindow}}}"
+                                             Value="False">
+                                    <Setter Property="Foreground"
+                                            Value="{StaticResource InactiveForegroundBrushKey}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+
+                <!-- メニューバー -->
+                <Menu Grid.Column="1"
+                      Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}" >
+
+                    <MenuItem Header="File(_F)" Template="{StaticResource MenuItemControlTemplate1}" >
+                        <MenuItem Header="Open" />
+                        <MenuItem Header="Close" />
+                    </MenuItem>
+                    <MenuItem Header="Edit(_E)" Template="{StaticResource MenuItemControlTemplate1}" />
+                    <MenuItem Header="View(_V)" Template="{StaticResource MenuItemControlTemplate1}" />
+                    <MenuItem Header="Option(_O)" Template="{StaticResource MenuItemControlTemplate1}" >
+                        <MenuItem IsCheckable="True" Header="Opt1" />
+                        <MenuItem IsCheckable="True" Header="Opt2" />
+                        <MenuItem IsCheckable="True" Header="Opt3" />
+                    </MenuItem>
+                    <MenuItem Header="Help(_H)" Template="{StaticResource MenuItemControlTemplate1}" />
+                </Menu>
 
                 <!-- 最小化、最大化、閉じるボタンを設置します -->
-                <Grid Grid.Column="2">
-                    <StackPanel Orientation="Horizontal"
-                                HorizontalAlignment="Right"
-                                VerticalAlignment="Center">
+                <Grid Grid.Column="3"
+                      HorizontalAlignment="Right" 
+                      VerticalAlignment="Top" >
+                    <StackPanel Orientation="Horizontal" >
                         <!-- 最小化ボタン
                                 Visibility="{Binding ResizeMode, Converter={StaticResource ResizeCaptionButtonVisibilityConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
                                 ToolTip="最小化"
