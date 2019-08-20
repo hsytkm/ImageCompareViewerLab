@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using System;
 using ThosoImage.Pixels;
 
 namespace OxyPlotInspector.Models
@@ -30,12 +31,15 @@ namespace OxyPlotInspector.Models
         public ImageLineLevels() { }
 
         // 対象画像の画素値全読み処理
-        public void LoadImagePixels() => LinePixelReader = new BitmapLinePixelReader(ImageSourcePath);
+        public void LoadImagePixels() =>
+            LinePixelReader = new BitmapLinePixelReader(ImageSourcePath);
 
         // 線の端座標からRGBレベルを求める(引数の単位は割合0~1)
         public void SetLinePointsRatio((double X1, double Y1, double X2, double Y2) ratio)
         {
-            RgbLevelLine = LinePixelReader?.GetRgbLineLevelsRatio(ratio.X1, ratio.Y1, ratio.X2, ratio.Y2);
+            if (LinePixelReader is null) throw new NullReferenceException(nameof(LinePixelReader));
+            var rgbs = LinePixelReader.GetRgbLineLevels(ratio.X1, ratio.Y1, ratio.X2, ratio.Y2);
+            RgbLevelLine = rgbs.ToArray();
         }
 
         // 情報の初期化(+仕様メモリの解放)

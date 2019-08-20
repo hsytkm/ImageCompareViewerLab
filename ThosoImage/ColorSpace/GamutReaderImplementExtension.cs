@@ -10,17 +10,17 @@ namespace ThosoImage.ColorSpace
         // Rectangleの範囲制限
         private static Rectangle ClipRectangle(Rectangle rectInput, int width, int height)
         {
-            int clip(int val, int min, int max)
+            int limit(int val, int min, int max)
             {
                 if (val <= min) return min;
                 if (val >= max) return max;
                 return val;
             }
-            var rectX = clip(rectInput.X, 0, width);
-            var rectY = clip(rectInput.Y, 0, height);
+            var rectX = limit(rectInput.X, 0, width);
+            var rectY = limit(rectInput.Y, 0, height);
             return new Rectangle(rectX, rectY,
-                clip(rectInput.Width, 1, width - rectX),
-                clip(rectInput.Height, 1, height - rectY));
+                limit(rectInput.Width, 1, width - rectX),
+                limit(rectInput.Height, 1, height - rectY));
         }
 
         // 単一エリアの計算
@@ -60,7 +60,8 @@ namespace ThosoImage.ColorSpace
                         ClipRectangle(rectInput, bitmap.Width, bitmap.Height));
                 }
             }
-            finally {
+            finally
+            {
                 bitmap.UnlockBits(bitmapData);
             }
         }
@@ -73,26 +74,30 @@ namespace ThosoImage.ColorSpace
             return new Gamut(rgbAverage, rgbyRms);
         }
 
+        // 画素値ポインタ
+        private static unsafe ReadOnlySpan<byte> GetPixelsSpan(BitmapData bitmapData) =>
+            new ReadOnlySpan<byte>((byte*)bitmapData.Scan0, bitmapData.Height * bitmapData.Stride);
+
         // 平均値の読み出し ProcessUsingLockbitsAndUnsafe()
         private static (double R, double G, double B)
             ReadRgbAverage(BitmapData bitmapData, int bytesPerPixel, ref Rectangle rect)
         {
             ulong sumB = 0, sumG = 0, sumR = 0;
-            unsafe
+
+            var stride = bitmapData.Stride;
+            var ySt = rect.Y * stride;
+            var yEd = (rect.Y + rect.Height) * stride;
+            var xSt = rect.X * bytesPerPixel;
+            var xEd = (rect.X + rect.Width) * bytesPerPixel;
+            var pixels = GetPixelsSpan(bitmapData);
+
+            for (int y = ySt; y < yEd; y += stride)
             {
-                var stride = bitmapData.Stride;
-                var ptrSt = (byte*)bitmapData.Scan0 + rect.Y * stride;
-                var ptrEd = ptrSt + rect.Height * stride;
-                var xSt = rect.X * bytesPerPixel;
-                var xEd = (rect.X + rect.Width) * bytesPerPixel;
-                for (byte* pixels = ptrSt; pixels < ptrEd; pixels += stride)
+                for (int n = y + xSt; n < y + xEd; n += bytesPerPixel)
                 {
-                    for (int x = xSt; x < xEd; x += bytesPerPixel)
-                    {
-                        sumB += pixels[x];
-                        sumG += pixels[x + 1];
-                        sumR += pixels[x + 2];
-                    }
+                    sumB += pixels[n];
+                    sumG += pixels[n + 1];
+                    sumR += pixels[n + 2];
                 }
             }
 
@@ -110,28 +115,27 @@ namespace ThosoImage.ColorSpace
             var aveY = Gamut.CalcY(r: ave.R, g: ave.G, b: ave.B);
             double sumB = 0D, sumG = 0D, sumR = 0D, sumY = 0D;
 
-            unsafe
-            {
-                var stride = bitmapData.Stride;
-                var ptrSt = (byte*)bitmapData.Scan0 + rect.Y * stride;
-                var ptrEd = ptrSt + rect.Height * stride;
-                var xSt = rect.X * bytesPerPixel;
-                var xEd = (rect.X + rect.Width) * bytesPerPixel;
-                for (byte* pixels = ptrSt; pixels < ptrEd; pixels += stride)
-                {
-                    for (int x = xSt; x < xEd; x += bytesPerPixel)
-                    {
-                        var b = pixels[x];
-                        var g = pixels[x + 1];
-                        var r = pixels[x + 2];
-                        var y = Gamut.CalcY(r: r, g: g, b: b);
+            var stride = bitmapData.Stride;
+            var ySt = rect.Y * stride;
+            var yEd = (rect.Y + rect.Height) * stride;
+            var xSt = rect.X * bytesPerPixel;
+            var xEd = (rect.X + rect.Width) * bytesPerPixel;
+            var pixels = GetPixelsSpan(bitmapData);
 
-                        // Math.Powで2乗するよりベタの方が速い
-                        sumB += (b - ave.B) * (b - ave.B);
-                        sumG += (g - ave.G) * (g - ave.G);
-                        sumR += (r - ave.R) * (r - ave.R);
-                        sumY += (y - aveY) * (y - aveY);
-                    }
+            for (int y = ySt; y < yEd; y += stride)
+            {
+                for (int n = y + xSt; n < y + xEd; n += bytesPerPixel)
+                {
+                    var pb = pixels[n];
+                    var pg = pixels[n + 1];
+                    var pr = pixels[n + 2];
+                    var py = Gamut.CalcY(r: pr, g: pg, b: pb);
+
+                    // Math.Powで2乗するよりベタの方が速い
+                    sumB += (pb - ave.B) * (pb - ave.B);
+                    sumG += (pg - ave.G) * (pg - ave.G);
+                    sumR += (pr - ave.R) * (pr - ave.R);
+                    sumY += (py - aveY) * (py - aveY);
                 }
             }
 

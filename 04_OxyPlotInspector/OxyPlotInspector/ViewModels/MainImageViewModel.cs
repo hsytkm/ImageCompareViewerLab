@@ -156,7 +156,10 @@ namespace OxyPlotInspector.ViewModels
         #endregion
 
         public int SourceWidth { get; private set; }
+        private int SourceWidthMax => SourceWidth - 1;
+
         public int SourceHeight { get; private set; }
+        private int SourceHeightMax => SourceHeight - 1;
 
         public void SetSourceSize(int width, int height)
         {
@@ -166,8 +169,8 @@ namespace OxyPlotInspector.ViewModels
 
         public new void SetPoint1(double x1, double y1)
         {
-            x1 = x1.Limit(0, SourceWidth - 1);
-            y1 = y1.Limit(0, SourceHeight - 1);
+            x1 = x1.Limit(0, SourceWidthMax);
+            y1 = y1.Limit(0, SourceHeightMax);
 
             base.SetPoint1(x1, y1);
             LeftWingPoints.SetPoint1(x1, y1);
@@ -176,8 +179,8 @@ namespace OxyPlotInspector.ViewModels
 
         public new void SetPoint2(double x2, double y2)
         {
-            x2 = x2.Limit(0, SourceWidth - 1);
-            y2 = y2.Limit(0, SourceHeight - 1);
+            x2 = x2.Limit(0, SourceWidthMax);
+            y2 = y2.Limit(0, SourceHeightMax);
 
             base.SetPoint2(x2, y2);
 
@@ -209,18 +212,17 @@ namespace OxyPlotInspector.ViewModels
         // 線端の座標を割合で返す
         public (double X1, double Y1, double X2, double Y2) GetPointsRatio()
         {
-            if (SourceWidth == 0) throw new DivideByZeroException(nameof(SourceWidth));
-            if (SourceHeight == 0) throw new DivideByZeroException(nameof(SourceHeight));
-
             double limit(double x)
             {
                 if (x <= 0D) return 0D;
                 if (x >= 1D) return 1D;
                 return x;
             }
+            if (SourceWidthMax == 0) throw new DivideByZeroException(nameof(SourceWidthMax));
+            if (SourceHeightMax == 0) throw new DivideByZeroException(nameof(SourceHeightMax));
 
-            return (limit(X1 / SourceWidth), limit(Y1 / SourceHeight),
-                limit(X2 / SourceWidth), limit(Y2 / SourceHeight));
+            return (limit(X1 / SourceWidthMax), limit(Y1 / SourceHeightMax),
+                limit(X2 / SourceWidthMax), limit(Y2 / SourceHeightMax));
         }
 
     }

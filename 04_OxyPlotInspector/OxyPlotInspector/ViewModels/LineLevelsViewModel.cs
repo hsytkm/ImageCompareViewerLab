@@ -42,7 +42,7 @@ namespace OxyPlotInspector.ViewModels
                 .Subscribe(x => UpdateSeriesVisible(x.line, x.isVisible, 0));
         }
 
-        private PlotModel GetPlotModelSkelton((byte R, byte G, byte B)[] rgb)
+        private PlotModel GetPlotModelSkelton(ReadOnlySpan<(byte R, byte G, byte B)> rgbs)
         {
             var pm = new PlotModel();
             //pm.Title = "Pixel Level";
@@ -51,13 +51,13 @@ namespace OxyPlotInspector.ViewModels
             var gLine = new LineSeries { Color = OxyColors.Green, StrokeThickness = 1.0 };
             var bLine = new LineSeries { Color = OxyColors.Blue, StrokeThickness = 1.0 };
 
-            if (rgb != null)
+            if (rgbs != null)
             {
-                for (int i = 0; i < rgb.Length; i++)
+                for (int i = 0; i < rgbs.Length; i++)
                 {
-                    rLine.Points.Add(new DataPoint(i, rgb[i].R));
-                    gLine.Points.Add(new DataPoint(i, rgb[i].G));
-                    bLine.Points.Add(new DataPoint(i, rgb[i].B));
+                    rLine.Points.Add(new DataPoint(i, rgbs[i].R));
+                    gLine.Points.Add(new DataPoint(i, rgbs[i].G));
+                    bLine.Points.Add(new DataPoint(i, rgbs[i].B));
                 }
             }
 
