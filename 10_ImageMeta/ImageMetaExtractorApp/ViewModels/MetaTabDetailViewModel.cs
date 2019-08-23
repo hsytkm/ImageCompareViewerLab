@@ -40,7 +40,13 @@ namespace ImageMetaExtractorApp.ViewModels
         public ReactiveProperty<string> FilterPattern { get; } = new ReactiveProperty<string>();
 
         // MetaItemのフィルタ文字列の削除コマンド
-        public DelegateCommand ClearFilterPatternCommand { get; }
+        public ReactiveCommand ClearFilterPatternCommand { get; }
+
+        //お気に入りフィルタフラグ
+        public ReactiveProperty<bool> IsFilterFavorite { get; } = new ReactiveProperty<bool>();
+
+        //お気に入りフィルタ切り替えコマンド
+        public DelegateCommand SwitchFavoriteFilterCommand { get; }
 
         // View選択項目(同項目の選択に反応させるためDistinctUntilChangedを指定しない)
         public ReactiveProperty<MetaItem> SelectedItem { get; } =
@@ -55,32 +61,60 @@ namespace ImageMetaExtractorApp.ViewModels
 
             // MetaItemの文字列フィルタリング
             MetaItemGroup
-                .CombineLatest(FilterPattern, (MetaGroup, Pattern) => (MetaGroup, Pattern))
-                .Subscribe(x => FilterMetaItems(x.MetaGroup.Items, x.Pattern));
+                .CombineLatest(FilterPattern, IsFilterFavorite,
+                    (MetaGroup, Pattern, IsFav) => (MetaGroup, Pattern, IsFav))
+                .Subscribe(x => FilterMetaItems(x.MetaGroup.Items, GetFilterPredicate(x.Pattern, x.IsFav)));
 
             // MetaItemのフィルタ文字列の削除
-            ClearFilterPatternCommand = new DelegateCommand(() => FilterPattern.Value = "");
+            ClearFilterPatternCommand = FilterPattern
+                .Select(x => !string.IsNullOrEmpty(x))
+                .ToReactiveCommand();
+
+            ClearFilterPatternCommand.Subscribe(x_ => FilterPattern.Value = "");
+
+            // お気に入りのみ表示
+            SwitchFavoriteFilterCommand = new DelegateCommand(() => IsFilterFavorite.Value = !IsFilterFavorite.Value);
 
             // カラム選択で色付け
             SelectedItem.Subscribe(x => x?.SwitchMark());
 
             IsActiveChanged += ViewIsActiveChanged;
         }
-
-        // MetaItemのフィルタリング https://blog.okazuki.jp/entry/2014/10/29/220236
-        private static void FilterMetaItems(ObservableCollection<MetaItem> collection, string pattern)
+        
+        // フィルタ条件の取得
+        private static Predicate<object> GetFilterPredicate(string pattern, bool isFav)
         {
-            if (collection is null) return;
+            bool hasPattern = !string.IsNullOrEmpty(pattern);
 
-            var collectionView = CollectionViewSource.GetDefaultView(collection);
-            if (string.IsNullOrEmpty(pattern))
+            // ◆Predicate<T>って連結できるっけ？できるならしたいなぁ
+            if (hasPattern && isFav)
             {
-                collectionView.Filter = x => true;
+                return obj =>
+                {
+                    var metaItem = obj as MetaItem;
+                    return metaItem.Key.Contains(pattern) && metaItem.IsMarking;
+                };
+            }
+            else if (hasPattern)
+            {
+                return obj => (obj as MetaItem).Key.Contains(pattern);
+            }
+            else if (isFav)
+            {
+                return obj => (obj as MetaItem).IsMarking;
             }
             else
             {
-                collectionView.Filter = x => (x as MetaItem).Key.Contains(pattern);
+                return _ => true;   // フィルタなし
             }
+        }
+
+        // MetaItemのフィルタリング https://blog.okazuki.jp/entry/2014/10/29/220236
+        private static void FilterMetaItems(ObservableCollection<MetaItem> collection, Predicate<object> filter)
+        {
+            if (collection is null) return;
+            var collectionView = CollectionViewSource.GetDefaultView(collection);
+            collectionView.Filter = filter;
         }
 
         #region INavigationAware

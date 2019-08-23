@@ -41,6 +41,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBox VerticalContentAlignment="Center"
@@ -49,6 +50,10 @@
             <Button Grid.Column="1"
                     Content="Clear"
                     Command="{Binding ClearFilterPatternCommand, Mode=OneTime}" />
+
+            <ToggleButton Grid.Column="2"
+                          Content="★"
+                          Command="{Binding SwitchFavoriteFilterCommand, Mode=OneTime}" />
         </Grid>
 
         <ListView Grid.Row="1"
