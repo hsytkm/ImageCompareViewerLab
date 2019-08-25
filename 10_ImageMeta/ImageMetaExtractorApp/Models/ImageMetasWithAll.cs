@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ImageMetaExtractorApp.Models
 {
@@ -19,9 +20,9 @@ namespace ImageMetaExtractorApp.Models
         {
             var metaItemGroups = GetMetaItemGroupList(imagePath, oldGroups);
 
-            // 全項目グループを先頭に挿入する
-            var metaAllGroup = new MetaItemGroup(AllGroupName, metaItemGroups);
-            metaItemGroups.Insert(0, metaAllGroup);
+            // 全項目グループを作成して先頭に挿入する
+            var metaItems = metaItemGroups.Select(x => x.Items).SelectMany(x => x);
+            metaItemGroups.Insert(0, new MetaItemGroup(AllGroupName, metaItems));
 
             return new ImageMetasWithAll(metaItemGroups);
         }

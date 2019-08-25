@@ -14,9 +14,7 @@ namespace ImageMetaExtractorApp.Models
         public readonly static string InitViewGroupName = "File";
 
         // メタ情報リストのリスト(Exif/Mnoteなどがまとめられている)
-        public IList<MetaItemGroup> MetaItemGroups { get; private set; }
-
-        internal ImageMetas() { }
+        public IList<MetaItemGroup> MetaItemGroups { get; }
 
         internal ImageMetas(IList<MetaItemGroup> metaItemGroups)
         {
@@ -63,7 +61,7 @@ namespace ImageMetaExtractorApp.Models
 
                 foreach (var srcItem in srcMarks)
                 {
-                    var destItem = destGroup.Items.FirstOrDefault(x => srcItem.IsSameMeta(x));
+                    var destItem = destGroup.Items.FirstOrDefault(x => srcItem.IsSameContent(x));
                     destItem?.SetMarking();
                 }
             }

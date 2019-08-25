@@ -15,15 +15,11 @@ namespace ImageMetaExtractorApp.Models
         public string Name { get; }
         public ObservableCollection<MetaItem> Items { get; }
 
-        private MetaItemGroup(string name, IEnumerable<MetaItem> metaItems)
+        public MetaItemGroup(string name, IEnumerable<MetaItem> metaItems)
         {
             Name = name;
             Items = new ObservableCollection<MetaItem>(metaItems);
         }
-
-        public MetaItemGroup(string name, IEnumerable<MetaItemGroup> metaItemGroups)
-            : this(name, metaItemGroups.Select(x => x.Items).SelectMany(x => x))
-        { }
 
         public MetaItemGroup(Meta.MetaItemList metaItems)
             : this(metaItems.Name, metaItems.Select(x => new MetaItem(metaItems.Name, x)))
@@ -66,9 +62,9 @@ namespace ImageMetaExtractorApp.Models
         }
 
         // 他社のメーカーノートを区別するためKeyも比較する
-        public bool IsSameMeta(MetaItem item)
+        public bool IsSameContent(MetaItem item)
         {
-            if (item is null) throw new ArgumentNullException(nameof(item));
+            if (item is null) return false;
             return Id == item.Id && Key == item.Key;
         }
 
