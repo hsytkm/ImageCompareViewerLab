@@ -1,4 +1,5 @@
-﻿using ImageMetaExtractorApp.Models;
+﻿using ImageMetaExtractorApp.Common;
+using ImageMetaExtractorApp.Models;
 using Prism;
 using Prism.Commands;
 using Prism.Events;
@@ -8,6 +9,7 @@ using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using Reactive.Bindings.Notifiers;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Diagnostics;
@@ -84,29 +86,20 @@ namespace ImageMetaExtractorApp.ViewModels
         // フィルタ条件の取得
         private static Predicate<object> GetFilterPredicate(string pattern, bool isFav)
         {
-            bool hasPattern = !string.IsNullOrEmpty(pattern);
+            var predicates = new List<Predicate<object>>();
 
-            // ◆Predicate<T>って連結できるっけ？できるならしたいなぁ
-            if (hasPattern && isFav)
-            {
-                return obj =>
-                {
-                    var metaItem = obj as MetaItem;
-                    return metaItem.Key.Contains(pattern) && metaItem.IsMarking;
-                };
-            }
-            else if (hasPattern)
-            {
-                return obj => (obj as MetaItem).Key.Contains(pattern);
-            }
-            else if (isFav)
-            {
-                return obj => (obj as MetaItem).IsMarking;
-            }
-            else
-            {
-                return _ => true;   // フィルタなし
-            }
+            // 指定文字列
+            if (!string.IsNullOrEmpty(pattern))
+                predicates.Add(obj => (obj as MetaItem).Key.Contains(pattern));
+
+            // お気に入り
+            if (isFav)
+                predicates.Add(obj => (obj as MetaItem).IsMarking);
+
+            if (predicates.Any())
+                return PredicateExtensions.And(predicates.ToArray());
+
+            return null;    // フィルタなし
         }
 
         // MetaItemのフィルタリング https://blog.okazuki.jp/entry/2014/10/29/220236

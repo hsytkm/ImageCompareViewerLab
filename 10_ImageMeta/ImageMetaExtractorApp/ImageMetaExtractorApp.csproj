@@ -110,6 +110,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\PredicateExtensions.cs" />
     <Compile Include="Models\ImageMetasFav.cs" />
     <Compile Include="Models\MetaItemGroup.cs" />
     <Compile Include="Models\ModelMaster.cs" />
