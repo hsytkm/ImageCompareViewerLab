@@ -44,7 +44,7 @@ namespace ImageMetaExtractorApp.ViewModels
         }
 
         // メタ情報クラスからView用のTabを読み出し
-        private void AddTab(ImageMetasFav imageMetas)
+        private void AddTab(ImageMetasWithAll imageMetas)
         {
             if (imageMetas is null) throw new ArgumentNullException(nameof(imageMetas));
 
@@ -58,7 +58,7 @@ namespace ImageMetaExtractorApp.ViewModels
 
             foreach (var metaItemGroup in imageMetas.MetaItemGroups.Where(x => x != null))
             {
-                var parameters = MetaTabDetailViewModel.GetNavigationParameters(metaItemGroup, imageMetas);
+                var parameters = MetaTabDetailViewModel.GetNavigationParameters(metaItemGroup);
                 _regionManager.RequestNavigate(regionName, nameof(MetaTabDetail), parameters);
             }
             // 画像の読み込み後の表示位置を指定(画像切り替え時用)

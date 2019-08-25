@@ -1,5 +1,6 @@
 ﻿using Prism.Mvvm;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Meta = ImageMetaExtractor;
@@ -14,26 +15,25 @@ namespace ImageMetaExtractorApp.Models
         public string Name { get; }
         public ObservableCollection<MetaItem> Items { get; }
 
-        public MetaItemGroup(string name)
+        private MetaItemGroup(string name, IEnumerable<MetaItem> metaItems)
         {
-            if (string.IsNullOrEmpty(name)) throw new ArgumentNullException(nameof(name));
-
             Name = name;
-            Items = new ObservableCollection<MetaItem>();
+            Items = new ObservableCollection<MetaItem>(metaItems);
         }
+
+        public MetaItemGroup(string name, IEnumerable<MetaItemGroup> metaItemGroups)
+            : this(name, metaItemGroups.Select(x => x.Items).SelectMany(x => x))
+        { }
 
         public MetaItemGroup(Meta.MetaItemList metaItems)
-        {
-            if (metaItems is null) throw new ArgumentNullException(nameof(metaItems));
-
-            Name = metaItems.Name;
-            Items = new ObservableCollection<MetaItem>(metaItems.Select(x => new MetaItem(Name, x)));
-        }
+            : this(metaItems.Name, metaItems.Select(x => new MetaItem(metaItems.Name, x)))
+        { }
 
         // 全マークをクリアする
         public void ClearAllMarking()
         {
-            foreach (var item in Items) item.ClearMarking();
+            foreach (var item in Items)
+                item.ClearMarking();
         }
     }
 

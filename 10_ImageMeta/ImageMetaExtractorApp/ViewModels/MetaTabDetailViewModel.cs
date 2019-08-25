@@ -23,14 +23,10 @@ namespace ImageMetaExtractorApp.ViewModels
     {
         // NavigationContextのKey
         private static readonly string MetaItemGroupKey = nameof(MetaItemGroupKey);
-        private static readonly string ImageMetasKey = nameof(ImageMetasKey);
 
         // メタ情報をまとめたクラス(Exif, MNoteなど)
         public ReactiveProperty<MetaItemGroup> MetaItemGroup { get; } =
             new ReactiveProperty<MetaItemGroup>(mode: ReactivePropertyMode.DistinctUntilChanged);
-
-        // お気に入り用メタ情報クラス
-        private ImageMetasFav _imageMetas;
 
         // タブ名
         public ReadOnlyReactiveProperty<string> TabName { get; }
@@ -65,7 +61,7 @@ namespace ImageMetaExtractorApp.ViewModels
             MetaItemGroup
                 .CombineLatest(FilterPattern, IsFilterFavorite,
                     (MetaGroup, Pattern, IsFav) => (MetaGroup, Pattern, IsFav))
-                .Subscribe(x => FilterMetaItems(x.MetaGroup.Items, GetFilterPredicate(x.Pattern, x.IsFav)));
+                .Subscribe(x => UpdateFilterMetaItems(x.MetaGroup.Items, GetFilterPredicate(x.Pattern, x.IsFav)));
 
             // MetaItemのフィルタ文字列の削除
             ClearFilterPatternCommand = FilterPattern
@@ -82,7 +78,9 @@ namespace ImageMetaExtractorApp.ViewModels
 
             IsActiveChanged += ViewIsActiveChanged;
         }
-        
+
+        #region MetaFilter
+
         // フィルタ条件の取得
         private static Predicate<object> GetFilterPredicate(string pattern, bool isFav)
         {
@@ -102,21 +100,30 @@ namespace ImageMetaExtractorApp.ViewModels
             return null;    // フィルタなし
         }
 
+        // MetaItemのフィルタリング
+        private void UpdateFilterMetaItems()
+        {
+            var metas = MetaItemGroup.Value?.Items;
+            if (metas is null) return;
+            UpdateFilterMetaItems(metas, GetFilterPredicate(FilterPattern.Value, IsFilterFavorite.Value));
+        }
+
         // MetaItemのフィルタリング https://blog.okazuki.jp/entry/2014/10/29/220236
-        private static void FilterMetaItems(ObservableCollection<MetaItem> collection, Predicate<object> filter)
+        private static void UpdateFilterMetaItems(ObservableCollection<MetaItem> collection, Predicate<object> filter)
         {
             if (collection is null) return;
             var collectionView = CollectionViewSource.GetDefaultView(collection);
             collectionView.Filter = filter;
         }
 
+        #endregion
+
         #region INavigationAware
 
-        public static NavigationParameters GetNavigationParameters(MetaItemGroup group, ImageMetasFav imageMetas) =>
+        public static NavigationParameters GetNavigationParameters(MetaItemGroup group) =>
             new NavigationParameters
                 {
                     { MetaItemGroupKey, group },
-                    { ImageMetasKey, imageMetas },
                 };
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -126,11 +133,8 @@ namespace ImageMetaExtractorApp.ViewModels
                 MetaItemGroup.Value = group;
 
                 // お気に入りタブなら所属名のカラムに幅を設ける(デフォで表示する)
-                if (ImageMetasFav.IsFavGroup(group)) IsShowGridViewColumn.TurnOn();
+                if (ImageMetasWithAll.IsAllGroup(group)) IsShowGridViewColumn.TurnOn();
             }
-
-            if (navigationContext.Parameters[ImageMetasKey] is ImageMetasFav imageMetas)
-                _imageMetas = imageMetas;
         }
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
@@ -164,13 +168,12 @@ namespace ImageMetaExtractorApp.ViewModels
         private void ViewIsActiveChanged(object sender, EventArgs e)
         {
             if (!(e is DataEventArgs<bool> e2)) return;
+            //Debug.WriteLine($"ViewIsActiveChanged({e2.Value}) : {TabName.Value}");
 
-            var metaItemGroup = MetaItemGroup.Value;
-            //Debug.WriteLine($"ViewIsActiveChanged({e2}) : {metaItemGroup.Name}");
-
-            if (!e2.Value)
+            // 変化時はフィルタを更新(ALLがいると外部からお気に入り状態が変化するので)
+            if (e2.Value)
             {
-                _imageMetas.AddFavMetaItem(metaItemGroup);
+                UpdateFilterMetaItems();
             }
         }
 

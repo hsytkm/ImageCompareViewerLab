@@ -111,7 +111,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\PredicateExtensions.cs" />
-    <Compile Include="Models\ImageMetasFav.cs" />
+    <Compile Include="Models\ImageMetasWithAll.cs" />
     <Compile Include="Models\MetaItemGroup.cs" />
     <Compile Include="Models\ModelMaster.cs" />
     <Compile Include="ViewModels\MetaTabControlViewModel.cs" />
