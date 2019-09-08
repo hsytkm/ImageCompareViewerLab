@@ -25,7 +25,7 @@ Excelのように、値に応じてセルの色を変えたい。
 
 xamlだけで実現できなかった(コードビハインド使った)のは残念やけど、やりたいことできて良かった。
 
-	![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/09_WPFGraphs/Graph2D_3/capture.gif)
+![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/09_WPFGraphs/Graph2D_3/capture.gif)
 
 以上
 

@@ -4,7 +4,7 @@
 
 	サチリ画素を点滅させる。
 
-	![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/08_ImageFunctions/BlinkHilight/capture.gif)
+![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/08_ImageFunctions/BlinkHilight/capture.gif)
 
 
 ## ZoomThumb
@@ -21,10 +21,10 @@
 
 	ZoomThumbCodeBehind2をベースに、左右画像で表示位置を連動させた。
 	
-	![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/08_ImageFunctions/ZoomThumbInterlocking2/capture.gif)
+![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/08_ImageFunctions/ZoomThumbInterlocking2/capture.gif)
 
 ## 参考にさせて頂いたページ
 
-	[Thumb コントロールで Photoshop のナビゲーターを再現する](http://grabacr.net/archives/1723)
+[Thumb コントロールで Photoshop のナビゲーターを再現する](http://grabacr.net/archives/1723)
 
 以上
