@@ -101,6 +101,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageMetaExtractorApp", "10_ImageMeta\ImageMetaExtractorApp\ImageMetaExtractorApp.csproj", "{DADDCF78-77DA-4C49-B19B-0D82A531DF71}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "11_Controls", "11_Controls", "{51026CE2-E210-4E38-922A-38BDE59EB2A5}"
+	ProjectSection(SolutionItems) = preProject
+		11_Controls\README.md = 11_Controls\README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursorPixelRender", "11_Controls\CursorPixelRender\CursorPixelRender.csproj", "{9B794701-B8AD-4849-8544-2802589C5BF3}"
 EndProject
