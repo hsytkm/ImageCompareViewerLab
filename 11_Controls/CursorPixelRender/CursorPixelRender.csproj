@@ -106,6 +106,7 @@
     </ApplicationDefinition>
     <Compile Include="Extensions\ObservableCollectionExtensions.cs" />
     <Compile Include="ViewModels\PixelRenderViewModel.cs" />
+    <Compile Include="Views\DigitToWidthConverter.cs" />
     <Compile Include="Views\PixelRender.xaml.cs">
       <DependentUpon>PixelRender.xaml</DependentUpon>
     </Compile>

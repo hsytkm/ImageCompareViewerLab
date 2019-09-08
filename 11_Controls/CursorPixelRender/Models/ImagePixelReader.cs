@@ -11,12 +11,12 @@ namespace CursorPixelRender.Models
         /// <summary>
         /// 
         /// </summary>
-        public ReadPixelsData ReadPixels2
+        public ReadPixelsData ReadPixels
         {
-            get => _readPixels2;
-            private set => SetProperty(ref _readPixels2, value);
+            get => _readPixels;
+            private set => SetProperty(ref _readPixels, value);
         }
-        private ReadPixelsData _readPixels2;
+        private ReadPixelsData _readPixels;
 
         private bool _togglePixelType;
 
@@ -30,52 +30,43 @@ namespace CursorPixelRender.Models
             Observable.Interval(TimeSpan.FromMilliseconds(500))
                 .Subscribe(_ =>
                 {
+                    var area = GetRandomReadPixelArea();
                     var pixels = _togglePixelType ? GetRgbData() : GetRawData();
 
-                    ReadPixels2 = new ReadPixelsData(pixels);
-
-                    //ReadPixels3.Clear();
-                    //foreach (var p in pixels)
-                    //{
-                    //    ReadPixels3.Add(p);
-                    //}
+                    ReadPixels = new ReadPixelsData(area, pixels);
                 });
         }
 
         private ReadPixelData[] GetRgbData()
         {
-            double get_random() => _random.NextDouble() * 256;
-            int max = 255;
+            int bitSize = 8;
+            int rgbMax = (1 << bitSize) - 1;
+            int labMax = 100;
 
-            var pixels = new[]
+            var r = GetRandomValue(bitSize);
+            var g = GetRandomValue(bitSize);
+            var b = GetRandomValue(bitSize);
+            var y = CalcY(r, g, b);
+
+            return new[]
             {
-                new ReadPixelData()
-                {
-                    Color = PixelColor.R,
-                    Max = max,
-                    Average = get_random(),
-                },
-                new ReadPixelData()
-                {
-                    Color = PixelColor.G,
-                    Max = max,
-                    Average = get_random(),
-                },
-                new ReadPixelData()
-                {
-                    Color = PixelColor.B,
-                    Max = max,
-                    Average = get_random(),
-                },
-            };
+                new ReadPixelData(PixelColor.R, rgbMax, r),
+                new ReadPixelData(PixelColor.G, rgbMax, g),
+                new ReadPixelData(PixelColor.B, rgbMax, b),
+                new ReadPixelData(PixelColor.Y, rgbMax, y),
+                new ReadPixelData(PixelColor.L, labMax, GetRandomValue(bitSize)),
 
-            return pixels;
+                // Labのa,bの最大値（表示幅に使用される）がテキトー
+                // 正確には -100～100(?) だが、0～100 と思って動作してる
+                new ReadPixelData(PixelColor.a, labMax, GetRandomValue(bitSize)),
+                new ReadPixelData(PixelColor.b, labMax, GetRandomValue(bitSize)),
+            };
         }
 
         private ReadPixelData[] GetRawData()
         {
-            double get_random() => _random.NextDouble() * 256;
-            int max = 255;
+            int bitSize = 14;
+            int max = (1 << bitSize) - 1;
 
             PixelColor color;
             switch (_random.Next(0, 4))
@@ -84,19 +75,23 @@ namespace CursorPixelRender.Models
                 case 1: color = PixelColor.Gr; break;
                 case 2: color = PixelColor.Gb; break;
                 case 3: color = PixelColor.B; break;
-                default: throw new Exception();
+                default: throw new NotSupportedException();
             }
 
             return new[]
             {
-                new ReadPixelData()
-                {
-                    Color = color,
-                    Max = max,
-                    Average = get_random(),
-                },
+                new ReadPixelData(color, max, GetRandomValue(bitSize)),
             };
         }
+
+        private double GetRandomValue(int bitSize) =>
+            _random.NextDouble() * (1 << bitSize);
+
+        private ReadPixelArea GetRandomReadPixelArea() =>
+            new ReadPixelArea(_random.Next(0, 6000), _random.Next(0, 4000), 1, 1);
+
+        private static double CalcY(double r, double g, double b) =>
+            0.299 * r + 0.587 * g + 0.114 * b;
 
     }
 }

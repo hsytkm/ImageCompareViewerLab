@@ -2,22 +2,46 @@
 
 namespace CursorPixelRender.Models
 {
+    /// <summary>
+    /// 画素色
+    /// </summary>
     public enum PixelColor
     {
-        None, R, G, B, Gr, Gb,
+        None, R, G, B, Gr, Gb, Y, L, a, b,
     }
 
-    struct ReadPixelData
+    /// <summary>
+    /// 画素の読み出し領域
+    /// </summary>
+    readonly struct ReadPixelArea
+    {
+        public static ReadPixelArea Zero = new ReadPixelArea(0, 0, 0, 0);
+
+        public readonly int X;
+        public readonly int Y;
+        public readonly int Width;
+        public readonly int Height;
+
+        public ReadPixelArea(int x, int y, int w, int h) =>
+            (X, Y, Width, Height) = (x, y, w, h);
+    }
+
+    /// <summary>
+    /// 画像から読み出した画素値
+    /// </summary>
+    readonly struct ReadPixelData
     {
         public static ReadPixelData Invalid = new ReadPixelData(PixelColor.None, 0, 0);
 
-        public PixelColor Color;
-        public int Max;
+        public readonly PixelColor Color;
+
+        public readonly int Max;
+
 #if true
-        public double Average;
+        public readonly double Average;
 #else
-        public ulong Sum;
-        public int Count;
+        public readonly ulong Sum;
+        public readonly int Count;
         public double Average => (double)Sum / Count;
 #endif
 
@@ -29,12 +53,17 @@ namespace CursorPixelRender.Models
         }
     }
 
+    /// <summary>
+    /// 画像から読み出した画素情報
+    /// </summary>
     class ReadPixelsData
     {
+        public ReadPixelArea ReadArea { get; }
         private readonly ReadPixelData[] _pixels;
 
-        public ReadPixelsData(ReadPixelData[] pixels)
+        public ReadPixelsData(in ReadPixelArea area, ReadPixelData[] pixels)
         {
+            ReadArea = area;
             _pixels = pixels;
         }
 
@@ -44,10 +73,8 @@ namespace CursorPixelRender.Models
         /// <param name="pixelColor"></param>
         /// <param name="readPixelData"></param>
         /// <returns></returns>
-        private bool TryToFindPixelColor(PixelColor pixelColor, out ReadPixelData readPixelData)
+        public bool TryToFindPixelColor(PixelColor pixelColor, out ReadPixelData readPixelData)
         {
-            readPixelData = ReadPixelData.Invalid;
-
             if (_pixels != null)
             {
                 foreach (var pixel in _pixels)
@@ -59,9 +86,11 @@ namespace CursorPixelRender.Models
                     }
                 }
             }
+            readPixelData = ReadPixelData.Invalid;
             return false;
         }
 
+#if false
         /// <summary>
         /// 指定色を含むか判定
         /// </summary>
@@ -83,6 +112,7 @@ namespace CursorPixelRender.Models
             }
             return default;
         }
+#endif
 
     }
 
