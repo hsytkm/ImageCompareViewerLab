@@ -7,7 +7,7 @@
 
 複数の文字列のUI上の位置を文字数に関わらず固定する。
 
-![イメージ](https://github.com/hsytkm/ImageCompareViewer/blob/master/11_Controls/CursorPixelRender/capture.gif)
+![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/11_Controls/CursorPixelRender/capture.gif)
 
 
 以上

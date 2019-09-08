@@ -17,4 +17,7 @@
 
 https://github.com/oxyplot/oxyplot
 
+
+![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/04_OxyPlotInspector/OxyPlotInspector/capture.gif)
+
 以上

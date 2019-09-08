@@ -11,6 +11,8 @@ ListBoxのItemsSourceにRegionを割り当て
 ### SwitchContext2
 複数のContentControlを用意して個別にRegionを割り当て
 
+![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/05_SwitchContext/SwitchContext2/capture.gif)
+
 ## 分からなかったこと
 - View作成時にViewModelに引数渡したかったけど分からんまま必要なくなった
 

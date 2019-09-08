@@ -24,6 +24,8 @@ CodeProjectから拾った仮想化のサンプルプロジェクト
 	UIのViewportなどから無理やり仮想化
 	◆サムネイル表示が2次元になると対応できずイマイチ…
 
+	![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/06_Virtualization/VirtualizationListItems/capture.gif)
+
 ## 参考にさせて頂いたページ
 
 - [ListView で表示用データを仮想化する](https://clown.hatenablog.jp/entry/20130327/listview_virtualizing)

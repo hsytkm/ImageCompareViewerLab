@@ -93,6 +93,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZoomThumbInterlocking2", "08_ImageFunctions\ZoomThumbInterlocking2\ZoomThumbInterlocking2.csproj", "{A13499C1-298E-42BD-8211-4814904B5AE3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10_ImageMeta", "10_ImageMeta", "{53528954-37BC-4330-AC9A-588BB94BB521}"
+	ProjectSection(SolutionItems) = preProject
+		10_ImageMeta\README.md = 10_ImageMeta\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageMetaExtractor", "10_ImageMeta\ImageMetaExtractor\ImageMetaExtractor.csproj", "{0ED4FF37-3F46-45F8-9E4E-BDDE29F22B26}"
 EndProject
