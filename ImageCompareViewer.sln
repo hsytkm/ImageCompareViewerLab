@@ -100,6 +100,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ImageMetaExtractorTester", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageMetaExtractorApp", "10_ImageMeta\ImageMetaExtractorApp\ImageMetaExtractorApp.csproj", "{DADDCF78-77DA-4C49-B19B-0D82A531DF71}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "11_Controls", "11_Controls", "{51026CE2-E210-4E38-922A-38BDE59EB2A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursorPixelRender", "11_Controls\CursorPixelRender\CursorPixelRender.csproj", "{9B794701-B8AD-4849-8544-2802589C5BF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -200,6 +204,10 @@ Global
 		{DADDCF78-77DA-4C49-B19B-0D82A531DF71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DADDCF78-77DA-4C49-B19B-0D82A531DF71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DADDCF78-77DA-4C49-B19B-0D82A531DF71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B794701-B8AD-4849-8544-2802589C5BF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B794701-B8AD-4849-8544-2802589C5BF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B794701-B8AD-4849-8544-2802589C5BF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B794701-B8AD-4849-8544-2802589C5BF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -227,6 +235,7 @@ Global
 		{0ED4FF37-3F46-45F8-9E4E-BDDE29F22B26} = {53528954-37BC-4330-AC9A-588BB94BB521}
 		{B4D7D261-D78A-4161-90DA-25567E6D710A} = {53528954-37BC-4330-AC9A-588BB94BB521}
 		{DADDCF78-77DA-4C49-B19B-0D82A531DF71} = {53528954-37BC-4330-AC9A-588BB94BB521}
+		{9B794701-B8AD-4849-8544-2802589C5BF3} = {51026CE2-E210-4E38-922A-38BDE59EB2A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A747267B-7393-4543-A070-7F5EC5AA9AB6}

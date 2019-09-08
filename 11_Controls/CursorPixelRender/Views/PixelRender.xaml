@@ -1,0 +1,117 @@
+﻿<UserControl x:Class="CursorPixelRender.Views.PixelRender"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:v="clr-namespace:CursorPixelRender.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolVisibilityConverter"/>
+        <!--
+        <sys:Double x:Key="TextBlockWidth">100</sys:Double>
+        -->
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Panel.Resources>
+            <!-- 基底Style -->
+            <Style TargetType="{x:Type TextBlock}"
+                   x:Key="TextBlockBaseStyle" >
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Margin" Value="0" />
+            </Style>
+
+            <!-- チャンネル名 (R,Grとか) -->
+            <Style TargetType="{x:Type TextBlock}"
+                   BasedOn="{StaticResource TextBlockBaseStyle}"
+                   x:Key="TextBlockChannelNameStyle" >
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="TextAlignment" Value="Left" />
+                <Setter Property="Width" Value="26" />
+                <Setter Property="Padding" Value="3,0,0,0" />
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+
+            <!-- 画素値の規定Style -->
+            <Style TargetType="{x:Type TextBlock}"
+                   BasedOn="{StaticResource TextBlockBaseStyle}"
+                   x:Key="TextBlockValueBaseStyle" >
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="TextAlignment" Value="Right" />
+                <Setter Property="Padding" Value="0,0,3,0" />
+            </Style>
+
+            <!-- 画素値 8bit -->
+            <Style TargetType="{x:Type TextBlock}"
+                   BasedOn="{StaticResource TextBlockValueBaseStyle}"
+                   x:Key="TextBlock8bitValueStyle" >
+                <Setter Property="Width" Value="70" />
+            </Style>
+
+            <!-- 画素値 14bit -->
+            <Style TargetType="{x:Type TextBlock}"
+                   BasedOn="{StaticResource TextBlockValueBaseStyle}"
+                   x:Key="TextBlock14bitValueStyle" >
+                <Setter Property="Width" Value="90" />
+            </Style>
+        </Panel.Resources>
+
+        <StackPanel Grid.Row="0"
+                    Margin="5"
+                    Orientation="Horizontal"
+                    Background="Red">
+
+            <Grid Visibility="{Binding IsVisibleR.Value, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"
+                  Background="Pink" >
+                <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
+                           Text="R"/>
+                <TextBlock Style="{StaticResource TextBlock8bitValueStyle}"
+                           Text="{Binding AveR.Value, Mode=OneWay, StringFormat={}{0:f1}}" />
+            </Grid>
+
+
+            <Grid Visibility="{Binding IsVisibleG.Value, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"
+                  Background="ForestGreen" >
+                <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
+                           Text="G"/>
+                <TextBlock Style="{StaticResource TextBlock8bitValueStyle}"
+                           Text="{Binding AveG.Value, Mode=OneWay, StringFormat={}{0:f1}}" />
+            </Grid>
+
+            <Grid Visibility="{Binding IsVisibleGr.Value, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"
+                  Background="GreenYellow" >
+                <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
+                           Text="Gr"/>
+                <TextBlock Style="{StaticResource TextBlock8bitValueStyle}"
+                           Text="{Binding AveGr.Value, Mode=OneWay, StringFormat={}{0:f1}}" />
+            </Grid>
+
+            <Grid Visibility="{Binding IsVisibleGb.Value, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"
+                  Background="LightGreen" >
+                <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
+                           Text="Gb"/>
+                <TextBlock Style="{StaticResource TextBlock8bitValueStyle}"
+                           Text="{Binding AveGb.Value, Mode=OneWay, StringFormat={}{0:f1}}" />
+            </Grid>
+
+            <Grid Visibility="{Binding IsVisibleB.Value, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}"
+                  Background="Azure" >
+                <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
+                           Text="B"/>
+                <TextBlock Style="{StaticResource TextBlock8bitValueStyle}"
+                           Text="{Binding AveB.Value, Mode=OneWay, StringFormat={}{0:f1}}" />
+            </Grid>
+        </StackPanel>
+
+    </Grid>
+</UserControl>
