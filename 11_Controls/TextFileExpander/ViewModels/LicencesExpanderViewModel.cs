@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace TextFileExpander.ViewModels
 {
-    class LicencesExpanderViewModel : BindableBase
+    class LicencesExpanderViewModel
     {
         public IReadOnlyCollection<LicenseViewModel> Licenses { get; }
 
