@@ -9,6 +9,14 @@
 
 ![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/11_Controls/CursorPixelRender/capture.gif)
 
+
+## TextFileExpander
+
+Expanderでテキストの内容を表示する。OSSライセンス用
+
+![Sample](https://github.com/hsytkm/ImageCompareViewer/blob/master/11_Controls/TextFileExpander/capture.gif)
+
+
 ## ExplorerAddressBar
 
 Directory Select Bar like a Windows Explorer
