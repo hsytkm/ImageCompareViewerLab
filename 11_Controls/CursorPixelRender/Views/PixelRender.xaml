@@ -42,6 +42,7 @@
             <Setter Property="TextAlignment" Value="Left" />
             <Setter Property="Width" Value="25" />
             <Setter Property="Padding" Value="3,0,0,0" />
+            <Setter Property="Margin" Value="10,0,0,0" />
             <Setter Property="Background" Value="Transparent" />
         </Style>
 
@@ -72,97 +73,28 @@
                    Margin="0,0,10,0"
                    Text=")" />
 
-        <!-- R/G/Gr/Gb/B -->
-        <StackPanel Orientation="Horizontal"
-                    Background="Pink"
-                    Visibility="{Binding PixelR.Value.IsVisible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" >
-            <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
-                       Text="R" />
-            <TextBlock Style="{StaticResource TextBlockValueStyle}"
-                       Width="{Binding PixelR.Value.Digit, Mode=OneWay, Converter={StaticResource DigitToWidthConverter}}"
-                       Text="{Binding PixelR.Value.Value, Mode=OneWay, StringFormat={}{0:f0}}" />
-        </StackPanel>
+        <!-- R/G/Gr/Gb/B/L/a/b -->
+        <ItemsControl ItemsSource="{Binding Pixels, Mode=OneWay}">
+            <ItemsControl.Template>
+                <ControlTemplate TargetType="{x:Type ItemsControl}">
+                    <StackPanel Orientation="Horizontal"
+                                IsItemsHost="True" />
+                </ControlTemplate>
+            </ItemsControl.Template>
 
-        <StackPanel Orientation="Horizontal"
-                    Background="ForestGreen"
-                    Visibility="{Binding PixelG.Value.IsVisible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" >
-            <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
-                       Text="G" />
-            <TextBlock Style="{StaticResource TextBlockValueStyle}"
-                       Width="{Binding PixelG.Value.Digit, Mode=OneWay, Converter={StaticResource DigitToWidthConverter}}"
-                       Text="{Binding PixelG.Value.Value, Mode=OneWay, StringFormat={}{0:f0}}" />
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal"
-                    Background="GreenYellow"
-                    Visibility="{Binding PixelGr.Value.IsVisible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" >
-            <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
-                       Text="Gr" />
-            <TextBlock Style="{StaticResource TextBlockValueStyle}"
-                       Width="{Binding PixelGr.Value.Digit, Mode=OneWay, Converter={StaticResource DigitToWidthConverter}}"
-                       Text="{Binding PixelGr.Value.Value, Mode=OneWay, StringFormat={}{0:f0}}" />
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal"
-                    Background="LightGreen"
-                    Visibility="{Binding PixelGb.Value.IsVisible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" >
-            <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
-                       Text="Gb" />
-            <TextBlock Style="{StaticResource TextBlockValueStyle}"
-                       Width="{Binding PixelGb.Value.Digit, Mode=OneWay, Converter={StaticResource DigitToWidthConverter}}"
-                       Text="{Binding PixelGb.Value.Value, Mode=OneWay, StringFormat={}{0:f0}}" />
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal"
-                    Background="Azure"
-                    Visibility="{Binding PixelB.Value.IsVisible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" >
-            <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
-                       Text="B" />
-            <TextBlock Style="{StaticResource TextBlockValueStyle}"
-                       Width="{Binding PixelB.Value.Digit, Mode=OneWay, Converter={StaticResource DigitToWidthConverter}}"
-                       Text="{Binding PixelB.Value.Value, Mode=OneWay, StringFormat={}{0:f0}}" />
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal"
-                    Background="Gold"
-                    Visibility="{Binding PixelY.Value.IsVisible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" >
-            <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
-                       Text="Y" />
-            <TextBlock Style="{StaticResource TextBlockValueStyle}"
-                       Width="{Binding PixelY.Value.Digit, Mode=OneWay, Converter={StaticResource DigitToWidthConverter}}"
-                       Text="{Binding PixelY.Value.Value, Mode=OneWay, StringFormat={}{0:f1}}" />
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal"
-                    Background="Purple"
-                    Visibility="{Binding PixelL.Value.IsVisible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" >
-            <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
-                       Text="L" />
-            <TextBlock Style="{StaticResource TextBlockValueStyle}"
-                       Width="{Binding PixelL.Value.Digit, Mode=OneWay, Converter={StaticResource DigitToWidthConverter}}"
-                       Text="{Binding PixelL.Value.Value, Mode=OneWay, StringFormat={}{0:f1}}" />
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal"
-                    Background="Orange"
-                    Visibility="{Binding Pixela.Value.IsVisible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" >
-            <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
-                       Text="a" />
-            <TextBlock Style="{StaticResource TextBlockValueStyle}"
-                       Width="{Binding Pixela.Value.Digit, Mode=OneWay, Converter={StaticResource DigitToWidthConverter}}"
-                       Text="{Binding Pixela.Value.Value, Mode=OneWay, StringFormat={}{0:f1}}" />
-        </StackPanel>
-
-        <StackPanel Orientation="Horizontal"
-                    Background="Bisque"
-                    Visibility="{Binding Pixelb.Value.IsVisible, Mode=OneWay, Converter={StaticResource BoolVisibilityConverter}}" >
-            <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
-                       Text="b" />
-            <TextBlock Style="{StaticResource TextBlockValueStyle}"
-                       Width="{Binding Pixelb.Value.Digit, Mode=OneWay, Converter={StaticResource DigitToWidthConverter}}"
-                       Text="{Binding Pixelb.Value.Value, Mode=OneWay, StringFormat={}{0:f1}}" />
-        </StackPanel>
-
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock Style="{StaticResource TextBlockChannelNameStyle}"
+                                   Text="{Binding Name, Mode=OneWay}" />
+                        <TextBlock Style="{StaticResource TextBlockValueStyle}"
+                                   Width="{Binding Digit, Mode=OneWay, Converter={StaticResource DigitToWidthConverter}}"
+                                   Text="{Binding Message, Mode=OneWay}" />
+                    </StackPanel>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        
     </StackPanel>
 
 </UserControl>

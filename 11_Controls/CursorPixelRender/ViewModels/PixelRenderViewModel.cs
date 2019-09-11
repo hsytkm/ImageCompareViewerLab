@@ -16,103 +16,40 @@ namespace CursorPixelRender.ViewModels
         public ReadOnlyReactiveProperty<int> CursorX { get; }
         public ReadOnlyReactiveProperty<int> CursorY { get; }
 
-        public ReadOnlyReactiveProperty<PixelDataVM> PixelR { get; }
-        public ReadOnlyReactiveProperty<PixelDataVM> PixelG { get; }
-        public ReadOnlyReactiveProperty<PixelDataVM> PixelGr { get; }
-        public ReadOnlyReactiveProperty<PixelDataVM> PixelGb { get; }
-        public ReadOnlyReactiveProperty<PixelDataVM> PixelB { get; }
-
-        public ReadOnlyReactiveProperty<PixelDataVM> PixelY { get; }
-
-        public ReadOnlyReactiveProperty<PixelDataVM> PixelL { get; }
-        public ReadOnlyReactiveProperty<PixelDataVM> Pixela { get; }
-        public ReadOnlyReactiveProperty<PixelDataVM> Pixelb { get; }
+        public ReadOnlyReactiveCollection<PixelDataVM> Pixels { get; }
 
         public PixelRenderViewModel()
         {
-            var readPixels = _imagePixelReader
-                .ObserveProperty(x => x.ReadPixels)
-                .ToReadOnlyReactiveProperty(mode: ReactivePropertyMode.DistinctUntilChanged);
-
-            CursorX = readPixels
-                .Select(x => x.ReadArea.X)
+            CursorX = _imagePixelReader
+                .ObserveProperty(x => x.ReadArea)
+                .Select(x => x.X)
                 .ToReadOnlyReactiveProperty();
 
-            CursorY = readPixels
-                .Select(x => x.ReadArea.Y)
+            CursorY = _imagePixelReader
+                .ObserveProperty(x => x.ReadArea)
+                .Select(x => x.Y)
                 .ToReadOnlyReactiveProperty();
 
-            PixelR = readPixels
-                .Select(x => new PixelDataVM(x, PixelColor.R))
-                .ToReadOnlyReactiveProperty();
-
-            PixelG = readPixels
-                .Select(x => new PixelDataVM(x, PixelColor.G))
-                .ToReadOnlyReactiveProperty();
-
-            PixelGr = readPixels
-                .Select(x => new PixelDataVM(x, PixelColor.Gr))
-                .ToReadOnlyReactiveProperty();
-
-            PixelGb = readPixels
-                .Select(x => new PixelDataVM(x, PixelColor.Gb))
-                .ToReadOnlyReactiveProperty();
-
-            PixelB = readPixels
-                .Select(x => new PixelDataVM(x, PixelColor.B))
-                .ToReadOnlyReactiveProperty();
-
-            PixelY = readPixels
-                .Select(x => new PixelDataVM(x, PixelColor.Y, 1))   // 小数点第一位表示用の+1
-                .ToReadOnlyReactiveProperty();
-
-            PixelL = readPixels
-                .Select(x => new PixelDataVM(x, PixelColor.L, 1))   // 小数点第一位表示用の+1
-                .ToReadOnlyReactiveProperty();
-
-            Pixela = readPixels
-                .Select(x => new PixelDataVM(x, PixelColor.a, 1))   // 小数点第一位表示用の+1
-                .ToReadOnlyReactiveProperty();
-
-            Pixelb = readPixels
-                .Select(x => new PixelDataVM(x, PixelColor.b, 1))   // 小数点第一位表示用の+1
-                .ToReadOnlyReactiveProperty();
+            Pixels = _imagePixelReader.Pixels
+                .ToReadOnlyReactiveCollection(x => new PixelDataVM(x));
         }
     }
 
     readonly struct PixelDataVM
     {
-        /// <summary>
-        /// 表示フラグ
-        /// </summary>
-        public bool IsVisible { get; }
+        public string Name { get; }
 
-        /// <summary>
-        /// 最大値から求めた桁数
-        /// </summary>
         public int Digit { get; }
 
-        /// <summary>
-        /// 画素値
-        /// </summary>
-        public double Value { get; }
+        public string Message { get; }
 
-        public PixelDataVM(ReadPixelsData pixels, PixelColor pixelColor, int digitOffset = 0)
+        public PixelDataVM(ReadPixelData pixel)
         {
-            if (pixels is null) throw new ArgumentNullException(nameof(pixels));
+            var decimalPlace = pixel.IsInteger ? 0 : 1;
 
-            if (pixels.TryToFindPixelColor(pixelColor, out var pixelData))
-            {
-                IsVisible = true;
-                Digit = GetDigit(pixelData.Max) + digitOffset;
-                Value = pixelData.Average;
-            }
-            else
-            {
-                IsVisible = false;
-                Digit = 0;
-                Value = 0;
-            }
+            Name = Enum.GetName(typeof(PixelColor), pixel.Color);
+            Digit = GetDigit(pixel.Max) + decimalPlace;
+            Message = pixel.Average.ToString($"f{decimalPlace}");
         }
 
         /// <summary>

@@ -9,14 +9,19 @@ namespace CursorPixelRender.Models
     class ImagePixelReader : BindableBase
     {
         /// <summary>
-        /// 
+        /// 画素読み出し領域
         /// </summary>
-        public ReadPixelsData ReadPixels
+        public ReadPixelArea ReadArea
         {
-            get => _readPixels;
-            private set => SetProperty(ref _readPixels, value);
+            get => _readArea;
+            private set => SetProperty(ref _readArea, value);
         }
-        private ReadPixelsData _readPixels;
+        private ReadPixelArea _readArea;
+
+        /// <summary>
+        /// 画素値リスト
+        /// </summary>
+        public ObservableCollection<ReadPixelData> Pixels { get; } = new ObservableCollection<ReadPixelData>();
 
         private bool _togglePixelType;
 
@@ -33,7 +38,10 @@ namespace CursorPixelRender.Models
                     var area = GetRandomReadPixelArea();
                     var pixels = _togglePixelType ? GetRgbData() : GetRawData();
 
-                    ReadPixels = new ReadPixelsData(area, pixels);
+                    ReadArea = area;
+
+                    Pixels.Clear();
+                    foreach (var pixel in pixels) { Pixels.Add(pixel); }
                 });
         }
 
@@ -50,16 +58,17 @@ namespace CursorPixelRender.Models
 
             return new[]
             {
-                new ReadPixelData(PixelColor.R, rgbMax, r),
-                new ReadPixelData(PixelColor.G, rgbMax, g),
-                new ReadPixelData(PixelColor.B, rgbMax, b),
-                new ReadPixelData(PixelColor.Y, rgbMax, y),
-                new ReadPixelData(PixelColor.L, labMax, GetRandomValue(bitSize)),
+                new ReadPixelData(PixelColor.R, r, rgbMax),
+                new ReadPixelData(PixelColor.G, g, rgbMax),
+                new ReadPixelData(PixelColor.B, b, rgbMax),
+
+                new ReadPixelData(PixelColor.Y, y, rgbMax, isInteger: false),
+                new ReadPixelData(PixelColor.L, GetRandomValue(bitSize), labMax, isInteger: false),
 
                 // Labのa,bの最大値（表示幅に使用される）がテキトー
                 // 正確には -100～100(?) だが、0～100 と思って動作してる
-                new ReadPixelData(PixelColor.a, labMax, GetRandomValue(bitSize)),
-                new ReadPixelData(PixelColor.b, labMax, GetRandomValue(bitSize)),
+                new ReadPixelData(PixelColor.a, GetRandomValue(bitSize), labMax, isInteger: false),
+                new ReadPixelData(PixelColor.b, GetRandomValue(bitSize), labMax, isInteger: false),
             };
         }
 
@@ -80,7 +89,7 @@ namespace CursorPixelRender.Models
 
             return new[]
             {
-                new ReadPixelData(color, max, GetRandomValue(bitSize)),
+                new ReadPixelData(color, GetRandomValue(bitSize), max),
             };
         }
 

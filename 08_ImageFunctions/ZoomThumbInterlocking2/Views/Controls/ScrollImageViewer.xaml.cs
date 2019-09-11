@@ -407,10 +407,13 @@ namespace ZoomThumb.Views.Controls
                     if (ImageViewActualSize.Value.IsValidValue())
                     {
                         var cursorPoint = e.GetPosition((IInputElement)sender);
-                        var x = Math.Round(cursorPoint.X * ImageSourcePixelSize.Value.Width / ImageViewActualSize.Value.Width);
-                        x = clip(x, 0, ImageSourcePixelSize.Value.Width - 1);
-                        var y = Math.Round(cursorPoint.Y * ImageSourcePixelSize.Value.Height / ImageViewActualSize.Value.Height);
-                        y = clip(y, 0, ImageSourcePixelSize.Value.Height - 1);
+                        var ox = Math.Floor(cursorPoint.X * ImageSourcePixelSize.Value.Width / (ImageViewActualSize.Value.Width - 1));
+                        var x = clip(ox, 0, ImageSourcePixelSize.Value.Width - 1);
+                        var oy = Math.Floor(cursorPoint.Y * ImageSourcePixelSize.Value.Height / (ImageViewActualSize.Value.Height - 1));
+                        var y = clip(oy, 0, ImageSourcePixelSize.Value.Height - 1);
+
+                        //Console.WriteLine($"({ImageSourcePixelSize.Value.Width}, {ImageSourcePixelSize.Value.Height})  ({ImageViewActualSize.Value.Width}, {ImageViewActualSize.Value.Height})  ({cursorPoint.X}, {cursorPoint.Y})  ({ox}, {oy})  ({x}, {y})");
+
                         ImageCursorPoint = new Point(x, y);
                     }
                 };
