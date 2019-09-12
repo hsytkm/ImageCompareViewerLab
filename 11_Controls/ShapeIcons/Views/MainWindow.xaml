@@ -20,6 +20,8 @@
                 <ResourceDictionary Source="DiscernCaseCheckBoxStyle.xaml"/>
                 <ResourceDictionary Source="FaceCheckBoxStyle.xaml"/>
                 <ResourceDictionary Source="ImageRotateButtonStyle.xaml"/>
+                <ResourceDictionary Source="MetasCopyButtonStyle.xaml"/>
+                <ResourceDictionary Source="MetasFavoriteCheckBoxStyle.xaml"/>
                 <ResourceDictionary Source="SelectionFrameCheckBoxStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -102,6 +104,26 @@
             <CheckBox.ToolTip>
                 <ToolTip>
                     <TextBlock Text="Tag検索で大文字と小文字を区別します"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </CheckBox.ToolTip>
+        </CheckBox>
+
+        <Button Style="{StaticResource MetasCopyButtonStyle}"
+                Height="15" >
+            <Button.ToolTip>
+                <ToolTip>
+                    <TextBlock Text="メタ情報コピー"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </Button.ToolTip>
+        </Button>
+
+        <CheckBox Style="{StaticResource MetasFavoriteCheckBoxStyle}"
+                  Height="15" >
+            <CheckBox.ToolTip>
+                <ToolTip>
+                    <TextBlock Text="お気に入り表示"
                                Foreground="{StaticResource ForegroundBrushKey}" />
                 </ToolTip>
             </CheckBox.ToolTip>

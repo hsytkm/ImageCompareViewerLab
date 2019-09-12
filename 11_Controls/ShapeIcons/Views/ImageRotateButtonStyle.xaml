@@ -80,12 +80,12 @@
                     <ControlTemplate.Triggers>
                         <Trigger Property="ButtonBase.IsMouseOver" Value="True">
                             <Setter TargetName="RotateButtonIcon"
-                                    Property="UserControl.BorderBrush"
+                                    Property="Control.BorderBrush"
                                     Value="{StaticResource Highlight2BorderBrushKey}" />
                         </Trigger>
                         <Trigger Property="ButtonBase.IsPressed" Value="True">
                             <Setter TargetName="RotateButtonIcon"
-                                    Property="UserControl.BorderBrush"
+                                    Property="Control.BorderBrush"
                                     Value="{StaticResource AccentBrushKey}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
