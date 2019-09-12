@@ -5,7 +5,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Control}" >
-                    <Viewbox Width="{Binding Path=Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"
+                    <Viewbox Width="{Binding Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"
                              Stretch="UniformToFill" >
                         <Grid Background="Transparent" >
                             <Grid.Resources>
@@ -15,11 +15,11 @@
                                     <Setter Property="StrokeThickness"
                                             Value="1" />
                                     <Setter Property="Fill"
-                                            Value="{Binding Path=BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
+                                            Value="{Binding BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
                                 </Style>
                                 <Style TargetType="{x:Type Polygon}">
                                     <Setter Property="Fill"
-                                            Value="{Binding Path=BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
+                                            Value="{Binding BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
                                 </Style>
                             </Grid.Resources>
 
@@ -73,7 +73,7 @@
         </Setter>
     </Style>
 
-    <Style x:Key="ImageRotateButtonStyle" TargetType="{x:Type Button}" >
+    <Style x:Key="ImageRightRotateButtonStyle" TargetType="{x:Type Button}" >
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>
@@ -91,11 +91,22 @@
                     </ControlTemplate.Triggers>
                     <Control x:Name="RotateButtonIcon"
                              Style="{StaticResource RotateIconStyle}"
-                             Width="{Binding Width, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}"
                              BorderBrush="{StaticResource BorderBrushKey}"/>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="ImageLeftRotateButtonStyle"
+           TargetType="{x:Type Button}"
+           BasedOn="{StaticResource ImageRightRotateButtonStyle}" >
+        <Setter Property="RenderTransformOrigin"
+                Value="0.5,0.5" />
+        <Setter Property="RenderTransform" >
+            <Setter.Value>
+                <ScaleTransform ScaleX="-1" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

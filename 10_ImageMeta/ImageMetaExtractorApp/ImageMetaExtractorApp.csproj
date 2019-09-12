@@ -124,6 +124,7 @@
     <Compile Include="Views\MetaTabDetail.xaml.cs">
       <DependentUpon>MetaTabDetail.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SelectorMouseWheelBehavior.cs" />
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

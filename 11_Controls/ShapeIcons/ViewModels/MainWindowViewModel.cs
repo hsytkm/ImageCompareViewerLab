@@ -22,6 +22,20 @@ namespace ShapeIcons.ViewModels
         }
         private bool _isColorZone;
 
+        public bool IsSelectionFrame
+        {
+            get => _isSelectionFrame;
+            set => SetProperty(ref _isSelectionFrame, value);
+        }
+        private bool _isSelectionFrame;
+
+        public bool IsDiscernCase
+        {
+            get => _isDiscernCase;
+            set => SetProperty(ref _isDiscernCase, value);
+        }
+        private bool _isDiscernCase;
+
         public MainWindowViewModel()
         {
 

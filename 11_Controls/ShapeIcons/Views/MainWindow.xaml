@@ -17,8 +17,10 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ColorZoneCheckBoxStyle.xaml"/>
+                <ResourceDictionary Source="DiscernCaseCheckBoxStyle.xaml"/>
                 <ResourceDictionary Source="FaceCheckBoxStyle.xaml"/>
                 <ResourceDictionary Source="ImageRotateButtonStyle.xaml"/>
+                <ResourceDictionary Source="SelectionFrameCheckBoxStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -26,6 +28,21 @@
     <StackPanel Orientation="Horizontal"
                 Background="AliceBlue"
                 Height="20" >
+        <StackPanel.Resources>
+            <Style x:Key="SepalateBorder"
+                   TargetType="{x:Type Border}">
+                <Setter Property="Width"
+                        Value="1" />
+                <Setter Property="Height"
+                        Value="16" />
+                <Setter Property="BorderThickness"
+                        Value="1" />
+                <Setter Property="BorderBrush"
+                        Value="{StaticResource BorderBrushKey}" />
+                <Setter Property="Margin"
+                        Value="3,0" />
+            </Style>
+        </StackPanel.Resources>
 
         <CheckBox IsChecked="{Binding IsColorZone, Mode=TwoWay}" 
                   Style="{StaticResource ColorZoneCheckBoxStyle}" >
@@ -47,7 +64,28 @@
             </CheckBox.ToolTip>
         </CheckBox>
 
-        <Button Style="{StaticResource ImageRotateButtonStyle}" >
+        <CheckBox IsChecked="{Binding IsSelectionFrame, Mode=TwoWay}" 
+                  Style="{StaticResource SelectionFrameCheckBoxStyle}" >
+            <CheckBox.ToolTip>
+                <ToolTip>
+                    <TextBlock Text="選択枠"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </CheckBox.ToolTip>
+        </CheckBox>
+
+        <Border Style="{StaticResource SepalateBorder}" />
+
+        <Button Style="{StaticResource ImageLeftRotateButtonStyle}" >
+            <Button.ToolTip>
+                <ToolTip>
+                    <TextBlock Text="左回転"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </Button.ToolTip>
+        </Button>
+
+        <Button Style="{StaticResource ImageRightRotateButtonStyle}" >
             <Button.ToolTip>
                 <ToolTip>
                     <TextBlock Text="右回転"
@@ -55,6 +93,19 @@
                 </ToolTip>
             </Button.ToolTip>
         </Button>
+
+        <Border Style="{StaticResource SepalateBorder}" />
+
+        <CheckBox IsChecked="{Binding IsDiscernCase, Mode=TwoWay}" 
+                  Style="{StaticResource DiscernCaseCheckBoxStyle}"
+                  Height="11" >
+            <CheckBox.ToolTip>
+                <ToolTip>
+                    <TextBlock Text="Tag検索で大文字と小文字を区別します"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </CheckBox.ToolTip>
+        </CheckBox>
 
     </StackPanel>
 </Window>

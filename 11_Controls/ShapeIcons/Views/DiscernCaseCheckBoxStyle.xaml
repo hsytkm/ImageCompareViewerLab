@@ -1,0 +1,79 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
+
+    <Style x:Key="DiscernCaseIconStyle" TargetType="{x:Type Control}" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Control}" >
+                    <Viewbox Width="{Binding Width, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Control}}}"
+                             Stretch="UniformToFill" >
+                        <Grid Background="Transparent" >
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type Path}">
+                                    <Setter Property="HorizontalAlignment"
+                                            Value="Left" />
+                                    <Setter Property="VerticalAlignment"
+                                            Value="Top" />
+                                    <Setter Property="Stroke"
+                                            Value="Transparent" />
+                                    <Setter Property="StrokeThickness"
+                                            Value="1" />
+                                    <Setter Property="Stretch"
+                                            Value="Fill" />
+                                    <Setter Property="Fill"
+                                            Value="{Binding BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}" />
+                                </Style>
+                                <Style TargetType="{x:Type Polygon}">
+                                    <Setter Property="StrokeThickness"
+                                            Value="4" />
+                                    <Setter Property="Fill"
+                                            Value="{Binding BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}" />
+                                </Style>
+                            </Grid.Resources>
+
+                            <!-- A -->
+                            <Polygon Points="41,0 0,107 13,107 54,0"  />
+                            <Polygon Points="41,0 82,107 95,107 54,0"  />
+                            <Polygon Points="19,63 19,75 76,75 76,63"  />
+
+                            <!-- a -->
+                            <Path Data="M121.41716,106.16588 L134.99997,106.16564 C142.16654,87.334868 166.99953,96.167 165.66631,107.99895 L165.66621,147.90993 C165.74955,150.99286 166.86503,154.15959 167.9996,155.65891 L183.0823,155.65924 C181.74932,155.32562 178.24937,149.99299 177.99938,146.91006 L177.9994,103.99929 C175.16608,78.002804 126.16676,76.002765 121.41716,106.16588 z"
+                                  Height="71.646"
+                                  Margin="95.242,35.354,0,0"
+                                  Width="61.666" />
+                            <Path Data="M166.68785,107.87503 C141.11802,114.1727 127.83261,117.66657 122.74934,123.74978 116.696,131.82943 116.6661,144.83299 123.49967,150.49937 127.49966,157.49994 151.33296,160.99949 166.50036,147.56191 L166.74985,130.7498 C162.71099,139.13075 154.33308,145.49965 144.16633,145.66631 144.16633,145.66631 131.24956,147.49963 131.99956,135.49975 131.24956,124.74986 154.16641,123.8332 166.62535,119.5936 z"
+                                  Height="48.822"
+                                  Margin="95.242,58.178,39.297,0" />
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="DiscernCaseCheckBoxStyle" TargetType="{x:Type CheckBox}" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="CheckBox.IsChecked"
+                                 Value="True">
+                            <Setter TargetName="DiscernCaseIcon"
+                                    Property="Control.BorderBrush"
+                                    Value="{StaticResource AccentBrushKey}" />
+                        </Trigger>
+                        <Trigger Property="ButtonBase.IsMouseOver" Value="True">
+                            <Setter TargetName="DiscernCaseIcon"
+                                    Property="Control.BorderBrush"
+                                    Value="{StaticResource Highlight2BorderBrushKey}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    <Control x:Name="DiscernCaseIcon"
+                             Style="{StaticResource DiscernCaseIconStyle}"
+                             BorderBrush="{StaticResource BorderBrushKey}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

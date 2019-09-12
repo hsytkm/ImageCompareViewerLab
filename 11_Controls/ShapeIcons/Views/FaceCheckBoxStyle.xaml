@@ -5,7 +5,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Control}" >
-                    <Viewbox Width="{Binding Path=Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"
+                    <Viewbox Width="{Binding Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"
                              Stretch="UniformToFill" >
                         <Grid Background="Transparent" >
                             <Grid.Resources>
@@ -15,7 +15,7 @@
                                     <Setter Property="StrokeThickness"
                                             Value="1" />
                                     <Setter Property="Fill"
-                                            Value="{Binding Path=BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
+                                            Value="{Binding BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
                                 </Style>
                             </Grid.Resources>
 
@@ -53,7 +53,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Control}" >
-                    <Viewbox Width="{Binding Path=Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"
+                    <Viewbox Width="{Binding Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"
                              Stretch="UniformToFill" >
                         <Grid Background="Transparent" >
                             <Grid.Resources>
@@ -63,7 +63,7 @@
                                     <Setter Property="StrokeThickness"
                                             Value="1" />
                                     <Setter Property="Fill"
-                                            Value="{Binding Path=BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
+                                            Value="{Binding BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
                                 </Style>
                             </Grid.Resources>
 
@@ -117,21 +117,31 @@
                                     Property="UserControl.BorderBrush"
                                     Value="{StaticResource Highlight2BorderBrushKey}" />
                         </Trigger>
+                        <Trigger Property="CheckBox.IsChecked" Value="False">
+                            <Setter TargetName="FaceOffIcon"
+                                    Property="Control.Visibility"
+                                    Value="Visible" />
+                            <Setter TargetName="FaceOnIcon"
+                                    Property="Control.Visibility"
+                                    Value="Hidden" />
+                        </Trigger>
+                        <Trigger Property="CheckBox.IsChecked" Value="True">
+                            <Setter TargetName="FaceOffIcon"
+                                    Property="Control.Visibility"
+                                    Value="Hidden" />
+                            <Setter TargetName="FaceOnIcon"
+                                    Property="Control.Visibility"
+                                    Value="Visible" />
+                        </Trigger>
                     </ControlTemplate.Triggers>
                     <Grid>
                         <Control x:Name="FaceOffIcon"
                                  Style="{StaticResource FaceOffIconStyle}"
-                                 Width="{Binding Path=Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type CheckBox}}}"
-                                 BorderBrush="{StaticResource BorderBrushKey}"
-                                 Visibility="{Binding Path=IsChecked, RelativeSource={RelativeSource AncestorType={x:Type CheckBox}},
-                                                      Converter={StaticResource InvBoolToVisibilityConverter}, Mode=OneWay}" />
+                                 BorderBrush="{StaticResource BorderBrushKey}" />
 
                         <Control x:Name="FaceOnIcon"
                                  Style="{StaticResource FaceOnIconStyle}"
-                                 Width="{Binding Path=Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type CheckBox}}}"
-                                 BorderBrush="{StaticResource AccentBrushKey}"
-                                 Visibility="{Binding Path=IsChecked, RelativeSource={RelativeSource AncestorType={x:Type CheckBox}},
-                                                      Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}" />
+                                 BorderBrush="{StaticResource AccentBrushKey}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

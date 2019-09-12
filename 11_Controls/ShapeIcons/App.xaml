@@ -6,9 +6,10 @@
 
     <Application.Resources>
         <ResourceDictionary>
-            <!-- Converters -->
+            <!-- Converters
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <v:InverseBooleanToVisibilityConverter x:Key="InvBoolToVisibilityConverter" />
+             -->
 
             <!-- Metroradiance -->
             <SolidColorBrush x:Key="BorderBrushKey" Color="#FF3F3F46"/>
