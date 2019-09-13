@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" >
+
+    <ResourceDictionary.MergedDictionaries>
+        <!--
+        <ResourceDictionary Source="ColorZoneCheckBoxStyle.xaml"/>
+        -->
+        <ResourceDictionary Source="ColorZoneCheckBoxStyle.xaml"/>
+        <ResourceDictionary Source="ContextMenuBaseStyle.xaml"/>
+        <ResourceDictionary Source="DiscernCaseCheckBoxStyle.xaml"/>
+        <ResourceDictionary Source="FaceCheckBoxStyle.xaml"/>
+        <ResourceDictionary Source="ImageRotateButtonStyle.xaml"/>
+        <ResourceDictionary Source="MetasCopyButtonStyle.xaml"/>
+        <ResourceDictionary Source="MetasFavoriteCheckBoxStyle.xaml"/>
+        <ResourceDictionary Source="SelectionFrameCheckBoxStyle.xaml"/>
+        <ResourceDictionary Source="TextBoxClearButtonStyle.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

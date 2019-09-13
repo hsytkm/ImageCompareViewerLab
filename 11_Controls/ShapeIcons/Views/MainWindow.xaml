@@ -7,7 +7,7 @@
         xmlns:vm="clr-namespace:ShapeIcons.ViewModels"
         mc:Ignorable="d"
         Title="Icons"
-        Height="200" Width="200">
+        Height="200" Width="300">
 
     <Window.DataContext>
         <vm:MainWindowViewModel />
@@ -16,13 +16,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ColorZoneCheckBoxStyle.xaml"/>
-                <ResourceDictionary Source="DiscernCaseCheckBoxStyle.xaml"/>
-                <ResourceDictionary Source="FaceCheckBoxStyle.xaml"/>
-                <ResourceDictionary Source="ImageRotateButtonStyle.xaml"/>
-                <ResourceDictionary Source="MetasCopyButtonStyle.xaml"/>
-                <ResourceDictionary Source="MetasFavoriteCheckBoxStyle.xaml"/>
-                <ResourceDictionary Source="SelectionFrameCheckBoxStyle.xaml"/>
+                <ResourceDictionary Source="Styles/ButtonIconStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
@@ -48,86 +42,53 @@
 
         <CheckBox IsChecked="{Binding IsColorZone, Mode=TwoWay}" 
                   Style="{StaticResource ColorZoneCheckBoxStyle}" >
-            <CheckBox.ToolTip>
-                <ToolTip>
-                    <TextBlock Text="CZ"
-                               Foreground="{StaticResource ForegroundBrushKey}" />
-                </ToolTip>
-            </CheckBox.ToolTip>
+            <CheckBox.ContextMenu>
+                <ContextMenu Background="{StaticResource BackgroundBrushKey}" >
+                    <MenuItem Header="IsEnable"
+                              IsCheckable="True"
+                              IsChecked="{Binding IsTekito1, Mode=TwoWay}" />
+                    <Border Height="1"
+                            Background="{StaticResource BorderBrushKey}"
+                            IsEnabled="False"
+                            IsHitTestVisible="False" />
+                    <MenuItem Header="Setting1"
+                              IsCheckable="True"
+                              IsChecked="{Binding IsTekito1, Mode=TwoWay}" />
+                    <MenuItem Header="Setting2"
+                              IsCheckable="True"
+                              IsChecked="{Binding IsTekito1, Mode=TwoWay}" />
+                </ContextMenu>
+            </CheckBox.ContextMenu>
         </CheckBox>
 
         <CheckBox IsChecked="{Binding IsFaceOn, Mode=TwoWay}" 
-                  Style="{StaticResource FaceCheckBoxStyle}" >
-            <CheckBox.ToolTip>
-                <ToolTip>
-                    <TextBlock Text="顔"
-                               Foreground="{StaticResource ForegroundBrushKey}" />
-                </ToolTip>
-            </CheckBox.ToolTip>
-        </CheckBox>
+                  Style="{StaticResource FaceCheckBoxStyle}" />
 
         <CheckBox IsChecked="{Binding IsSelectionFrame, Mode=TwoWay}" 
-                  Style="{StaticResource SelectionFrameCheckBoxStyle}" >
-            <CheckBox.ToolTip>
-                <ToolTip>
-                    <TextBlock Text="選択枠"
-                               Foreground="{StaticResource ForegroundBrushKey}" />
-                </ToolTip>
-            </CheckBox.ToolTip>
-        </CheckBox>
+                  Style="{StaticResource SelectionFrameCheckBoxStyle}" />
+
+        <v:ChannelsCheckBox Width="19" Height="19" />
 
         <Border Style="{StaticResource SepalateBorder}" />
 
-        <Button Style="{StaticResource ImageLeftRotateButtonStyle}" >
-            <Button.ToolTip>
-                <ToolTip>
-                    <TextBlock Text="左回転"
-                               Foreground="{StaticResource ForegroundBrushKey}" />
-                </ToolTip>
-            </Button.ToolTip>
-        </Button>
+        <Button Style="{StaticResource ImageLeftRotateButtonStyle}" />
 
-        <Button Style="{StaticResource ImageRightRotateButtonStyle}" >
-            <Button.ToolTip>
-                <ToolTip>
-                    <TextBlock Text="右回転"
-                               Foreground="{StaticResource ForegroundBrushKey}" />
-                </ToolTip>
-            </Button.ToolTip>
-        </Button>
+        <Button Style="{StaticResource ImageRightRotateButtonStyle}" />
 
         <Border Style="{StaticResource SepalateBorder}" />
+
+        <Button Style="{StaticResource TextBoxClearButtonStyle}"
+                Height="9" />
 
         <CheckBox IsChecked="{Binding IsDiscernCase, Mode=TwoWay}" 
                   Style="{StaticResource DiscernCaseCheckBoxStyle}"
-                  Height="11" >
-            <CheckBox.ToolTip>
-                <ToolTip>
-                    <TextBlock Text="Tag検索で大文字と小文字を区別します"
-                               Foreground="{StaticResource ForegroundBrushKey}" />
-                </ToolTip>
-            </CheckBox.ToolTip>
-        </CheckBox>
+                  Height="11" />
 
         <Button Style="{StaticResource MetasCopyButtonStyle}"
-                Height="15" >
-            <Button.ToolTip>
-                <ToolTip>
-                    <TextBlock Text="メタ情報コピー"
-                               Foreground="{StaticResource ForegroundBrushKey}" />
-                </ToolTip>
-            </Button.ToolTip>
-        </Button>
+                Height="15" />
 
         <CheckBox Style="{StaticResource MetasFavoriteCheckBoxStyle}"
-                  Height="15" >
-            <CheckBox.ToolTip>
-                <ToolTip>
-                    <TextBlock Text="お気に入り表示"
-                               Foreground="{StaticResource ForegroundBrushKey}" />
-                </ToolTip>
-            </CheckBox.ToolTip>
-        </CheckBox>
+                  Height="15" />
 
     </StackPanel>
 </Window>

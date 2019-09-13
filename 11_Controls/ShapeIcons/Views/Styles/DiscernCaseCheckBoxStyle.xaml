@@ -52,6 +52,14 @@
     </Style>
 
     <Style x:Key="DiscernCaseCheckBoxStyle" TargetType="{x:Type CheckBox}" >
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <ToolTip>
+                    <TextBlock Text="Tag検索で大文字と小文字を区別します"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>

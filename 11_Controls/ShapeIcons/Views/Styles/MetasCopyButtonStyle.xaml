@@ -64,6 +64,14 @@
     </Style>
 
     <Style x:Key="MetasCopyButtonStyle" TargetType="{x:Type Button}" >
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <ToolTip>
+                    <TextBlock Text="メタ情報コピー"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>

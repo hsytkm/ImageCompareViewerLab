@@ -36,6 +36,34 @@ namespace ShapeIcons.ViewModels
         }
         private bool _isDiscernCase;
 
+        public bool IsTekito1
+        {
+            get => _isTekito1;
+            set => SetProperty(ref _isTekito1, value);
+        }
+        private bool _isTekito1;
+
+        public bool IsTekito2
+        {
+            get => _isTekito2;
+            set => SetProperty(ref _isTekito2, value);
+        }
+        private bool _isTekito2;
+
+        public bool IsTekito3
+        {
+            get => _isTekito3;
+            set => SetProperty(ref _isTekito3, value);
+        }
+        private bool _isTekito3;
+
+        public bool IsTekito4
+        {
+            get => _isTekito4;
+            set => SetProperty(ref _isTekito4, value);
+        }
+        private bool _isTekito4;
+
         public MainWindowViewModel()
         {
 

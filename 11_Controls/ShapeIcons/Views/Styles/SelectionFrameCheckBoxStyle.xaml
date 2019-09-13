@@ -63,6 +63,14 @@
     </Style>
 
     <Style x:Key="SelectionFrameCheckBoxStyle" TargetType="{x:Type CheckBox}" >
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <ToolTip>
+                    <TextBlock Text="選択枠"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>

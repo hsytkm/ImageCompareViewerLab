@@ -60,7 +60,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModels\BindableBase.cs" />
+    <Compile Include="ViewModels\ChannelsCheckBoxViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="Views\ChannelsCheckBox.xaml.cs">
+      <DependentUpon>ChannelsCheckBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -93,31 +97,51 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Views\ColorZoneCheckBoxStyle.xaml">
+    <Page Include="Views\ChannelsCheckBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Styles\ChannelsCheckBoxStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Styles\ButtonIconStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Styles\ContextMenuBaseStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\MetasCopyButtonStyle.xaml">
+    <Page Include="Views\Styles\ColorZoneCheckBoxStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\FaceCheckBoxStyle.xaml">
+    <Page Include="Views\Styles\TextBoxClearButtonStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\DiscernCaseCheckBoxStyle.xaml">
+    <Page Include="Views\Styles\MetasCopyButtonStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\MetasFavoriteCheckBoxStyle.xaml">
+    <Page Include="Views\Styles\FaceCheckBoxStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\SelectionFrameCheckBoxStyle.xaml">
+    <Page Include="Views\Styles\DiscernCaseCheckBoxStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\ImageRotateButtonStyle.xaml">
+    <Page Include="Views\Styles\MetasFavoriteCheckBoxStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Styles\SelectionFrameCheckBoxStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Styles\ImageRotateButtonStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
