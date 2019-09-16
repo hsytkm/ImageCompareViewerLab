@@ -50,14 +50,6 @@
     </Style>
 
     <Style x:Key="FaceOnIconStyle" TargetType="{x:Type Control}" >
-        <Setter Property="ToolTip">
-            <Setter.Value>
-                <ToolTip>
-                    <TextBlock Text="顔"
-                               Foreground="{StaticResource ForegroundBrushKey}" />
-                </ToolTip>
-            </Setter.Value>
-        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Control}" >
@@ -113,6 +105,14 @@
     </Style>
 
     <Style x:Key="FaceCheckBoxStyle" TargetType="{x:Type CheckBox}" >
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <ToolTip>
+                    <TextBlock Text="顔"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate>

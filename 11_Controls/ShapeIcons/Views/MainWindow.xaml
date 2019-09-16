@@ -69,6 +69,12 @@
 
         <v:ChannelsCheckBox Width="19" Height="19" />
 
+        <CheckBox IsChecked="{Binding IsTekito1, Mode=TwoWay}" 
+                  Style="{StaticResource InspectorCheckBoxStyle}" />
+
+        <CheckBox IsChecked="{Binding IsTekito1, Mode=TwoWay}" 
+                  Style="{StaticResource LinkChainCheckBoxStyle}" />
+
         <Border Style="{StaticResource SepalateBorder}" />
 
         <Button Style="{StaticResource ImageLeftRotateButtonStyle}" />

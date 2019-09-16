@@ -9,6 +9,8 @@
         <ResourceDictionary Source="DiscernCaseCheckBoxStyle.xaml"/>
         <ResourceDictionary Source="FaceCheckBoxStyle.xaml"/>
         <ResourceDictionary Source="ImageRotateButtonStyle.xaml"/>
+        <ResourceDictionary Source="InspectorCheckBoxStyle.xaml"/>
+        <ResourceDictionary Source="LinkChainCheckBoxStyle.xaml"/>
         <ResourceDictionary Source="MetasCopyButtonStyle.xaml"/>
         <ResourceDictionary Source="MetasFavoriteCheckBoxStyle.xaml"/>
         <ResourceDictionary Source="SelectionFrameCheckBoxStyle.xaml"/>

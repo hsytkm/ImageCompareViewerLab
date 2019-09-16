@@ -1,0 +1,84 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
+
+    <Style x:Key="InspectorIconStyle" TargetType="{x:Type Control}" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Control}" >
+                    <Viewbox Width="{Binding Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"
+                             Stretch="UniformToFill" >
+                        <Grid Background="Transparent" >
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type Path}">
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="VerticalAlignment" Value="Top" />
+                                    <Setter Property="Stretch" Value="Fill" />
+                                    <Setter Property="Stroke" Value="Transparent" />
+                                    <Setter Property="Fill"
+                                            Value="{Binding BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
+                                </Style>
+                            </Grid.Resources>
+
+                            <Path>
+                                <Path.Data>
+                                    <CombinedGeometry GeometryCombineMode="Xor">
+                                        <CombinedGeometry.Geometry1>
+                                            <EllipseGeometry RadiusX="100" RadiusY="100" Center="100,100" />
+                                        </CombinedGeometry.Geometry1>
+                                        <CombinedGeometry.Geometry2>
+                                            <EllipseGeometry RadiusX="90" RadiusY="90" Center="100,100" />
+                                        </CombinedGeometry.Geometry2>
+                                    </CombinedGeometry>
+                                </Path.Data>
+                            </Path>
+
+                            <Path Data="M84.231288,134.86483 L134.64799,127.97203 127.64567,84.644897 C127.64567,84.644897 144.45124,82.019016 144.45124,82.019016 L165.10782,149.63547 87.382332,148.651 C87.382332,148.651 84.231288,134.86483 84.231288,134.86483 z"
+                                  Height="93.013" 
+                                  Margin="66.053,54.887,0,0"
+                                  Width="104.18" />
+                            <Path Data="M50.611136,76.744678 L128.0733,119.41978 119.01876,128.85755 33.509044,88.234126 C33.509044,88.234126 50.611136,76.744678 50.611136,76.744678 z" 
+                                  Height="86.09"
+                                  Margin="24.513,49.08,0,0"
+                                  Width="126.96"/>
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="InspectorCheckBoxStyle" TargetType="{x:Type CheckBox}" >
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <ToolTip>
+                    <TextBlock Text="Inspector"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="CheckBox.IsChecked"
+                                 Value="True">
+                            <Setter TargetName="InspectorIcon"
+                                    Property="Control.BorderBrush"
+                                    Value="{StaticResource AccentBrushKey}" />
+                        </Trigger>
+                        <Trigger Property="ButtonBase.IsMouseOver"
+                                 Value="True">
+                            <Setter TargetName="InspectorIcon"
+                                    Property="Control.BorderBrush"
+                                    Value="{StaticResource Highlight2BorderBrushKey}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    <Control x:Name="InspectorIcon"
+                             Style="{StaticResource InspectorIconStyle}"
+                             BorderBrush="{StaticResource BorderBrushKey}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

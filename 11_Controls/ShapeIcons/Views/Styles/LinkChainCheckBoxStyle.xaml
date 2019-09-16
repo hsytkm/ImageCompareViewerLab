@@ -1,0 +1,140 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" >
+
+    <Style x:Key="ChainOffIconStyle" TargetType="{x:Type Control}" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Control}" >
+                    <Viewbox Width="{Binding Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"
+                             Stretch="UniformToFill" >
+                        <Grid Background="Transparent" >
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type Path}">
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="VerticalAlignment" Value="Top" />
+                                    <Setter Property="Stretch" Value="Fill" />
+                                    <Setter Property="Stroke" Value="Transparent" />
+                                    <Setter Property="Fill"
+                                            Value="{Binding BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
+                                </Style>
+                            </Grid.Resources>
+
+                            <Path Data="M139.705,68.525341 C178.76913,24.910653 207.14496,15.050161 238.62384,40.839288 252.99076,54.585393 257.65643,72.751181 251.89791,98.486401 250.0019,108.34703 189.50937,170.73449 181.82926,170.16602 151.14984,177.72878 132.30917,169.50194 124.15519,147.41051 126.90466,134.23145 133.01374,130.96504 143.87727,131.10219 163.45762,163.72021 187.80252,139.73037 227.05621,84.833161 231.98662,74.972524 220.22948,45.011355 192.16404,56.768269 L159.4267,85.591703 C145.73486,88.727812 140.10895,82.470587 139.705,68.525341 z" 
+                                  Height="147.155" 
+                                  Margin="104.744,26.756,0,0" 
+                                  Width="131.143"/>
+                            <Path Data="M118.89778,16.213333 L130.97072,17.574431 126.82085,48.491135 120.78439,48.490888 z" 
+                                  Height="39.804" 
+                                  Margin="104.744,10,0,0" 
+                                  Width="25.273" Stretch="Fill"/>
+                            <Path Data="M66.939259,46.648889 L75.162485,35.908777 94.505447,57.905931 88.437483,63.974046 z" 
+                                  Height="38.501" 
+                                  Margin="49.872,35.909,0,0" 
+                                  Width="45.632" Stretch="Fill"/>
+                            <Path Data="M119.91457,202.02133 L133.56735,199.74485 145.70324,231.99629 119.91454,234.65216 z" 
+                                  Height="35.892" 
+                                  Margin="119.915,199.749,0,0" 
+                                  Width="26.789"/>
+                            <Path Data="M151.96177,192.92221 L160.1163,184.19946 188.18341,206.95423 172.44339,221.36541 z" 
+                                  Height="38.168" 
+                                  Margin="151.962,184.199,0,0" 
+                                  Width="37.219"/>
+                            <Path Data="M115.48444,121.74222 C132.62012,124.08707 140.39498,104.36538 130.53442,95.642214 111.71043,78.225389 93.259029,75.827302 71.180459,83.695606 41.476657,108.82563 20.76706,127.72266 9.5505129,143.23987 0.23592101,156.12588 -2.2472866,167.01605 -0.49951808,174.14997 3.2272551,206.27656 17.997814,224.73222 46.718244,225.91954 68.076186,231.88182 92.145592,215.24351 118.39822,180.40759 119.97169,170.30278 113.84699,158.50517 99.340306,163.34078 L65.206927,196.33672 C47.571348,203.73237 18.273248,189.3204 29.651042,161.44452 L82.558062,109.8646 C95.642524,103.60675 105.86011,108.35661 115.48444,121.74222 z" 
+                                  Height="148.698" 
+                                  Margin="-1.02,79.41,0,0" 
+                                  Width="136.891"/>
+
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ChainOnIconStyle" TargetType="{x:Type Control}" >
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Control}" >
+                    <Viewbox Width="{Binding Width, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"
+                             Stretch="UniformToFill" >
+                        <Grid Background="Transparent" >
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type Path}">
+                                    <Setter Property="HorizontalAlignment" Value="Left" />
+                                    <Setter Property="VerticalAlignment" Value="Top" />
+                                    <Setter Property="Stretch" Value="Fill" />
+                                    <Setter Property="Stroke" Value="Transparent" />
+                                    <Setter Property="Fill"
+                                            Value="{Binding BorderBrush, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type Control}}}"  />
+                                </Style>
+                            </Grid.Resources>
+
+                            <Path Data="M131.29038,72.585766 C170.35451,28.971078 187.88956,13.957932 232.99516,38.536558 247.36208,52.282663 259.0178,67.174159 250.99436,105.50766 249.09835,115.36829 211.30964,153.76302 201.11749,162.55694 180.29947,180.59653 136.92867,172.70481 121.53193,142.03775 124.2814,128.85869 135.60672,125.43949 146.47025,125.57664 152.37721,137.0649 165.25416,147.234 176.82985,140.68459 191.57593,132.34139 201.76808,122.19426 222.80295,97.164671 231.69397,61.536968 201.11754,48.232696&#xD;&#xA;181.81749,63.11514 L168.37251,76.419143 C150.37358,69.428904 147.12076,71.68382 131.29038,72.585766 z"
+                                  Height="184.37" 
+                                  Margin="80.851,-0.02,0,0" 
+                                  Width="174.251"/>
+                            <Path Data="M115.52809,120.49064 C133.89148,119.52249 136.02673,106.68686 140.08346,103.29558 130.26149,76.172011 82.431791,57.766189 59.371042,82.952829 41.861955,101.84325 39.086181,104.74921 25.633644,120.00646 15.251462,131.78144 7.6979135,152.94345 9.8330522,171.8334 13.559825,203.95999 36.737277,234.31643 79.228869,224.87125 98.659697,218.33243 114.24706,196.05164 130.26148,177.88802 116.59585,179.58329 104.42489,177.88802 93.321679,173.52886 L67.912197,194.59849 C50.276618,201.99414 30.69787,176.21762 42.075664,148.34174 L75.812529,109.10867 C97.307433,93.851226 114.24713,115.32467 115.52809,120.49064 z" 
+                                  Height="183.773" 
+                                  Margin="0.439,71.654,0,0" 
+                                  Width="174.994"/>
+
+                        </Grid>
+                    </Viewbox>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="LinkChainCheckBoxStyle" TargetType="{x:Type CheckBox}" >
+        <Setter Property="ToolTip">
+            <Setter.Value>
+                <ToolTip>
+                    <TextBlock Text="連動"
+                               Foreground="{StaticResource ForegroundBrushKey}" />
+                </ToolTip>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="ButtonBase.IsMouseOver" Value="True">
+                            <Setter TargetName="ChainOffIcon"
+                                    Property="Control.BorderBrush"
+                                    Value="{StaticResource Highlight2BorderBrushKey}" />
+                            <Setter TargetName="ChainOnIcon"
+                                    Property="Control.BorderBrush"
+                                    Value="{StaticResource Highlight2BorderBrushKey}" />
+                        </Trigger>
+                        <Trigger Property="CheckBox.IsChecked" Value="False">
+                            <Setter TargetName="ChainOffIcon"
+                                    Property="Control.Visibility"
+                                    Value="Visible" />
+                            <Setter TargetName="ChainOnIcon"
+                                    Property="Control.Visibility"
+                                    Value="Hidden" />
+                        </Trigger>
+                        <Trigger Property="CheckBox.IsChecked" Value="True">
+                            <Setter TargetName="ChainOffIcon"
+                                    Property="Control.Visibility"
+                                    Value="Hidden" />
+                            <Setter TargetName="ChainOnIcon"
+                                    Property="Control.Visibility"
+                                    Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    <Grid>
+                        <Control x:Name="ChainOffIcon"
+                                 Style="{StaticResource ChainOffIconStyle}"
+                                 BorderBrush="{StaticResource BorderBrushKey}" />
+
+                        <Control x:Name="ChainOnIcon"
+                                 Style="{StaticResource ChainOnIconStyle}"
+                                 BorderBrush="{StaticResource AccentBrushKey}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>
