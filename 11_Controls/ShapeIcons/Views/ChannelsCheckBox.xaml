@@ -144,18 +144,12 @@
                             <Grid>
                                 <Control x:Name="ChannelsCircleIcon"
                                          Style="{StaticResource ChannelsCircleIconStyle}" />
-                                <Border Width="17" Height="17" >
-                                    <Control x:Name="ChannelsRedIcon"
-                                             Style="{StaticResource ChannelsIconStyle}" />
-                                </Border>
-                                <Border Margin="-4,5,0,0" Width="17" Height="17" >
-                                    <Control x:Name="ChannelsGreenIcon"
-                                             Style="{StaticResource ChannelsIconStyle}" />
-                                </Border>
-                                <Border Margin="4,5,0,0" Width="17" Height="17" >
-                                    <Control x:Name="ChannelsBlueIcon"
-                                             Style="{StaticResource ChannelsIconStyle}" />
-                                </Border>
+                                <Control x:Name="ChannelsRedIcon"
+                                         Style="{StaticResource ChannelsTopIconStyle}" />
+                                <Control x:Name="ChannelsGreenIcon"
+                                         Style="{StaticResource ChannelsRightIconStyle}" />
+                                <Control x:Name="ChannelsBlueIcon"
+                                         Style="{StaticResource ChannelsLeftIconStyle}" />
                             </Grid>
                         </ControlTemplate>
                     </Setter.Value>
