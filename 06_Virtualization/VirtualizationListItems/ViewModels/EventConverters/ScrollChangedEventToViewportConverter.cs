@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using Reactive.Bindings.Interactivity;
 
-namespace VirtualizationListItems.Views
+namespace VirtualizationListItems.ViewModels.EventConverters
 {
     /// <summary>
     /// ScrollChangedイベント
@@ -15,7 +16,7 @@ namespace VirtualizationListItems.Views
         {
             return source
                 .Cast<ScrollChangedEventArgs>()
-                .Where(e => !(e.ViewportWidthChange == 0 && e.ViewportHeightChange == 0) || e.HorizontalChange != 0)
+                //.Where(e => !(e.ViewportWidthChange == 0 && e.ViewportHeightChange == 0) || e.HorizontalChange != 0)
                 .Select(e => (CenterRatio: CenterRatio(e.ExtentWidth, e.ViewportWidth, e.HorizontalOffset),
                     ViewportRatio: ViewportRatio(e.ExtentWidth, e.ViewportWidth)));
         }
@@ -38,8 +39,9 @@ namespace VirtualizationListItems.Views
             return ClipRatio(viewport / length);
         }
 
-        private static double ClipRatio(double value, double min = 0, double max = 1) =>
-            (value <= min) ? min : ((value >= max) ? max : value);
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static double ClipRatio(double value) =>
+            (value <= 0) ? 0 : (1 < value ? 1 : value);
 
     }
 }

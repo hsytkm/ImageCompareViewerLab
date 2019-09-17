@@ -7,6 +7,7 @@
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
              xmlns:v="clr-namespace:VirtualizationListItems.Views"
              xmlns:vm="clr-namespace:VirtualizationListItems.ViewModels"
+             xmlns:vme="clr-namespace:VirtualizationListItems.ViewModels.EventConverters"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d"
@@ -67,24 +68,31 @@
                 <!-- スクロールバーの水平位置取得 -->
                 <Setter Property="Template">
                     <Setter.Value>
-                        <ControlTemplate TargetType="ListBox">
-                            <Border>
-                                <ScrollViewer>
-                                    <ItemsPresenter />
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="ScrollChanged">
-                                            <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollChangedHorizontal, Mode=OneTime}">
-                                                <v:ScrollChangedEventToViewportConverter/>
-                                            </r:EventToReactiveProperty>
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </ScrollViewer>
-                            </Border>
+                        <ControlTemplate TargetType="{x:Type ListBox}">
+                            <ScrollViewer>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="ScrollChanged">
+                                        <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollChangedHorizontal, Mode=OneTime}">
+                                            <vme:ScrollChangedEventToViewportConverter/>
+                                        </r:EventToReactiveProperty>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+
+                                <ItemsPresenter />
+                            </ScrollViewer>
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
             </Style>
         </ListBox.Style>
+
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="KeyDown">
+                <r:EventToReactiveProperty ReactiveProperty="{Binding DeleteFilePath, Mode=OneTime}">
+                    <vme:KeyDownEventToDeleteFilePathConverter/>
+                </r:EventToReactiveProperty>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
 
     </ListBox>
 

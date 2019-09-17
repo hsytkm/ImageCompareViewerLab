@@ -60,9 +60,10 @@
     </ApplicationDefinition>
     <Compile Include="Models\ImageSource.cs" />
     <Compile Include="Models\ImageSources.cs" />
+    <Compile Include="ViewModels\EventConverters\KeyDownEventToDeleteFilePathConverter.cs" />
     <Compile Include="ViewModels\ThumbnailListViewModel.cs" />
     <Compile Include="Views\ListBoxSelectionBehavior.cs" />
-    <Compile Include="Views\ScrollChangedEventToViewportConverter.cs" />
+    <Compile Include="ViewModels\EventConverters\ScrollChangedEventToViewportConverter.cs" />
     <Compile Include="Views\ThumbnailList.xaml.cs">
       <DependentUpon>ThumbnailList.xaml</DependentUpon>
     </Compile>

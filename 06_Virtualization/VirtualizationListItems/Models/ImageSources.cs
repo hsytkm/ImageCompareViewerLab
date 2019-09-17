@@ -11,31 +11,35 @@ namespace VirtualizationListItems.Models
     {
         private const string DirPath = @"C:\data";
 
-        public ObservableCollection<ImageSource> Sources { get; } = new ObservableCollection<ImageSource>();
+        public ReadOnlyObservableCollection<ImageSource> Sources =>
+            new ReadOnlyObservableCollection<ImageSource>(_sources);
 
-        private string _SelectedImagePath;
+        private readonly ObservableCollection<ImageSource> _sources =
+            new ObservableCollection<ImageSource>();
+
         public string SelectedImagePath
         {
-            get => _SelectedImagePath;
-            set => SetProperty(ref _SelectedImagePath, value);
+            get => _selectedImagePath;
+            set => SetProperty(ref _selectedImagePath, value);
         }
+        private string _selectedImagePath;
 
         public ImageSources() { }
 
         public void Initialize(string dirPath = DirPath)
         {
-            Sources.Clear();
+            _sources.Clear();
 
             // ImageSourceのコンストラクタ内ではサムネイルを読み込まない
             foreach (var path in GetImagePaths(dirPath))
             {
-                Sources.Add(new ImageSource(path));
+                _sources.Add(new ImageSource(path));
             }
 
             // とりあえず先頭画像を選択しとく
-            if (Sources.Any())
+            if (_sources.Any())
             {
-                SelectedImagePath = Sources.First().FilePath;
+                SelectedImagePath = _sources.First().FilePath;
             }
         }
 
@@ -60,7 +64,7 @@ namespace VirtualizationListItems.Models
             if (centerRatio == 0) throw new ArgumentException(nameof(centerRatio));
             if (viewportRatio == 0) throw new ArgumentException(nameof(viewportRatio));
 
-            var list = Sources;
+            var list = _sources;
             int length = list.Count;
             if (length == 0) return;
 
@@ -96,7 +100,21 @@ namespace VirtualizationListItems.Models
             }
 
             // 読み込み状況の表示テスト
+            // ◆アイテムが全て画面内に収まっているとScrollChangedが発生せず更新されないが、テスト用やからいいや
             LoadedItemText();
+        }
+
+        // リストからファイルを削除する
+        public void DeleteImageFile(string deletePath)
+        {
+            var deleteImageSource = _sources.FirstOrDefault(x => x.FilePath == deletePath);
+            if (deleteImageSource is null) return;
+
+            // 削除後に0個になるのは禁止(◆どのように扱えばよいか分からないので…)
+            if (_sources.Count() > 1)
+            {
+                _sources.Remove(deleteImageSource);
+            }
         }
 
         #region テスト
@@ -111,7 +129,7 @@ namespace VirtualizationListItems.Models
         private void LoadedItemText()
         {
             var sb = new System.Text.StringBuilder();
-            foreach(var source in Sources)
+            foreach(var source in _sources)
             {
                 sb.Append(source.IsThumbnailEmpty ? "□" : "■");
             }

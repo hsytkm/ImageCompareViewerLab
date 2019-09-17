@@ -21,7 +21,10 @@ namespace VirtualizationListItems.ViewModels
 
         // スクロール変化時
         public ReactiveProperty<(double CenterRatio, double ViewportRatio)> ScrollChangedHorizontal { get; } =
-            new ReactiveProperty<(double CenterRatio, double ViewportRatio)>(mode: ReactivePropertyMode.None);
+            new ReactiveProperty<(double CenterRatio, double ViewportRatio)>(mode: ReactivePropertyMode.DistinctUntilChanged);
+        
+        // 削除したいファイルPATH
+        public ReactiveProperty<string> DeleteFilePath { get; } = new ReactiveProperty<string>(mode: ReactivePropertyMode.DistinctUntilChanged);
 
         public ThumbnailListViewModel(IContainerExtension container, IRegionManager regionManager)
         {
@@ -59,13 +62,17 @@ namespace VirtualizationListItems.ViewModels
                 .ToReactivePropertyAsSynchronized(x => x.SelectedImagePath,
                     // M->VM
                     convert: m => Thumbnails.FirstOrDefault(vm => vm.FilePath == m),
-                    // VM->M
+                    // M<-VM
                     convertBack: vm => imageSources.SelectedImagePath = vm?.FilePath);
 #endif
 
             // スクロール操作時の画像読出/解放
             ScrollChangedHorizontal
                 .Subscribe(x => imageSources.UpdateThumbnail(x.CenterRatio, x.ViewportRatio));
+
+            // リストからファイル削除
+            DeleteFilePath
+                .Subscribe(x => imageSources.DeleteImageFile(x));
         }
 
     }
