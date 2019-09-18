@@ -24,7 +24,11 @@ namespace VirtualizationListItems.ViewModels
             new ReactiveProperty<(double CenterRatio, double ViewportRatio)>(mode: ReactivePropertyMode.DistinctUntilChanged);
         
         // 削除したいファイルPATH
-        public ReactiveProperty<string> DeleteFilePath { get; } = new ReactiveProperty<string>(mode: ReactivePropertyMode.DistinctUntilChanged);
+        public ReactiveProperty<string> DeleteFilePath { get; } =
+            new ReactiveProperty<string>(mode: ReactivePropertyMode.DistinctUntilChanged);
+
+        // Deleteボタンの動作  OFF=リストから削除, ON=リストから削除+ゴミ箱移動
+        public ReactiveProperty<bool> EnableFileDelete { get; } = new ReactiveProperty<bool>();
 
         public ThumbnailListViewModel(IContainerExtension container, IRegionManager regionManager)
         {
@@ -72,7 +76,13 @@ namespace VirtualizationListItems.ViewModels
 
             // リストからファイル削除
             DeleteFilePath
-                .Subscribe(x => imageSources.DeleteImageFile(x));
+                .Subscribe(x =>
+                {
+                    if (EnableFileDelete.Value)
+                        imageSources.DeleteImageFile(x);
+                    else
+                        imageSources.ClearImageFile(x);
+                });
         }
 
     }

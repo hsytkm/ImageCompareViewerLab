@@ -25,7 +25,7 @@ namespace VirtualizationListItems.Views
             if (!(sender is ListBox listBox)) return;
 
             // 選択中アイテムが消されたときの再選択
-            if (listBox.SelectedItem == null)
+            if (listBox.SelectedItem == null && listBox.Items.Count > 0)
             {
                 var max = listBox.Items.Count - 1;
                 var newIndex = _selectedIndexBuffer < 0 ? 0 : (_selectedIndexBuffer < max ? _selectedIndexBuffer : max);

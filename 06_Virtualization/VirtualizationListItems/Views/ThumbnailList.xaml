@@ -13,87 +13,99 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <ListBox ItemsSource="{Binding Path=Thumbnails, Mode=OneWay}"
-             SelectedItem="{Binding Path=SelectedItem.Value, Mode=TwoWay}" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
 
-        <!-- 選択要素が表示されるようにスクロールする -->
-        <i:Interaction.Behaviors>
-            <v:ListBoxSelectionBehavior/>
-        </i:Interaction.Behaviors>
+        <CheckBox Content="DeleteKey押下時の動作  OFF=クリア(ファイル消えない), ON=削除(ゴミ箱移動)"
+                  IsChecked="{Binding EnableFileDelete.Value, Mode=TwoWay}" />
 
-        <ListBox.Resources>
-            <DataTemplate DataType="{x:Type vm:ThubnailVModel}">
-                <Grid Width="84">
-                    <!-- 明示的に画質落とす(指定しなくても Unspecified => Linear => LowQuality で解釈されるので同じ) -->
-                    <Image Source="{Binding Image, Mode=OneWay}"
-                           Width="80"
-                           Margin="2"
-                           VerticalAlignment="Top"
-                           RenderOptions.BitmapScalingMode="LowQuality" />
-                    <TextBlock Text="{Binding Filename, Mode=OneTime}"
-                               HorizontalAlignment="Center"
-                               TextAlignment="Left"
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding Thumbnails, Mode=OneWay}"
+                 SelectedItem="{Binding SelectedItem.Value, Mode=TwoWay}" >
+
+            <!-- 選択要素が表示されるようにスクロールする -->
+            <i:Interaction.Behaviors>
+                <v:ListBoxSelectionBehavior/>
+            </i:Interaction.Behaviors>
+
+            <ListBox.Resources>
+                <DataTemplate DataType="{x:Type vm:ThubnailVModel}">
+                    <Grid Width="84">
+                        <!-- 明示的に画質落とす(指定しなくても Unspecified => Linear => LowQuality で解釈されるので同じ) -->
+                        <Image Source="{Binding Image, Mode=OneWay}"
+                               Width="80"
                                Margin="2"
-                               TextWrapping="Wrap"
-                               Foreground="Lime" >
-                        <TextBlock.ToolTip>
-                            <ToolTip>
-                                <TextBlock Text="{Binding Filename, Mode=OneTime}" />
-                            </ToolTip>
-                        </TextBlock.ToolTip>
-                    </TextBlock>
-                </Grid>
-            </DataTemplate>
-        </ListBox.Resources>
+                               VerticalAlignment="Top"
+                               RenderOptions.BitmapScalingMode="LowQuality" />
+                        <TextBlock Text="{Binding Filename, Mode=OneTime}"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Left"
+                                   Margin="2"
+                                   TextWrapping="Wrap"
+                                   Foreground="Lime" >
+                            <TextBlock.ToolTip>
+                                <ToolTip>
+                                    <TextBlock Text="{Binding Filename, Mode=OneTime}" />
+                                </ToolTip>
+                            </TextBlock.ToolTip>
+                        </TextBlock>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.Resources>
 
-        <ListBox.Style>
-            <Style TargetType="{x:Type ListBox}" >
-                <!-- UI仮想化 (IsDeferredScrollingEnabledは使い勝手悪いのでfalse) -->
-                <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
-                <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
-                <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
-                <Setter Property="Padding" Value="0" />
-                <Setter Property="Height" Value="86" />
-                <Setter Property="Background" Value="Pink" />
-                <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
-                <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Visible" />
-                <Setter Property="ItemsPanel">
-                    <Setter.Value>
-                        <ItemsPanelTemplate>
-                            <VirtualizingStackPanel Orientation="Horizontal"/>
-                        </ItemsPanelTemplate>
-                    </Setter.Value>
-                </Setter>
+            <ListBox.Style>
+                <Style TargetType="{x:Type ListBox}" >
+                    <!-- UI仮想化 (IsDeferredScrollingEnabledは使い勝手悪いのでfalse) -->
+                    <Setter Property="VirtualizingStackPanel.IsVirtualizing" Value="True"/>
+                    <Setter Property="VirtualizingStackPanel.VirtualizationMode" Value="Recycling"/>
+                    <Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="Height" Value="86" />
+                    <Setter Property="Background" Value="Pink" />
+                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden" />
+                    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Visible" />
+                    <Setter Property="ItemsPanel">
+                        <Setter.Value>
+                            <ItemsPanelTemplate>
+                                <VirtualizingStackPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </Setter.Value>
+                    </Setter>
 
-                <!-- スクロールバーの水平位置取得 -->
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type ListBox}">
-                            <ScrollViewer>
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="ScrollChanged">
-                                        <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollChangedHorizontal, Mode=OneTime}">
-                                            <vme:ScrollChangedEventToViewportConverter/>
-                                        </r:EventToReactiveProperty>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
+                    <!-- スクロールバーの水平位置取得 -->
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBox}">
+                                <ScrollViewer>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="ScrollChanged">
+                                            <r:EventToReactiveProperty ReactiveProperty="{Binding ScrollChangedHorizontal, Mode=OneTime}">
+                                                <vme:ScrollChangedEventToViewportConverter/>
+                                            </r:EventToReactiveProperty>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
 
-                                <ItemsPresenter />
-                            </ScrollViewer>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </ListBox.Style>
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.Style>
 
-        <i:Interaction.Triggers>
-            <i:EventTrigger EventName="KeyDown">
-                <r:EventToReactiveProperty ReactiveProperty="{Binding DeleteFilePath, Mode=OneTime}">
-                    <vme:KeyDownEventToDeleteFilePathConverter/>
-                </r:EventToReactiveProperty>
-            </i:EventTrigger>
-        </i:Interaction.Triggers>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="KeyDown">
+                    <r:EventToReactiveProperty ReactiveProperty="{Binding DeleteFilePath, Mode=OneTime}">
+                        <vme:KeyDownEventToDeleteFilePathConverter/>
+                    </r:EventToReactiveProperty>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
 
-    </ListBox>
+        </ListBox>
+    </Grid>
 
 </UserControl>

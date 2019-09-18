@@ -104,17 +104,34 @@ namespace VirtualizationListItems.Models
             LoadedItemText();
         }
 
-        // リストからファイルを削除する
-        public void DeleteImageFile(string deletePath)
+        // リストからファイルをクリアする(実ファイルは削除されない)
+        public bool ClearImageFile(string sourcePath)
         {
-            var deleteImageSource = _sources.FirstOrDefault(x => x.FilePath == deletePath);
-            if (deleteImageSource is null) return;
+            // クリア後にアイテムがなくなるのは禁止(◆削除後の動作を決めてないので)
+            if (_sources.Count() <= 1) return false;
 
-            // 削除後に0個になるのは禁止(◆どのように扱えばよいか分からないので…)
-            if (_sources.Count() > 1)
-            {
-                _sources.Remove(deleteImageSource);
-            }
+            var imageSource = _sources.FirstOrDefault(x => x.FilePath == sourcePath);
+            if (imageSource is null) return false;
+            _sources.Remove(imageSource);
+            return true;
+        }
+
+        // リストからファイルを削除する(実ファイルがゴミ箱送りになる)
+        public bool DeleteImageFile(string sourcePath)
+        {
+            if (!ClearImageFile(sourcePath)) return false;
+
+            // ゴミ箱に移動されない
+            //File.Delete(sourcePath);
+
+            // ゴミ箱に移動される(参照追加 Microsoft.VisualBasic が必要)
+            // https://stackoverflow.com/questions/3282418/send-a-file-to-the-recycle-bin
+            Microsoft.VisualBasic.FileIO.FileSystem.DeleteFile(
+                sourcePath,
+                Microsoft.VisualBasic.FileIO.UIOption.OnlyErrorDialogs,
+                Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin);
+
+            return true;
         }
 
         #region テスト
