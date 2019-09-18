@@ -18,8 +18,13 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
 
+        <i:Interaction.Triggers>
+            <prism:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest}">
+                <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True" />
+            </prism:InteractionRequestTrigger>
+        </i:Interaction.Triggers>
+        
         <CheckBox Content="DeleteKey押下時の動作  OFF=クリア(ファイル消えない), ON=削除(ゴミ箱移動)"
                   IsChecked="{Binding EnableFileDelete.Value, Mode=TwoWay}" />
 

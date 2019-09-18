@@ -1,4 +1,6 @@
-﻿using Prism.Ioc;
+﻿using Prism.Commands;
+using Prism.Interactivity.InteractionRequest;
+using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using Reactive.Bindings;
@@ -25,10 +27,12 @@ namespace VirtualizationListItems.ViewModels
         
         // 削除したいファイルPATH
         public ReactiveProperty<string> DeleteFilePath { get; } =
-            new ReactiveProperty<string>(mode: ReactivePropertyMode.DistinctUntilChanged);
+            new ReactiveProperty<string>(mode: ReactivePropertyMode.None);
 
         // Deleteボタンの動作  OFF=リストから削除, ON=リストから削除+ゴミ箱移動
         public ReactiveProperty<bool> EnableFileDelete { get; } = new ReactiveProperty<bool>();
+
+        public InteractionRequest<IConfirmation> ConfirmationRequest { get; } = new InteractionRequest<IConfirmation>();
 
         public ThumbnailListViewModel(IContainerExtension container, IRegionManager regionManager)
         {
@@ -79,12 +83,23 @@ namespace VirtualizationListItems.ViewModels
                 .Subscribe(x =>
                 {
                     if (EnableFileDelete.Value)
-                        imageSources.DeleteImageFile(x);
+                    {
+                        ConfirmationRequest.Raise(new Confirmation()
+                        {
+                            Title = "Confirmation",
+                            Content = "Confirmation Message"
+                        },
+                        r =>
+                        {
+                            if (r.Confirmed) imageSources.DeleteImageFile(x);
+                        });
+                    }
                     else
+                    {
                         imageSources.ClearImageFile(x);
+                    }
                 });
         }
-
     }
 
     class ThubnailVModel : BindableBase
