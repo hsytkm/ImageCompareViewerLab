@@ -2,6 +2,7 @@
 using Prism.Unity;
 using System.Windows;
 using VirtualizationListItems.Models;
+using VirtualizationListItems.ViewModels;
 using VirtualizationListItems.Views;
 
 namespace VirtualizationListItems
@@ -19,6 +20,7 @@ namespace VirtualizationListItems
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<ImageSources>();
+            containerRegistry.RegisterDialog<ConfirmDialog, ConfirmDialogViewModel>();
         }
 
     }

@@ -61,13 +61,21 @@
     </ApplicationDefinition>
     <Compile Include="Models\ImageSource.cs" />
     <Compile Include="Models\ImageSources.cs" />
+    <Compile Include="ViewModels\ConfirmDialogViewModel.cs" />
     <Compile Include="ViewModels\EventConverters\KeyDownEventToDeleteFilePathConverter.cs" />
     <Compile Include="ViewModels\ThumbnailListViewModel.cs" />
+    <Compile Include="Views\ConfirmDialog.xaml.cs">
+      <DependentUpon>ConfirmDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ListBoxSelectionBehavior.cs" />
     <Compile Include="ViewModels\EventConverters\ScrollChangedEventToViewportConverter.cs" />
     <Compile Include="Views\ThumbnailList.xaml.cs">
       <DependentUpon>ThumbnailList.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\ConfirmDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

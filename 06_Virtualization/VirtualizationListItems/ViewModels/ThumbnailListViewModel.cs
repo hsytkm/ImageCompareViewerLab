@@ -1,8 +1,7 @@
-﻿using Prism.Commands;
-using Prism.Interactivity.InteractionRequest;
-using Prism.Ioc;
+﻿using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using Reactive.Bindings;
 using Reactive.Bindings.Extensions;
 using System;
@@ -12,6 +11,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Windows.Media.Imaging;
 using VirtualizationListItems.Models;
+using VirtualizationListItems.Views;
 
 namespace VirtualizationListItems.ViewModels
 {
@@ -32,9 +32,7 @@ namespace VirtualizationListItems.ViewModels
         // Deleteボタンの動作  OFF=リストから削除, ON=リストから削除+ゴミ箱移動
         public ReactiveProperty<bool> EnableFileDelete { get; } = new ReactiveProperty<bool>();
 
-        public InteractionRequest<IConfirmation> ConfirmationRequest { get; } = new InteractionRequest<IConfirmation>();
-
-        public ThumbnailListViewModel(IContainerExtension container, IRegionManager regionManager)
+        public ThumbnailListViewModel(IContainerExtension container, IRegionManager regionManager, IDialogService dialogService)
         {
             var imageSources = container.Resolve<ImageSources>();
             var modelImageSources = imageSources.Sources;
@@ -84,15 +82,12 @@ namespace VirtualizationListItems.ViewModels
                 {
                     if (EnableFileDelete.Value)
                     {
-                        ConfirmationRequest.Raise(new Confirmation()
-                        {
-                            Title = "Confirmation",
-                            Content = "Confirmation Message"
-                        },
-                        r =>
-                        {
-                            if (r.Confirmed) imageSources.DeleteImageFile(x);
-                        });
+                        var param = new DialogParameters("Message=メッセージ");
+                        var ret = ButtonResult.No;
+                        dialogService.ShowDialog(nameof(ConfirmDialog), param, r => ret = r.Result);
+
+                        if (ret == ButtonResult.Yes)
+                            imageSources.DeleteImageFile(x);
                     }
                     else
                     {
