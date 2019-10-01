@@ -10,8 +10,8 @@ namespace SwitchContext.Models
         private static readonly string ImagePath2 = @"C:/data/image2.jpg";
         private static readonly string ImagePath3 = @"C:/data/image3.jpg";
 
-        // 画像リスト
-        private MainImage[] ImageSources = new[]
+        // 画像リスト(Viewの操作で配列が入れ替わる)
+        private readonly MainImage[] ImageSources = new[]
         {
             new MainImage(ImagePath1),
             new MainImage(ImagePath2),

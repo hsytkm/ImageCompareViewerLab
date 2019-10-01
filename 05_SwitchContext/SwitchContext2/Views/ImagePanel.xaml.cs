@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using SwitchContext.ViewModels;
+using System.Windows.Controls;
 
 namespace SwitchContext.Views
 {
@@ -11,5 +12,14 @@ namespace SwitchContext.Views
         {
             InitializeComponent();
         }
+
+        public void SetContentIndex(int index)
+        {
+            if (DataContext is ImagePanelViewModel vmodel)
+            {
+                vmodel.ContentIndex = index;
+            }
+        }
+
     }
 }

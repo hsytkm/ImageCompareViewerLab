@@ -8,6 +8,13 @@ namespace SwitchContext.ViewModels
     {
         private readonly MainImages MainImages = ModelContext.Instance.MainImages;
         
+        public int ContentIndex
+        {
+            get => _contentIndex;
+            set => SetProperty(ref _contentIndex, value);
+        }
+        private int _contentIndex;
+
         private BitmapImage _ImageSource;
         public BitmapImage ImageSource
         {
@@ -20,6 +27,11 @@ namespace SwitchContext.ViewModels
         public void UpdateImageSource(int index)
         {
             ImageSource = MainImages.GetImageSource(index);
+        }
+
+        public void SetContentIndex(int index)
+        {
+            ContentIndex = index;
         }
 
     }

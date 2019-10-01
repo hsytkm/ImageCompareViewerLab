@@ -20,9 +20,12 @@ namespace SwitchContext.Views
             int count = 1;
             for (int i = 0; i < count; i++)
             {
+                var view = container.Resolve<ImagePanel>();
+                view.SetContentIndex(i);
+
                 regionManager.RegisterViewWithRegion(
                     RegionNames.GetImageContentRegionName(count, i),
-                    () => container.Resolve<ImagePanel>());
+                    () => view);
             }
         }
     }

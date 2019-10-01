@@ -20,18 +20,30 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <TextBlock Foreground="LimeGreen">
-            <Run Text="UserControl ActiveWidth: " />
-            <Run Text="{Binding ActualWidth, Mode=OneWay,
-                                StringFormat={}{0:f3},
-                                RelativeSource={RelativeSource FindAncestor,
-                                AncestorType={x:Type v:ImagePanel}}}" />
-            <LineBreak />
-            <Run Text="Image ActiveWidth: " />
-            <Run Text="{Binding ActualWidth, ElementName=_image, Mode=OneWay, StringFormat={}{0:f3}}" />
-        </TextBlock>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Margin="5,0"
+                       Text="{Binding ContentIndex, Mode=OneWay}" />
 
-        <Image Grid.Row="1"
+            <TextBlock Grid.Column="1"
+                       Foreground="LimeGreen">
+                <Run Text="UserControl ActiveWidth: " />
+                <Run Text="{Binding ActualWidth, Mode=OneWay,
+                                    StringFormat={}{0:f3},
+                                    RelativeSource={RelativeSource FindAncestor,
+                                    AncestorType={x:Type v:ImagePanel}}}" />
+                <LineBreak />
+                <Run Text="Image ActiveWidth: " />
+                <Run Text="{Binding ActualWidth, ElementName=_image, Mode=OneWay, StringFormat={}{0:f3}}" />
+            </TextBlock>
+
+        </Grid>
+
+        <Image Grid.Row="2"
                Name="_image"
                Source="{Binding ImageSource, Mode=OneWay}" />
     </Grid>
