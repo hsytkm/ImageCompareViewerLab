@@ -4,7 +4,7 @@
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     mc:Ignorable="d">
 
-    <ControlTemplate x:Key="MenuItemControlTemplate1"
+    <ControlTemplate x:Key="MenuItemControlTemplate"
                      TargetType="{x:Type MenuItem}">
         <Border x:Name="templateRoot"
                 BorderBrush="{TemplateBinding BorderBrush}"

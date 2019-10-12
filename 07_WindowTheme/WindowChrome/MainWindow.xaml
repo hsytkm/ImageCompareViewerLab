@@ -6,17 +6,14 @@
         xmlns:v="clr-namespace:WindowChrome"
         mc:Ignorable="d"
         Title="WindowChrome"
-        Height="300"
-        Width="500"
+        Height="300" Width="500"
+        MinHeight="50" MinWidth="120"
         Background="{StaticResource ContentOutlineBackgroundKey}"
         Foreground="{StaticResource ForegroundBrushKey}"
         UseLayoutRounding="True"
         FontFamily="Segoe UI"
         TextOptions.TextFormattingMode="Display"
-        AllowsTransparency="True"
-        MinHeight="50" 
-        MinWidth="120"
-        WindowStyle="None" >
+        WindowStyle="None" AllowsTransparency="True" >
     <!-- 
         SizeToContent="WidthAndHeight"
         Icon="small.ico"
@@ -25,7 +22,6 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Styles/CustomCaptionStyle.xaml"/>
                 <ResourceDictionary Source="Styles/ResizeGripStyle.xaml"/>
                 <ResourceDictionary Source="Styles/MainTabStyle.xaml"/>
                 <ResourceDictionary Source="Styles/MenuItemStyle.xaml"/>
@@ -40,19 +36,9 @@
             <v:CaptionForegroundConverter x:Key="CaptionForegroundConverterKey"/>
             <v:CaptionBackgroundConverter x:Key="CaptionBackgroundConverterKey"/>
              -->
-            <v:MaximizeCaptionButtonContentConverter x:Key="MaximizeCaptionButtonContentConverterKey"/>
             <v:RootGridMarginConverter x:Key="RootGridMarginConverterKey" />
         </ResourceDictionary>
     </Window.Resources>
-
-    <Window.CommandBindings>
-        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}"
-                        Executed="CloseWindow"/>
-        <CommandBinding Command="{x:Static SystemCommands.MaximizeWindowCommand}"
-                        Executed="MaximizeOrRestoreWindow"/>
-        <CommandBinding Command="{x:Static SystemCommands.MinimizeWindowCommand}"
-                        Executed="MinimizeWindow"/>
-    </Window.CommandBindings>
 
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="28"
@@ -163,52 +149,24 @@
                 <Menu Grid.Column="1"
                       Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}" >
 
-                    <MenuItem Header="File(_F)" Template="{StaticResource MenuItemControlTemplate1}" >
+                    <MenuItem Header="File(_F)" Template="{StaticResource MenuItemControlTemplate}" >
                         <MenuItem Header="Open" />
                         <MenuItem Header="Close" />
                     </MenuItem>
-                    <MenuItem Header="Edit(_E)" Template="{StaticResource MenuItemControlTemplate1}" />
-                    <MenuItem Header="View(_V)" Template="{StaticResource MenuItemControlTemplate1}" />
-                    <MenuItem Header="Option(_O)" Template="{StaticResource MenuItemControlTemplate1}" >
+                    <MenuItem Header="Edit(_E)" Template="{StaticResource MenuItemControlTemplate}" />
+                    <MenuItem Header="View(_V)" Template="{StaticResource MenuItemControlTemplate}" />
+                    <MenuItem Header="Option(_O)" Template="{StaticResource MenuItemControlTemplate}" >
                         <MenuItem IsCheckable="True" Header="Opt1" />
                         <MenuItem IsCheckable="True" Header="Opt2" />
                         <MenuItem IsCheckable="True" Header="Opt3" />
                     </MenuItem>
-                    <MenuItem Header="Help(_H)" Template="{StaticResource MenuItemControlTemplate1}" />
+                    <MenuItem Header="Help(_H)" Template="{StaticResource MenuItemControlTemplate}" />
                 </Menu>
 
-                <!-- 最小化、最大化、閉じるボタンを設置します -->
-                <Grid Grid.Column="3"
-                      HorizontalAlignment="Right" 
-                      VerticalAlignment="Top" >
-                    <StackPanel Height="{Binding Height, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}"
-                                Orientation="Horizontal" >
-                        <!-- 最小化ボタン
-                                Visibility="{Binding ResizeMode, Converter={StaticResource ResizeCaptionButtonVisibilityConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                ToolTip="最小化"
-                        -->
-                        <Button Content="0"
-                                Style="{StaticResource CustomCaptionButtonBaseKey}"
-                                Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}"
-                                Command="{x:Static SystemCommands.MinimizeWindowCommand}" />
-                        <!-- 最大化ボタン
-                                IsEnabled="{Binding ResizeMode, Converter={StaticResource MaximizeCaptionButtonEnableConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                Visibility="{Binding ResizeMode, Converter={StaticResource ResizeCaptionButtonVisibilityConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                ToolTip="{Binding WindowState, Converter={StaticResource MaximizeCaptionButtonTooltipConverter}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                        -->
-                        <Button Content="{Binding WindowState,Converter={StaticResource MaximizeCaptionButtonContentConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
-                                Style="{StaticResource CustomCaptionButtonBaseKey}"
-                                Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}"
-                                Command="{x:Static SystemCommands.MaximizeWindowCommand}"/>
-                        <!-- 閉じるボタン
-                                ToolTip="閉じる"
-                        -->
-                        <Button Content="r"
-                                Style="{StaticResource CustomCaptionButtonBaseKey}"
-                                Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}"
-                                Command="{x:Static SystemCommands.CloseWindowCommand}"/>
-                    </StackPanel>
-                </Grid>
+                <!-- 最小化、最大化、閉じるボタン -->
+                <v:SystemButtons Grid.Column="3"
+                                 HorizontalAlignment="Right" 
+                                 VerticalAlignment="Top" />
             </Grid>
 
             <!-- コンテンツ -->

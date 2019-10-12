@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="WindowChrome.SystemButtons"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:v="clr-namespace:WindowChrome"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.CommandBindings>
+        <CommandBinding Command="{x:Static SystemCommands.CloseWindowCommand}"
+                        Executed="CloseWindow"/>
+        <CommandBinding Command="{x:Static SystemCommands.MaximizeWindowCommand}"
+                        Executed="MaximizeOrRestoreWindow"/>
+        <CommandBinding Command="{x:Static SystemCommands.MinimizeWindowCommand}"
+                        Executed="MinimizeWindow"/>
+    </UserControl.CommandBindings>
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Styles/CustomCaptionStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <v:MaximizeCaptionButtonContentConverter x:Key="MaximizeCaptionButtonContentConverterKey"/>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <StackPanel Height="{Binding Height, RelativeSource={RelativeSource AncestorType={x:Type Grid}}}"
+                Orientation="Horizontal" >
+        <!-- 最小化ボタン
+                Visibility="{Binding ResizeMode, Converter={StaticResource ResizeCaptionButtonVisibilityConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                ToolTip="最小化"
+        -->
+        <Button Content="0"
+                Style="{StaticResource CustomCaptionButtonBaseKey}"
+                Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}"
+                Command="{x:Static SystemCommands.MinimizeWindowCommand}" />
+        <!-- 最大化ボタン
+                IsEnabled="{Binding ResizeMode, Converter={StaticResource MaximizeCaptionButtonEnableConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                Visibility="{Binding ResizeMode, Converter={StaticResource ResizeCaptionButtonVisibilityConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                ToolTip="{Binding WindowState, Converter={StaticResource MaximizeCaptionButtonTooltipConverter}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+        -->
+        <Button Content="{Binding WindowState, Converter={StaticResource MaximizeCaptionButtonContentConverterKey}, RelativeSource={RelativeSource AncestorType={x:Type Window}}}"
+                Style="{StaticResource CustomCaptionButtonBaseKey}"
+                Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}"
+                Command="{x:Static SystemCommands.MaximizeWindowCommand}"/>
+        <!-- 閉じるボタン
+                ToolTip="閉じる"
+        -->
+        <Button Content="r"
+                Style="{StaticResource CustomCaptionButtonBaseKey}"
+                Foreground="{Binding Foreground, Mode=OneWay, ElementName=CaptionTitle}"
+                Command="{x:Static SystemCommands.CloseWindowCommand}"/>
+    </StackPanel>
+</UserControl>
