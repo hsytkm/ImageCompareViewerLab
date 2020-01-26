@@ -46,7 +46,6 @@ namespace ZoomThumb.ViewModels
         public ReactiveCommand ZoomX1Command { get; } = new ReactiveCommand();
         public ReactiveCommand OffsetCenterCommand { get; } = new ReactiveCommand();
 
-        public ReactiveProperty<Size> SizeTest { get; } = new ReactiveProperty<Size>();
         public ReactiveProperty<Point> PointTest { get; } = new ReactiveProperty<Point>();
 
         public ImageScrollControlViewModel(IContainerExtension container, IRegionManager regionManager)
@@ -106,7 +105,6 @@ namespace ZoomThumb.ViewModels
                 .Subscribe(x => ImageScrollOffsetCenterRatio.Value = new Point(0.5, 0.5));
 
 
-            //SizeTest.Subscribe(x => Console.WriteLine($"VM-SizeTest: {x}"));
             //PointTest.Subscribe(x => Console.WriteLine($"VM-PointTest: {x}"));
 
         }

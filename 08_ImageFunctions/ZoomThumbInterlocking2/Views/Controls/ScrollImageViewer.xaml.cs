@@ -446,9 +446,12 @@ namespace ZoomThumb.Views.Controls
                     double left = 0, top = 0;
 
                     // 画像全体表示ならLeft/Topを計算
-                    if (x.contentSize.Width >= x.imageSize.Width && x.contentSize.Height >= x.imageSize.Height)
+                    if (x.contentSize.Width >= x.imageSize.Width)
                     {
                         left = (x.contentSize.Width - x.imageSize.Width) / 2;
+                    }
+                    if (x.contentSize.Height >= x.imageSize.Height)
+                    {
                         top = (x.contentSize.Height - x.imageSize.Height) / 2;
                     }
 
